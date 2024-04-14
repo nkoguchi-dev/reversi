@@ -12,6 +12,30 @@ version = "0.0.1-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs("src/main/kotlin", "src/main/resources")
+        }
+    }
+    create("integrationTest") {
+        compileClasspath += sourceSets["main"].output
+        runtimeClasspath += sourceSets["main"].output
+        kotlin.srcDir("src/integrationTest/kotlin")
+        resources.srcDir("src/integrationTest/resources")
+    }
+}
+
+configurations {
+    getByName("integrationTestImplementation") {
+        extendsFrom(configurations.getByName("testImplementation"))
+    }
+    getByName("integrationTestRuntimeOnly") {
+        extendsFrom(configurations.getByName("testRuntimeOnly"))
+    }
 }
 
 repositories {
@@ -31,6 +55,20 @@ dependencies {
 
     // テスト
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.projectreactor:reactor-test")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    testImplementation("org.mockito:mockito-inline:5.1.0")
+    //testImplementation("org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.2")
+}
+
+tasks.register<Test>("integrationTest") {
+    group = "verification"
+    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+    classpath = sourceSets["integrationTest"].runtimeClasspath
+    useJUnitPlatform()
+    systemProperty("spring.config.location", "classpath:/application.yml,classpath:/application-integration-test.yml")
 }
 
 tasks.named("compileKotlin", KotlinCompilationTask::class) {
@@ -39,7 +77,10 @@ tasks.named("compileKotlin", KotlinCompilationTask::class) {
     }
 }
 
-
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<Copy> {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
