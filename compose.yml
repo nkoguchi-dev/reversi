@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  demo_web-api:
+    build:
+      context: ./web-api
+    container_name: demo_web-api
+    volumes:
+      - ./web-api:/project/web-api
+      - /project/web-api/.gradle
+    ports:
+      - "18080:8080"
+      - "15005:5005"
+    env_file:
+      - ./web-api/app-settings.env
+    command: gradle clean bootRun -x test
