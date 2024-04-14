@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("org.springframework.boot") version "3.2.4"
@@ -33,12 +33,12 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "21"
+tasks.named("compileKotlin", KotlinCompilationTask::class) {
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
     }
 }
+
 
 tasks.withType<Test> {
     useJUnitPlatform()
