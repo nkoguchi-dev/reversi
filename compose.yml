@@ -28,4 +28,3 @@ services:
       - "15005:5005"
     env_file:
       - ./web-api/app-settings.env
-    command: gradle clean bootRun -x test
