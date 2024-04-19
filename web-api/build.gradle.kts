@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 plugins {
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
+    id("org.flywaydb.flyway") version "9.8.1"
     kotlin("jvm") version "2.0.0-RC1"
     kotlin("plugin.spring") version "2.0.0-RC1"
 }
@@ -49,9 +50,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // PostgreSQL + flyway + mybatis
-//	implementation("org.postgresql:postgresql")
-//	runtimeOnly("org.flywaydb:flyway-core")
-//	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3")
+	implementation("org.postgresql:postgresql")
+	runtimeOnly("org.flywaydb:flyway-core")
+	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3")
 
     // テスト
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -60,7 +61,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testImplementation("org.mockito:mockito-inline:5.1.0")
-    //testImplementation("org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.2")
+    testImplementation("org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.2")
 }
 
 tasks.register<Test>("integrationTest") {
@@ -83,4 +84,12 @@ tasks.withType<Test> {
 
 tasks.withType<Copy> {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+flyway {
+    schemas = arrayOf("demo")
+    url = "jdbc:postgresql://localhost:15432/demodb"
+    user = "pgadmin"
+    password = "pgadmin"
+    flyway.cleanDisabled = true
 }
