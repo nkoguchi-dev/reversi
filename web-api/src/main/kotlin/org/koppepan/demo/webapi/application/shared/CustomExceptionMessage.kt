@@ -1,4 +1,4 @@
-package org.koppepan.demo.webapi.application.usecase.shared
+package org.koppepan.demo.webapi.application.shared
 
 class CustomExceptionMessage(
     val message: String,

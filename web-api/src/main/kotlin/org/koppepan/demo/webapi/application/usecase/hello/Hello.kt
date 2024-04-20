@@ -1,7 +1,7 @@
 package org.koppepan.demo.webapi.application.usecase.hello
 
-import org.koppepan.demo.webapi.application.usecase.shared.CustomExceptionMessage
-import org.koppepan.demo.webapi.application.usecase.shared.require
+import org.koppepan.demo.webapi.application.shared.CustomExceptionMessage
+import org.koppepan.demo.webapi.application.shared.require
 
 data class HelloName(
     val value: String
