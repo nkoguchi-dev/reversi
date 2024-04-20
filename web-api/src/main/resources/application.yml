@@ -4,10 +4,10 @@ spring:
   flyway:
     enabled: false
 
-datasource:
-  driver-class-name: org.postgresql.Driver
-  url: ${DATASOURCE_URL}
-  username: ${DATASOURCE_USERNAME}
-  password: ${DATASOURCE_PASSWORD}
-  hikari:
-    maximum-pool-size: ${DATASOURCE_MAXIMUM_POOL_SIZE:10}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DATASOURCE_MAXIMUM_POOL_SIZE:10}

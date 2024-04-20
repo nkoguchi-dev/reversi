@@ -1,0 +1,5 @@
+# log settings
+logging:
+  level:
+    root: INFO
+    com.koppepan.demo.webapi: debug
