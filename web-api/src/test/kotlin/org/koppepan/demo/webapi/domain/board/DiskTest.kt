@@ -1,11 +1,11 @@
-package org.koppepan.demo.webapi.domain.disk
+package org.koppepan.demo.webapi.domain.board
 
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.koppepan.demo.webapi.application.shared.CustomIllegalArgumentException
+import org.koppepan.demo.webapi.domain.shared.CustomIllegalArgumentException
 
 class DiskTest {
     @Test
@@ -41,7 +41,7 @@ class DiskTest {
     @DisplayName("Diskクラスのreverseメソッドが正常に動作すること")
     fun testDiskReverse() {
         val disk = Disk(DiskId("test"), DiskType.Light)
-        val reversedDisk = disk.reverce()
+        val reversedDisk = disk.reverse()
         assertAll(
             { assertEquals("test", reversedDisk.diskId.value) },
             { assertEquals(DiskType.Dark, reversedDisk.diskType) },

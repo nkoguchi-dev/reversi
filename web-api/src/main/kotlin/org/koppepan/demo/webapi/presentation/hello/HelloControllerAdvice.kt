@@ -1,6 +1,6 @@
 package org.koppepan.demo.webapi.presentation.hello
 
-import org.koppepan.demo.webapi.application.shared.CustomIllegalArgumentException
+import org.koppepan.demo.webapi.domain.shared.CustomIllegalArgumentException
 import org.koppepan.demo.webapi.presentation.ErrorResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice

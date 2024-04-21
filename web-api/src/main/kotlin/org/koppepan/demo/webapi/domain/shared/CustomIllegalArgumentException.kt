@@ -1,4 +1,4 @@
-package org.koppepan.demo.webapi.application.shared
+package org.koppepan.demo.webapi.domain.shared
 
 class CustomIllegalArgumentException(
     message: String,

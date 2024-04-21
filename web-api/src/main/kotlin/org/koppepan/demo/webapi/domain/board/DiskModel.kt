@@ -1,14 +1,14 @@
-package org.koppepan.demo.webapi.domain.disk
+package org.koppepan.demo.webapi.domain.board
 
-import org.koppepan.demo.webapi.application.shared.CustomExceptionMessage
-import org.koppepan.demo.webapi.application.shared.requireOrThrow
+import org.koppepan.demo.webapi.domain.shared.CustomExceptionMessage
+import org.koppepan.demo.webapi.domain.shared.requireOrThrow
 import org.koppepan.demo.webapi.domain.generator.IdGenerator
 
 data class Disk(
     val diskId: DiskId,
     val diskType: DiskType
 ) {
-    fun reverce(): Disk = when (diskType) {
+    fun reverse(): Disk = when (diskType) {
         DiskType.Light -> this.copy(diskType = DiskType.Dark)
         DiskType.Dark -> this.copy(diskType = DiskType.Light)
     }

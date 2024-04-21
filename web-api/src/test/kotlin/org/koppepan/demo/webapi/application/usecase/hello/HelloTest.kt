@@ -3,7 +3,7 @@ package org.koppepan.demo.webapi.application.usecase.hello
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.koppepan.demo.webapi.application.shared.CustomIllegalArgumentException
+import org.koppepan.demo.webapi.domain.shared.CustomIllegalArgumentException
 
 class HelloTest {
     @Test
