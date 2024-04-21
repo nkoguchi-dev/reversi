@@ -32,7 +32,7 @@ class SquareTest {
                 position = SquarePosition(0, 0),
                 disk = null,
             )
-            val disk = Disk(DiskId("test"), DiskType.Light)
+            val disk = Disk(DiskType.Light)
             val newSquare = square.putDisk(disk)
             assertAll(
                 { assertEquals(0, newSquare.position.x) },
@@ -46,7 +46,7 @@ class SquareTest {
         fun testReverseDiskToDark() {
             val square = Square(
                 position = SquarePosition(0, 0),
-                disk = Disk(DiskId("test"), DiskType.Light),
+                disk = Disk(DiskType.Light),
             )
             val newSquare = square.reverseDisk()
             assertAll(
@@ -61,7 +61,7 @@ class SquareTest {
         fun testReverseDiskToLight() {
             val square = Square(
                 position = SquarePosition(0, 0),
-                disk = Disk(DiskId("test"), DiskType.Dark),
+                disk = Disk(DiskType.Dark),
             )
             val newSquare = square.reverseDisk()
             assertAll(
@@ -168,7 +168,12 @@ class SquareTest {
                 SquareLine.SquareLineHorizontal(squares)
             }
             assertAll(
-                { assertEquals("SquareLineHorizontalは全てのSquareが同じy座標を持つ必要があります", exception.message) },
+                {
+                    assertEquals(
+                        "SquareLineHorizontalは全てのSquareが同じy座標を持つ必要があります",
+                        exception.message
+                    )
+                },
                 { assertEquals("", exception.description) },
             )
         }
@@ -291,7 +296,12 @@ class SquareTest {
                 SquareLine.SquareLineDiagonal(squares)
             }
             assertAll(
-                { assertEquals("SquareLineDiagonalはBoardの端から端に並ぶSquareを持つ必要があります", exception.message) },
+                {
+                    assertEquals(
+                        "SquareLineDiagonalはBoardの端から端に並ぶSquareを持つ必要があります",
+                        exception.message
+                    )
+                },
                 { assertEquals("", exception.description) },
             )
         }
