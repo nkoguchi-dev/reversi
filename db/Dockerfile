@@ -1,4 +1,4 @@
-FROM postgres:16
+FROM postgres:15
 
 RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
