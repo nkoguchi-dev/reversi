@@ -1,22 +1,22 @@
 package org.koppepan.demo.webapi.presentation.hello.get
 
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.koppepan.demo.webapi.application.usecase.hello.HelloMessage
 import org.koppepan.demo.webapi.application.usecase.hello.HelloName
 import org.koppepan.demo.webapi.application.usecase.hello.get.GetHelloUseCase
-import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
-import reactor.core.publisher.Mono
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(GetHelloController::class)
@@ -30,12 +30,12 @@ class GetHelloControllerTest {
 
     @Test
     @DisplayName("APIが正しく動作すること")
-    fun testHello() {
+    fun testHello(): Unit = runBlocking {
         val useCaseOutput = GetHelloUseCase.Output(
             message = HelloMessage("Hello, Bob!"),
         )
-        Mockito.`when`(getHelloUseCase.get(any()))
-            .thenReturn(Mono.just(useCaseOutput))
+        whenever(getHelloUseCase.get(any()))
+            .thenReturn(useCaseOutput)
 
         webClient.get()
             .uri { uriBuilder ->

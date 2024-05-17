@@ -13,7 +13,7 @@ class PostgreSQLTestContainersExtension : BeforeEachCallback,
     ApplicationContextInitializer<ConfigurableApplicationContext> {
     companion object {
         @Container
-        val postgresContainer = PostgreSQLContainer<Nothing>("postgres:12-alpine")
+        val postgresContainer = PostgreSQLContainer<Nothing>("postgres:16-alpine")
             .apply {
                 withDatabaseName("demodb")
                 withUsername("pgadmin")
@@ -32,9 +32,12 @@ class PostgreSQLTestContainersExtension : BeforeEachCallback,
 
     override fun initialize(applicationContext: ConfigurableApplicationContext) {
         val values = TestPropertyValues.of(
-            "spring.datasource.url=${postgresContainer.jdbcUrl}",
-            "spring.datasource.username=${postgresContainer.username}",
-            "spring.datasource.password=${postgresContainer.password}"
+            "spring.r2dbc.url=r2dbc:postgresql://${postgresContainer.host}:${postgresContainer.firstMappedPort}/${postgresContainer.databaseName}",
+            "spring.r2dbc.host=${postgresContainer.host}",
+            "spring.r2dbc.port=${postgresContainer.firstMappedPort}",
+            "spring.r2dbc.database=${postgresContainer.databaseName}",
+            "spring.r2dbc.username=${postgresContainer.username}",
+            "spring.r2dbc.password=${postgresContainer.password}"
         )
         values.applyTo(applicationContext)
     }
