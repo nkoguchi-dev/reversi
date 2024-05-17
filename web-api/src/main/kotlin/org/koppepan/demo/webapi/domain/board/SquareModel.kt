@@ -3,16 +3,39 @@ package org.koppepan.demo.webapi.domain.board
 import org.koppepan.demo.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.demo.webapi.domain.shared.requireOrThrow
 
-data class Square(
+class Square private constructor(
     val position: SquarePosition,
     val disk: Disk?,
 ) {
+    companion object {
+        fun create(position: SquarePosition, disk: Disk?): Square = Square(position, disk)
+    }
+
+    fun copy(
+        position: SquarePosition = this.position,
+        disk: Disk? = this.disk
+    ): Square {
+        requireOrThrow(position == this.position) {
+            CustomExceptionMessage(
+                message = "Squareのpositionは変更できません",
+                description = "",
+            )
+        }
+        requireOrThrow(this.disk == null || disk != null) {
+            CustomExceptionMessage(
+                message = "Squareからdiskを取り除く事はできません",
+                description = "",
+            )
+        }
+        return create(position, disk)
+    }
+
     fun putDisk(disk: Disk): Square = this.copy(disk = disk)
 
     fun reverseDisk(): Square = this.disk?.let { this.copy(disk = it.reverse()) } ?: this
 }
 
-data class SquarePosition(
+class SquarePosition private constructor(
     val x: Int,
     val y: Int,
 ) {
@@ -29,6 +52,29 @@ data class SquarePosition(
                 description = "",
             )
         }
+    }
+
+    companion object {
+        fun create(x: Int, y: Int): SquarePosition = SquarePosition(x, y)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other !is SquarePosition) {
+            return false
+        }
+        if (x != other.x || y != other.y) {
+            return false
+        }
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = x
+        result = 31 * result + y
+        return result
     }
 }
 
@@ -93,8 +139,8 @@ sealed interface SquareLine {
             }
             requireOrThrow(
                 squares.zipWithNext().all { (prev, curr) ->
-                        (curr.position.x - prev.position.x == 1) && (curr.position.y - prev.position.y == 1)
-                    }
+                    (curr.position.x - prev.position.x == 1) && (curr.position.y - prev.position.y == 1)
+                }
             ) {
                 CustomExceptionMessage(
                     message = "SquareLineDiagonalは斜めのSquareを持つ必要があります",
