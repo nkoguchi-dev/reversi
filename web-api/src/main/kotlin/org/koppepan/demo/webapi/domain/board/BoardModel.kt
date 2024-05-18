@@ -2,30 +2,49 @@ package org.koppepan.demo.webapi.domain.board
 
 import org.koppepan.demo.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.demo.webapi.domain.shared.requireOrThrow
-import org.koppepan.demo.webapi.domain.generator.IdGenerator
 
 /**
  * 盤を表すクラス
  */
 class Board private constructor(
-    val boardId: BoardId,
-    val squareLines: List<SquareLine>,
-)
-
-@JvmInline
-value class BoardId(
-    val value: String,
+    val diskMap: Map<SquarePosition, Disk?>,
 ) {
-    init {
-        requireOrThrow(value.isNotBlank()) {
-            CustomExceptionMessage(
-                message = "BoardIdに空文字を設定する事はできません",
-                description = "",
-            )
+    companion object {
+        fun create(): Board {
+            val positions = HorizontalPosition.entries.flatMap { x ->
+                VerticalPosition.entries.map { y ->
+                    SquarePosition(x, y)
+                }
+            }
+            val initialDiskMap: MutableMap<SquarePosition, Disk?> = positions
+                .associateWith { null }
+                .toMutableMap()
+            initialDiskMap[SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR)] = Disk(DiskType.Light)
+            initialDiskMap[SquarePosition(HorizontalPosition.FIVE, VerticalPosition.FIVE)] = Disk(DiskType.Light)
+            initialDiskMap[SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FIVE)] = Disk(DiskType.Dark)
+            initialDiskMap[SquarePosition(HorizontalPosition.FIVE, VerticalPosition.FOUR)] = Disk(DiskType.Dark)
+            return Board(initialDiskMap.toMap())
         }
     }
 
-    companion object {
-        fun generate(idGenerator: IdGenerator): BoardId = BoardId(idGenerator.generate())
+    fun putDisk(position: SquarePosition, disk: Disk?): Board {
+        requireOrThrow(diskMap[position] == null) {
+            CustomExceptionMessage(
+                message = "ディスクを置く事はできません",
+                description = "既に${position}にディスクが置かれています"
+            )
+        }
+        val adjacentPositions = position.getAdjacentPositions()
+        requireOrThrow(adjacentPositions.any { diskMap[it] == disk?.reverse()}) {
+            CustomExceptionMessage(
+                message = "ディスクを置く事はできません",
+                description = "隣り合う場所に相手のディスクがありません。position: $position"
+            )
+        }
+        return Board(diskMap + (position to disk))
+    }
+
+    fun getDisk(position: SquarePosition): Disk? {
+        return diskMap[position]
     }
 }
