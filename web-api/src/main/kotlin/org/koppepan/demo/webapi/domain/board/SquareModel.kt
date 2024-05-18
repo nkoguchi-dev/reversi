@@ -3,6 +3,9 @@ package org.koppepan.demo.webapi.domain.board
 import org.koppepan.demo.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.demo.webapi.domain.shared.requireOrThrow
 
+/**
+ * 盤のマス目１つを表すクラス
+ */
 class Square private constructor(
     val position: SquarePosition,
     val disk: Disk?,
@@ -11,7 +14,7 @@ class Square private constructor(
         fun create(position: SquarePosition, disk: Disk?): Square = Square(position, disk)
     }
 
-    fun copy(
+    private fun copy(
         position: SquarePosition = this.position,
         disk: Disk? = this.disk
     ): Square {
@@ -30,11 +33,20 @@ class Square private constructor(
         return create(position, disk)
     }
 
+    /**
+     * SquareにDiskを置く
+     */
     fun putDisk(disk: Disk): Square = this.copy(disk = disk)
 
+    /**
+     * SquareのDiskを裏返す
+     */
     fun reverseDisk(): Square = this.disk?.let { this.copy(disk = it.reverse()) } ?: this
 }
 
+/**
+ * マス目の座標を表すクラス
+ */
 class SquarePosition private constructor(
     val x: Int,
     val y: Int,
@@ -78,10 +90,16 @@ class SquarePosition private constructor(
     }
 }
 
+/**
+ * マス目を列で管理するクラス
+ */
 sealed interface SquareLine {
     val squares: List<Square>
     val type: SquareLineType
 
+    /**
+     * 縦のラインを表すクラス
+     */
     data class SquareLineHorizontal(
         override val squares: List<Square>,
         override val type: SquareLineType = SquareLineType.Horizontal,
@@ -102,6 +120,9 @@ sealed interface SquareLine {
         }
     }
 
+    /**
+     * 横のラインを表すクラス
+     */
     data class SquareLineVertical(
         override val squares: List<Square>,
         override val type: SquareLineType = SquareLineType.Vertical,
@@ -122,6 +143,9 @@ sealed interface SquareLine {
         }
     }
 
+    /**
+     * 斜めのラインを表すクラス
+     */
     data class SquareLineDiagonal(
         val squaresArgument: List<Square>,
         override val type: SquareLineType = SquareLineType.Diagonal,

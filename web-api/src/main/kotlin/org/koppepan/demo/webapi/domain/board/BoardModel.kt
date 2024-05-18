@@ -4,6 +4,9 @@ import org.koppepan.demo.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.demo.webapi.domain.shared.requireOrThrow
 import org.koppepan.demo.webapi.domain.generator.IdGenerator
 
+/**
+ * 盤を表すクラス
+ */
 data class Board(
     val boardId: BoardId,
     val squareLines: List<SquareLine>,

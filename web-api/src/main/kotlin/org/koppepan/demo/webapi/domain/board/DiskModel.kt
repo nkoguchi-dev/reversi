@@ -1,5 +1,8 @@
 package org.koppepan.demo.webapi.domain.board
 
+/**
+ * ディスク（駒）を表すクラス
+ */
 data class Disk(
     val diskType: DiskType
 ) {
