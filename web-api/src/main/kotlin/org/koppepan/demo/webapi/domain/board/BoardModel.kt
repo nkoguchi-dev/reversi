@@ -7,12 +7,13 @@ import org.koppepan.demo.webapi.domain.generator.IdGenerator
 /**
  * 盤を表すクラス
  */
-data class Board(
+class Board private constructor(
     val boardId: BoardId,
     val squareLines: List<SquareLine>,
 )
 
-data class BoardId(
+@JvmInline
+value class BoardId(
     val value: String,
 ) {
     init {
