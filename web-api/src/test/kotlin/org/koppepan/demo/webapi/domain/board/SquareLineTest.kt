@@ -15,7 +15,7 @@ class SquareLineTest {
         @DisplayName("SquareLineHorizontalのインスタンスを生成できること")
         fun testSquareLineHorizontal() {
             val squares = (0..7).map { Square.create(SquarePosition.create(it, 0), null) }
-            val squareLine = SquareLine.SquareLineHorizontal(squares)
+            val squareLine = SquareLine.SquareLineHorizontal.create(squares)
             assertAll(
                 { assertEquals(8, squareLine.squares.size) },
                 { assertEquals(SquareLineType.Horizontal, squareLine.type) },
@@ -27,7 +27,7 @@ class SquareLineTest {
         fun testSquareLineHorizontalSize() {
             val squares = (0..6).map { Square.create(SquarePosition.create(it, 0), null) }
             val exception = assertThrows<CustomIllegalArgumentException> {
-                SquareLine.SquareLineHorizontal(squares)
+                SquareLine.SquareLineHorizontal.create(squares)
             }
             assertAll(
                 { assertEquals("SquareLineHorizontalは8つのSquareを持つ必要があります", exception.message) },
@@ -49,7 +49,7 @@ class SquareLineTest {
                 Square.create(SquarePosition.create(7, 0), null),
             )
             val exception = assertThrows<CustomIllegalArgumentException> {
-                SquareLine.SquareLineHorizontal(squares)
+                SquareLine.SquareLineHorizontal.create(squares)
             }
             assertAll(
                 {
@@ -70,7 +70,7 @@ class SquareLineTest {
         @DisplayName("SquareLineVerticalのインスタンスを生成できること")
         fun testSquareLineVertical() {
             val squares = (0..7).map { Square.create(SquarePosition.create(0, it), null) }
-            val squareLine = SquareLine.SquareLineVertical(squares)
+            val squareLine = SquareLine.SquareLineVertical.create(squares)
             assertAll(
                 { assertEquals(8, squareLine.squares.size) },
                 { assertEquals(SquareLineType.Vertical, squareLine.type) },
@@ -82,7 +82,7 @@ class SquareLineTest {
         fun testSquareLineVerticalSize() {
             val squares = (0..6).map { Square.create(SquarePosition.create(0, it), null) }
             val exception = assertThrows<CustomIllegalArgumentException> {
-                SquareLine.SquareLineVertical(squares)
+                SquareLine.SquareLineVertical.create(squares)
             }
             assertAll(
                 { assertEquals("SquareLineVerticalは8つのSquareを持つ必要があります", exception.message) },
@@ -104,7 +104,7 @@ class SquareLineTest {
                 Square.create(SquarePosition.create(0, 7), null),
             )
             val exception = assertThrows<CustomIllegalArgumentException> {
-                SquareLine.SquareLineVertical(squares)
+                SquareLine.SquareLineVertical.create(squares)
             }
             assertAll(
                 { assertEquals("SquareLineVerticalは全てのSquareが同じx座標を持つ必要があります", exception.message) },
@@ -120,7 +120,7 @@ class SquareLineTest {
         @DisplayName("SquareLineDiagonalのインスタンスを生成できること")
         fun testSquareLineDiagonal() {
             val squares = (0..7).map { Square.create(SquarePosition.create(it, it), null) }
-            val squareLine = SquareLine.SquareLineDiagonal(squares)
+            val squareLine = SquareLine.SquareLineDiagonal.create(squares)
             assertAll(
                 { assertEquals(8, squareLine.squares.size) },
                 { assertEquals(SquareLineType.Diagonal, squareLine.type) },
@@ -131,7 +131,7 @@ class SquareLineTest {
         @DisplayName("SquareLineDiagonalの配列順序が逆順でもインスタンスを生成できること")
         fun testSquareLineDiagonalReverse() {
             val squares = (0..7).map { Square.create(SquarePosition.create(7 - it, 7 - it), null) }
-            val squareLine = SquareLine.SquareLineDiagonal(squares)
+            val squareLine = SquareLine.SquareLineDiagonal.create(squares)
             assertAll(
                 { assertEquals(8, squareLine.squares.size) },
                 { assertEquals(SquareLineType.Diagonal, squareLine.type) },
@@ -146,7 +146,7 @@ class SquareLineTest {
                 Square.create(SquarePosition.create(1, 6), null),
                 Square.create(SquarePosition.create(2, 7), null),
             )
-            val squareLine = SquareLine.SquareLineDiagonal(squares)
+            val squareLine = SquareLine.SquareLineDiagonal.create(squares)
             assertAll(
                 { assertEquals(3, squareLine.squares.size) },
                 { assertEquals(SquareLineType.Diagonal, squareLine.type) },
@@ -161,7 +161,7 @@ class SquareLineTest {
                 Square.create(SquarePosition.create(6, 1), null),
                 Square.create(SquarePosition.create(7, 2), null),
             )
-            val squareLine = SquareLine.SquareLineDiagonal(squares)
+            val squareLine = SquareLine.SquareLineDiagonal.create(squares)
             assertAll(
                 { assertEquals(3, squareLine.squares.size) },
                 { assertEquals(SquareLineType.Diagonal, squareLine.type) },
@@ -177,7 +177,7 @@ class SquareLineTest {
                 Square.create(SquarePosition.create(2, 2), null),
             )
             val exception = assertThrows<CustomIllegalArgumentException> {
-                SquareLine.SquareLineDiagonal(squares)
+                SquareLine.SquareLineDiagonal.create(squares)
             }
             assertAll(
                 {
@@ -194,7 +194,7 @@ class SquareLineTest {
         @DisplayName("SquareLineDiagonalのSquareが空の場合例外が発生すること")
         fun testSquareLineDiagonalSize() {
             val exception = assertThrows<CustomIllegalArgumentException> {
-                SquareLine.SquareLineDiagonal(listOf())
+                SquareLine.SquareLineDiagonal.create(listOf())
             }
             assertAll(
                 { assertEquals("SquareLineDiagonalは3つ以上のSquareを持つ必要があります", exception.message) },
@@ -216,7 +216,7 @@ class SquareLineTest {
                 Square.create(SquarePosition.create(7, 6), null),
             )
             val exception = assertThrows<CustomIllegalArgumentException> {
-                SquareLine.SquareLineDiagonal(squares)
+                SquareLine.SquareLineDiagonal.create(squares)
             }
             assertAll(
                 { assertEquals("SquareLineDiagonalは斜めのSquareを持つ必要があります", exception.message) },
