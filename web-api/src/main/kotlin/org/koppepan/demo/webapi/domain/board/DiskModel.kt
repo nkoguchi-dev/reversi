@@ -29,6 +29,10 @@ class Disk(
     override fun hashCode(): Int {
         return diskType.hashCode()
     }
+
+    override fun toString(): String {
+        return "Disk(diskType=$diskType)"
+    }
 }
 
 enum class DiskType {
