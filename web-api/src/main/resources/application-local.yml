@@ -2,4 +2,4 @@
 logging:
   level:
     root: INFO
-    com.koppepan.demo.webapi: debug
+    org.koppepan.reversi.webapi: debug

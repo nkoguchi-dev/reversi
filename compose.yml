@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  demo_db:
-    container_name: demo_db
+  reversi_db:
+    container_name: reversi_db
     build:
       context: ./db
     ports:
@@ -14,15 +14,15 @@ services:
       - ./db/data:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d
 
-  demo_web-api:
+  reversi_web-api:
     build:
       context: ./web-api
-    container_name: demo_web-api
+    container_name: reversi_web-api
     volumes:
       - ./web-api:/project/web-api
       - /project/web-api/.gradle
     depends_on:
-      - demo_db
+      - reversi_db
     ports:
       - "18080:8080"
       - "15005:5005"

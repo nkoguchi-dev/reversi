@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.spring") version "1.9.23"
 }
 
-group = "org.koppepan.demo"
+group = "org.koppepan.reversi"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -97,9 +97,9 @@ configurations {
 }
 
 flyway {
-    schemas = arrayOf("demo")
+    schemas = arrayOf("reversi")
     driver = "org.postgresql.Driver"
-    url = "jdbc:postgresql://localhost:15432/demodb"
+    url = "jdbc:postgresql://localhost:15432/reversi_db"
     user = "pgadmin"
     password = "pgadmin"
     flyway.cleanDisabled = true

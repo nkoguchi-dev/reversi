@@ -1,1 +1,1 @@
-CREATE DATABASE demodb;
+CREATE DATABASE reversi_db;
