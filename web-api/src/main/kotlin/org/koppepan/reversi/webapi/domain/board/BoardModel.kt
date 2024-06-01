@@ -46,6 +46,9 @@ class Board private constructor(
         }
     }
 
+    /**
+     * 盤にディスクを置く
+     */
     fun putDisk(playerMove: PlayerMove): Board {
         validateDiskExist(playerMove.position)
         requireOrThrow(validateCanReverse(playerMove.position, playerMove.disk)) {
@@ -57,17 +60,24 @@ class Board private constructor(
         return Board(diskMap + (playerMove.position to playerMove.disk))
     }
 
+    /**
+     * 指定の位置に置かれているディスクを取得する
+     */
     fun getDisk(position: SquarePosition): Disk? {
         return diskMap[position]
     }
 
-    // 裏返す事が可能な相手の駒があるか？のチェックを行わずに盤に駒を置く
+    /**
+     * 裏返す事が可能な相手の駒があるか？のチェックを行わずに盤に駒を置く
+     */
     private fun putDiskWithoutAdjacentCheck(position: SquarePosition, disk: Disk?): Board {
         validateDiskExist(position)
         return Board(diskMap + (position to disk))
     }
 
-    // 指定のPositionにすでにディスクが置かれているかどうかチェックする
+    /**
+     * 指定のPositionにすでにディスクが置かれているかどうかチェックする
+     */
     private fun validateDiskExist(position: SquarePosition) {
         requireOrThrow(diskMap[position] == null) {
             CustomExceptionMessage(
@@ -77,6 +87,9 @@ class Board private constructor(
         }
     }
 
+    /**
+     * 指定の位置にディスクを置いた場合に裏返す事ができるかどうかをチェックする
+     */
     private fun validateCanReverse(position: SquarePosition, disk: Disk): Boolean {
         val lines = SquareLine.createFromPosition(position)
         return lines.any { it.canReverse(position, disk) }
