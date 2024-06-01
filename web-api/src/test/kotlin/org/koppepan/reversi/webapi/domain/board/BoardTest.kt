@@ -15,19 +15,19 @@ class BoardTest {
         assertEquals(64, diskMap.size)
         assertEquals(
             Disk(DiskType.Light),
-            board.getDisk(SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR))
+            board.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR))
         )
         assertEquals(
             Disk(DiskType.Light),
-            board.getDisk(SquarePosition(HorizontalPosition.FIVE, VerticalPosition.FIVE))
+            board.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE))
         )
         assertEquals(
             Disk(DiskType.Dark),
-            board.getDisk(SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FIVE))
+            board.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE))
         )
         assertEquals(
             Disk(DiskType.Dark),
-            board.getDisk(SquarePosition(HorizontalPosition.FIVE, VerticalPosition.FOUR))
+            board.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR))
         )
     }
 
@@ -38,7 +38,7 @@ class BoardTest {
         @DisplayName("ディスクを置く事ができる")
         fun testPutDisk() {
             val board = Board.create()
-            val putPosition = SquarePosition(HorizontalPosition.FIVE, VerticalPosition.THREE)
+            val putPosition = SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)
             val newBoard = board.putDisk(
                 PlayerMove.create(putPosition, Disk(DiskType.Light))
             )
@@ -55,13 +55,13 @@ class BoardTest {
             val exception = assertThrows(CustomIllegalArgumentException::class.java) {
                 board.putDisk(
                     PlayerMove.create(
-                        SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR),
+                        SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR),
                         Disk(DiskType.Light)
                     )
                 )
             }
             assertEquals("ディスクを置く事はできません", exception.message)
-            assertEquals("既に(FOUR, FOUR)にディスクが置かれています", exception.description)
+            assertEquals("既に(D, FOUR)にディスクが置かれています", exception.description)
         }
 
 //        @Test

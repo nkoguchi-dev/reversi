@@ -18,19 +18,19 @@ class Board private constructor(
             }
             return Board(positions.associateWith { null })
                 .putDiskWithoutAdjacentCheck(
-                    SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR),
                     Disk(DiskType.Light)
                 )
                 .putDiskWithoutAdjacentCheck(
-                    SquarePosition(HorizontalPosition.FIVE, VerticalPosition.FIVE),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE),
                     Disk(DiskType.Light)
                 )
                 .putDiskWithoutAdjacentCheck(
-                    SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FIVE),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE),
                     Disk(DiskType.Dark)
                 )
                 .putDiskWithoutAdjacentCheck(
-                    SquarePosition(HorizontalPosition.FIVE, VerticalPosition.FOUR),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR),
                     Disk(DiskType.Dark)
                 )
         }

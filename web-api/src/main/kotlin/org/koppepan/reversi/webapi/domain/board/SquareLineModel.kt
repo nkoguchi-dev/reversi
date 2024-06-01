@@ -9,7 +9,6 @@ import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
  */
 sealed interface SquareLine {
     val squares: List<Square>
-
     /**
      * 縦のラインを表すクラス
      */
@@ -31,6 +30,13 @@ sealed interface SquareLine {
                     )
                 }
                 return SquareLineHorizontal(squares)
+            }
+
+            fun createFromPosition(position: SquarePosition): SquareLineHorizontal {
+                val squares = HorizontalPosition.entries.map { x ->
+                    Square.create(position.copy(x = x), null)
+                }
+                return create(squares)
             }
         }
     }
@@ -56,6 +62,13 @@ sealed interface SquareLine {
                     )
                 }
                 return SquareLineVertical(squares)
+            }
+
+            fun createFromPosition(position: SquarePosition): SquareLineVertical {
+                val squares = VerticalPosition.entries.map { y ->
+                    Square.create(position.copy(y = y), null)
+                }
+                return create(squares)
             }
         }
     }
@@ -94,8 +107,8 @@ sealed interface SquareLine {
                 requireOrThrow(
                     // 最初のXが1で最後の最後のYが1or8
                     // 最初のXが1or8で最後の最後のYが8
-                    (sortedSquares.first().position.x == HorizontalPosition.ONE && (sortedSquares.last().position.y == VerticalPosition.ONE || sortedSquares.last().position.y == VerticalPosition.EIGHT))
-                            || (sortedSquares.last().position.x == HorizontalPosition.EIGHT && (sortedSquares.first().position.y == VerticalPosition.ONE || sortedSquares.first().position.y == VerticalPosition.EIGHT))
+                    (sortedSquares.first().position.x == HorizontalPosition.A && (sortedSquares.last().position.y == VerticalPosition.ONE || sortedSquares.last().position.y == VerticalPosition.EIGHT))
+                            || (sortedSquares.last().position.x == HorizontalPosition.H && (sortedSquares.first().position.y == VerticalPosition.ONE || sortedSquares.first().position.y == VerticalPosition.EIGHT))
                 ) {
                     CustomExceptionMessage(
                         message = "SquareLineDiagonalはBoardの端から端に並ぶ要素を持つ必要があります",
@@ -103,6 +116,43 @@ sealed interface SquareLine {
                     )
                 }
                 return SquareLineDiagonal(sortedSquares)
+            }
+
+            fun createLines(position: SquarePosition): List<SquareLineDiagonal> {
+                return listOf(
+                    createDiagonalLineFromTopLeftToBottomRight(position),
+                    createDiagonalLineFromBottomRightToTopLeft(position)
+                )
+            }
+
+            // 左上から右下に向かう斜めラインを作成
+            private fun createDiagonalLineFromTopLeftToBottomRight(position: SquarePosition): SquareLineDiagonal {
+                val squares = mutableListOf<Square>()
+                var current = position
+                while (current.x.prev() != null && current.y.next() != null) {
+                    squares.add(Square.create(current, null))
+                    current = current.copy(x = current.x.prev()!!, y = current.y.next()!!)
+                }
+                while (current.x.next() != null && current.y.prev() != null) {
+                    squares.add(Square.create(current, null))
+                    current = current.copy(x = current.x.next()!!, y = current.y.prev()!!)
+                }
+                return create(squares.sortedBy { it.position.x })
+            }
+
+            // 右下から左上に向かう斜めラインを作成
+            private fun createDiagonalLineFromBottomRightToTopLeft(position: SquarePosition): SquareLineDiagonal {
+                val squares = mutableListOf<Square>()
+                var current = position
+                while (current.x.prev() != null && current.y.prev() != null) {
+                    squares.add(Square.create(current, null))
+                    current = current.copy(x = current.x.prev()!!, y = current.y.prev()!!)
+                }
+                while (current.x.next() != null && current.y.next() != null) {
+                    squares.add(Square.create(current, null))
+                    current = current.copy(x = current.x.next()!!, y = current.y.next()!!)
+                }
+                return create(squares.sortedBy { it.position.x })
             }
         }
     }

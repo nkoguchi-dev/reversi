@@ -40,6 +40,13 @@ class SquarePosition(
         return adjacentPositions.toList()
     }
 
+    fun copy(
+        x: HorizontalPosition = this.x,
+        y: VerticalPosition = this.y
+    ): SquarePosition {
+        return SquarePosition(x, y)
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -65,14 +72,14 @@ class SquarePosition(
 }
 
 enum class HorizontalPosition(val value: Int, val prev: Int?, val next: Int?) {
-    ONE(1, null, 2),
-    TWO(2, 1, 3),
-    THREE(3, 2, 4),
-    FOUR(4, 3, 5),
-    FIVE(5, 4, 6),
-    SIX(6, 5, 7),
-    SEVEN(7, 6, 8),
-    EIGHT(8, 7, null),
+    A(1, null, 2),
+    B(2, 1, 3),
+    C(3, 2, 4),
+    D(4, 3, 5),
+    E(5, 4, 6),
+    F(6, 5, 7),
+    G(7, 6, 8),
+    H(8, 7, null),
     ;
 
     companion object {
