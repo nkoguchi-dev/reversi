@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 class SquarePositionTest {
     @Test
-    @DisplayName("SquarePositionを作成する事ができる")
+    @DisplayName("SquarePositionを作成する事ができること")
     fun testCreate() {
         val squarePosition = SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR)
         assertEquals(HorizontalPosition.FOUR, squarePosition.x)
@@ -14,7 +14,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("SquarePosition同士が等しいかどうかを判定する事ができる")
+    @DisplayName("SquarePosition同士が等しいかどうかを判定する事ができること")
     fun testEquals() {
         val squarePosition1 = SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR)
         val squarePosition2 = SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR)
@@ -24,7 +24,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("SquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("SquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositions() {
         val squarePosition = SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR)
         val adjacentPositions = squarePosition.getAdjacentPositions()
@@ -40,7 +40,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("盤の左隅を表すSquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("盤の左隅を表すSquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositionsAtLeftMiddle() {
         val squarePosition = SquarePosition(HorizontalPosition.ONE, VerticalPosition.FOUR)
         val adjacentPositions = squarePosition.getAdjacentPositions()
@@ -53,7 +53,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("盤の右隅を表すSquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("盤の右隅を表すSquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositionsAtRightMiddle() {
         val squarePosition = SquarePosition(HorizontalPosition.EIGHT, VerticalPosition.FOUR)
         val adjacentPositions = squarePosition.getAdjacentPositions()
@@ -66,7 +66,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("盤の上隅を表すSquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("盤の上隅を表すSquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositionsAtTopMiddle() {
         val squarePosition = SquarePosition(HorizontalPosition.FOUR, VerticalPosition.ONE)
         val adjacentPositions = squarePosition.getAdjacentPositions()
@@ -79,7 +79,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("盤の下隅を表すSquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("盤の下隅を表すSquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositionsAtBottomMiddle() {
         val squarePosition = SquarePosition(HorizontalPosition.FOUR, VerticalPosition.EIGHT)
         val adjacentPositions = squarePosition.getAdjacentPositions()
@@ -92,7 +92,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("盤の左上角を表すSquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("盤の左上角を表すSquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositionsAtTopLeft() {
         val squarePosition = SquarePosition(HorizontalPosition.ONE, VerticalPosition.ONE)
         val adjacentPositions = squarePosition.getAdjacentPositions()
@@ -103,7 +103,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("盤の右上角を表すSquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("盤の右上角を表すSquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositionsAtTopRight() {
         val squarePosition = SquarePosition(HorizontalPosition.EIGHT, VerticalPosition.ONE)
         val adjacentPositions = squarePosition.getAdjacentPositions()
@@ -114,7 +114,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("盤の左下角を表すSquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("盤の左下角を表すSquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositionsAtBottomLeft() {
         val squarePosition = SquarePosition(HorizontalPosition.ONE, VerticalPosition.EIGHT)
         val adjacentPositions = squarePosition.getAdjacentPositions()
@@ -125,7 +125,7 @@ class SquarePositionTest {
     }
 
     @Test
-    @DisplayName("盤の右下角を表すSquarePositionの隣接する位置を取得する事ができる")
+    @DisplayName("盤の右下角を表すSquarePositionの隣接する位置を取得する事ができること")
     fun testGetAdjacentPositionsAtBottomRight() {
         val squarePosition = SquarePosition(HorizontalPosition.EIGHT, VerticalPosition.EIGHT)
         val adjacentPositions = squarePosition.getAdjacentPositions()
