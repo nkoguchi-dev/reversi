@@ -45,7 +45,7 @@ sealed interface SquareLine {
             fun create(squares: List<Square>): SquareLineVertical {
                 requireOrThrow(squares.size == VerticalPosition.entries.size) {
                     CustomExceptionMessage(
-                        message = "SquareLineVerticalは${VerticalPosition.entries.size}個のSquareを持つ必要があります",
+                        message = "SquareLineVerticalは${VerticalPosition.entries.size}個の要素を持つ必要があります",
                         description = "",
                     )
                 }
@@ -74,26 +74,31 @@ sealed interface SquareLine {
                 // マスが3つ以下の斜めラインは反転チェックをする必要がないため除外
                 requireOrThrow(sortedSquares.size >= 3) {
                     CustomExceptionMessage(
-                        message = "SquareLineDiagonalは3つ以上のSquareを持つ必要があります",
+                        message = "SquareLineDiagonalは3つ以上の要素を持つ必要があります",
                         description = "",
                     )
                 }
                 requireOrThrow(
                     sortedSquares.zipWithNext().all { (prev, curr) ->
                         (curr.position.x.prev() == prev.position.x) && (curr.position.y.prev() == prev.position.y)
+                                || (curr.position.x.next() == prev.position.x) && (curr.position.y.next() == prev.position.y)
+                                || (curr.position.x.prev() == prev.position.x) && (curr.position.y.next() == prev.position.y)
+                                || (curr.position.x.next() == prev.position.x) && (curr.position.y.prev() == prev.position.y)
                     }
                 ) {
                     CustomExceptionMessage(
-                        message = "SquareLineDiagonalは斜めのSquareを持つ必要があります",
+                        message = "SquareLineDiagonalは斜めの要素を持つ必要があります",
                         description = "",
                     )
                 }
                 requireOrThrow(
-                    (sortedSquares.first().position.x == HorizontalPosition.ONE || sortedSquares.first().position.y == VerticalPosition.ONE)
-                            && (sortedSquares.last().position.x == HorizontalPosition.EIGHT || sortedSquares.last().position.y == VerticalPosition.EIGHT)
+                    // 最初のXが1で最後の最後のYが1or8
+                    // 最初のXが1or8で最後の最後のYが8
+                    (sortedSquares.first().position.x == HorizontalPosition.ONE && (sortedSquares.last().position.y == VerticalPosition.ONE || sortedSquares.last().position.y == VerticalPosition.EIGHT))
+                            || (sortedSquares.last().position.x == HorizontalPosition.EIGHT && (sortedSquares.first().position.y == VerticalPosition.ONE || sortedSquares.first().position.y == VerticalPosition.EIGHT))
                 ) {
                     CustomExceptionMessage(
-                        message = "SquareLineDiagonalはBoardの端から端に並ぶSquareを持つ必要があります",
+                        message = "SquareLineDiagonalはBoardの端から端に並ぶ要素を持つ必要があります",
                         description = "",
                     )
                 }
