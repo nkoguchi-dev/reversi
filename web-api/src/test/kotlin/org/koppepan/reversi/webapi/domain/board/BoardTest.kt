@@ -61,7 +61,7 @@ class BoardTest {
                 )
             }
             assertEquals("ディスクを置く事はできません", exception.message)
-            assertEquals("既に(D, FOUR)にディスクが置かれています", exception.description)
+            assertEquals("既にディスクが置かれている位置にディスクを置くことはできません。position: (D, FOUR)", exception.description)
         }
 
 //        @Test

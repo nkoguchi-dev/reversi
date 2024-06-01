@@ -51,12 +51,7 @@ class Board private constructor(
      */
     fun putDisk(playerMove: PlayerMove): Board {
         validateDiskExist(playerMove.position)
-        requireOrThrow(validateCanReverse(playerMove.position, playerMove.disk)) {
-            CustomExceptionMessage(
-                message = "ディスクを置く事はできません",
-                description = "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。position: ${playerMove.position}"
-            )
-        }
+        validateCanReverse(playerMove.position, playerMove.disk)
         return Board(diskMap + (playerMove.position to playerMove.disk))
     }
 
@@ -82,7 +77,7 @@ class Board private constructor(
         requireOrThrow(diskMap[position] == null) {
             CustomExceptionMessage(
                 message = "ディスクを置く事はできません",
-                description = "既に${position}にディスクが置かれています"
+                description = "既にディスクが置かれている位置にディスクを置くことはできません。position: $position"
             )
         }
     }
@@ -90,9 +85,14 @@ class Board private constructor(
     /**
      * 指定の位置にディスクを置いた場合に裏返す事ができるかどうかをチェックする
      */
-    private fun validateCanReverse(position: SquarePosition, disk: Disk): Boolean {
+    private fun validateCanReverse(position: SquarePosition, disk: Disk) {
         val lines = SquareLine.createFromPosition(position)
-        return lines.any { it.canReverse(position, disk) }
+        requireOrThrow(lines.any { it.canReverse(position, disk) }) {
+            CustomExceptionMessage(
+                message = "ディスクを置く事はできません",
+                description = "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。position: $position"
+            )
+        }
     }
 }
 
