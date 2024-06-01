@@ -127,32 +127,68 @@ sealed interface SquareLine {
 
             // 左上から右下に向かう斜めラインを作成
             private fun createDiagonalLineFromTopLeftToBottomRight(position: SquarePosition): SquareLineDiagonal {
-                val squares = mutableListOf<Square>()
-                var current = position
-                while (current.x.prev() != null && current.y.next() != null) {
-                    squares.add(Square.create(current, null))
-                    current = current.copy(x = current.x.prev()!!, y = current.y.next()!!)
+                // 起点から左上に向かう斜めラインを生成
+                val squaresTopLeft = generateSequence(position) { current ->
+                    val prevX = current.x.prev()
+                    val prevY = current.y.prev()
+                    if (prevX != null && prevY != null) {
+                        current.copy(x = prevX, y = prevY)
+                    } else {
+                        null
+                    }
+                }.fold(mutableListOf<Square>()) { acc, current ->
+                    acc.apply { add(Square.create(current, null)) }
                 }
-                while (current.x.next() != null && current.y.prev() != null) {
-                    squares.add(Square.create(current, null))
-                    current = current.copy(x = current.x.next()!!, y = current.y.prev()!!)
+                // 起点から右下に向かう斜めラインを生成
+                val squaresBottomRight = generateSequence(position) { current ->
+                    val nextX = current.x.next()
+                    val nextY = current.y.next()
+                    if (nextX != null && nextY != null) {
+                        current.copy(x = nextX, y = nextY)
+                    } else {
+                        null
+                    }
+                }.fold(mutableListOf<Square>()) { acc, current ->
+                    acc.apply { add(Square.create(current, null)) }
                 }
-                return create(squares.sortedBy { it.position.x })
+                return create(
+                    (squaresTopLeft + squaresBottomRight)
+                        .distinctBy { it.position }
+                        .sortedBy { it.position.x }
+                )
             }
 
             // 右下から左上に向かう斜めラインを作成
             private fun createDiagonalLineFromBottomRightToTopLeft(position: SquarePosition): SquareLineDiagonal {
-                val squares = mutableListOf<Square>()
-                var current = position
-                while (current.x.prev() != null && current.y.prev() != null) {
-                    squares.add(Square.create(current, null))
-                    current = current.copy(x = current.x.prev()!!, y = current.y.prev()!!)
+                // 起点から右上に向かう斜めラインを生成
+                val squaresTopRight = generateSequence(position) { current ->
+                    val nextX = current.x.next()
+                    val prevY = current.y.prev()
+                    if (nextX != null && prevY != null) {
+                        current.copy(x = nextX, y = prevY)
+                    } else {
+                        null
+                    }
+                }.fold(mutableListOf<Square>()) { acc, current ->
+                    acc.apply { add(Square.create(current, null)) }
                 }
-                while (current.x.next() != null && current.y.next() != null) {
-                    squares.add(Square.create(current, null))
-                    current = current.copy(x = current.x.next()!!, y = current.y.next()!!)
+                // 起点から左下に向かう斜めラインを生成
+                val squaresBottomLeft = generateSequence(position) { current ->
+                    val prevX = current.x.prev()
+                    val nextY = current.y.next()
+                    if (prevX != null && nextY != null) {
+                        current.copy(x = prevX, y = nextY)
+                    } else {
+                        null
+                    }
+                }.fold(mutableListOf<Square>()) { acc, current ->
+                    acc.apply { add(Square.create(current, null)) }
                 }
-                return create(squares.sortedBy { it.position.x })
+                return create(
+                    (squaresTopRight + squaresBottomLeft)
+                        .distinctBy { it.position }
+                        .sortedBy { it.position.x }
+                )
             }
         }
     }
