@@ -47,12 +47,11 @@ class Board private constructor(
     }
 
     fun putDisk(playerMove: PlayerMove): Board {
-        validatePosition(playerMove.position)
-        val adjacentPositions = playerMove.position.getAdjacentPositions()
-        requireOrThrow(adjacentPositions.any { diskMap[it] == playerMove.disk.reverse() }) {
+        validateDiskExist(playerMove.position)
+        requireOrThrow(validateCanReverse(playerMove.position, playerMove.disk)) {
             CustomExceptionMessage(
                 message = "ディスクを置く事はできません",
-                description = "隣り合う場所に相手のディスクがありません。position: ${playerMove.position}"
+                description = "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。position: ${playerMove.position}"
             )
         }
         return Board(diskMap + (playerMove.position to playerMove.disk))
@@ -64,18 +63,23 @@ class Board private constructor(
 
     // 裏返す事が可能な相手の駒があるか？のチェックを行わずに盤に駒を置く
     private fun putDiskWithoutAdjacentCheck(position: SquarePosition, disk: Disk?): Board {
-        validatePosition(position)
+        validateDiskExist(position)
         return Board(diskMap + (position to disk))
     }
 
     // 指定のPositionにすでにディスクが置かれているかどうかチェックする
-    private fun validatePosition(position: SquarePosition) {
+    private fun validateDiskExist(position: SquarePosition) {
         requireOrThrow(diskMap[position] == null) {
             CustomExceptionMessage(
                 message = "ディスクを置く事はできません",
                 description = "既に${position}にディスクが置かれています"
             )
         }
+    }
+
+    private fun validateCanReverse(position: SquarePosition, disk: Disk): Boolean {
+        val lines = SquareLine.createFromPosition(position)
+        return lines.any { it.canReverse(position, disk) }
     }
 }
 

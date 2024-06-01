@@ -9,6 +9,24 @@ import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
  */
 sealed interface SquareLine {
     val squares: List<Square>
+
+    /**
+     * 指定した位置にディスクを置けるかどうかを返す
+     */
+    fun canReverse(position: SquarePosition, disk: Disk): Boolean
+
+    companion object {
+        /**
+         * マス目の位置を含むラインのリストを生成する
+         */
+        fun createFromPosition(position: SquarePosition): List<SquareLine> {
+            return listOf(
+                SquareLineHorizontal.createFromPosition(position),
+                SquareLineVertical.createFromPosition(position),
+            ) + SquareLineDiagonal.createLines(position)
+        }
+    }
+
     /**
      * 縦のラインを表すクラス
      */
@@ -38,6 +56,11 @@ sealed interface SquareLine {
                 }
                 return create(squares)
             }
+        }
+
+        override fun canReverse(position: SquarePosition, disk: Disk): Boolean {
+            // TODO: 未実装
+            return true
         }
     }
 
@@ -70,6 +93,11 @@ sealed interface SquareLine {
                 }
                 return create(squares)
             }
+        }
+
+        override fun canReverse(position: SquarePosition, disk: Disk): Boolean {
+            // TODO: 未実装
+            return true
         }
     }
 
@@ -190,6 +218,11 @@ sealed interface SquareLine {
                         .sortedBy { it.position.x }
                 )
             }
+        }
+
+        override fun canReverse(position: SquarePosition, disk: Disk): Boolean {
+            // TODO: 未実装
+            return true
         }
     }
 }
