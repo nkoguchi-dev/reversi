@@ -13,7 +13,7 @@ sealed interface SquareLine {
     /**
      * 指定した位置にディスクを置けるかどうかを返す
      */
-    fun canReverse(position: SquarePosition, disk: Disk): Boolean
+    fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk>
 
     companion object {
         /**
@@ -61,9 +61,9 @@ sealed interface SquareLine {
             }
         }
 
-        override fun canReverse(position: SquarePosition, disk: Disk): Boolean {
+        override fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk> {
             // TODO: 未実装
-            return true
+            return mapOf()
         }
     }
 
@@ -98,9 +98,9 @@ sealed interface SquareLine {
             }
         }
 
-        override fun canReverse(position: SquarePosition, disk: Disk): Boolean {
+        override fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk> {
             // TODO: 未実装
-            return true
+            return mapOf()
         }
     }
 
@@ -231,9 +231,9 @@ sealed interface SquareLine {
             }
         }
 
-        override fun canReverse(position: SquarePosition, disk: Disk): Boolean {
+        override fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk> {
             // TODO: 未実装
-            return true
+            return mapOf()
         }
     }
 }

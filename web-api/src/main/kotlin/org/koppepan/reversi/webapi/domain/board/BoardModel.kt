@@ -87,7 +87,10 @@ class Board private constructor(
      */
     private fun validateCanReverse(position: SquarePosition, disk: Disk) {
         val lines = SquareLine.createFromPosition(position, diskMap)
-        requireOrThrow(lines.any { it.canReverse(position, disk) }) {
+        val reversedDiskMap = lines.map {
+            it.getReversibleDisks(position, disk)
+        }.reduce { acc, map -> acc + map }
+        requireOrThrow(reversedDiskMap.isNotEmpty()) {
             CustomExceptionMessage(
                 message = "ディスクを置く事はできません",
                 description = "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。position: $position"
