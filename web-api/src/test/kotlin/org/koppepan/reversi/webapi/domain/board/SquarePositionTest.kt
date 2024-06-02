@@ -24,6 +24,30 @@ class SquarePositionTest {
         assertNotEquals(squarePosition1, squarePosition3)
     }
 
+    @Test
+    @DisplayName("SquarePositionのX座標を正しく比較できること")
+    fun testCompareX() {
+        val squarePosition1 = SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR)
+        val squarePosition2 = SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR)
+        val squarePosition3 = SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)
+        val squarePosition4 = SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR)
+        assertTrue(squarePosition1.x < squarePosition2.x)
+        assertTrue(squarePosition3.x > squarePosition1.x)
+        assertTrue(squarePosition1.x == squarePosition4.x)
+    }
+
+    @Test
+    @DisplayName("SquarePositionのY座標を正しく比較できること")
+    fun testCompareY() {
+        val squarePosition1 = SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR)
+        val squarePosition2 = SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE)
+        val squarePosition3 = SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)
+        val squarePosition4 = SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR)
+        assertTrue(squarePosition1.y < squarePosition2.y)
+        assertTrue(squarePosition3.y > squarePosition1.y)
+        assertTrue(squarePosition1.y == squarePosition4.y)
+    }
+
     @Nested
     @DisplayName("隣接位置の取得")
     inner class TestGetAdjacentPositions {
