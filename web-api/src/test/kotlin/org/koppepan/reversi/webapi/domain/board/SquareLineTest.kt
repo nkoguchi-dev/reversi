@@ -14,7 +14,16 @@ class SquareLineTest {
         @Test
         @DisplayName("SquareLineHorizontalのインスタンスを生成できること")
         fun testSquareLineHorizontal() {
-            val horizontalPositions = listOf(HorizontalPosition.A, HorizontalPosition.B, HorizontalPosition.C, HorizontalPosition.D, HorizontalPosition.E, HorizontalPosition.F, HorizontalPosition.G, HorizontalPosition.H)
+            val horizontalPositions = listOf(
+                HorizontalPosition.A,
+                HorizontalPosition.B,
+                HorizontalPosition.C,
+                HorizontalPosition.D,
+                HorizontalPosition.E,
+                HorizontalPosition.F,
+                HorizontalPosition.G,
+                HorizontalPosition.H,
+            )
             val squares = horizontalPositions.map { Square.create(SquarePosition(it, VerticalPosition.ONE), null) }
             assertDoesNotThrow {
                 SquareLine.SquareLineHorizontal.create(squares)
@@ -24,8 +33,17 @@ class SquareLineTest {
         @Test
         @DisplayName("座標を指定してSquareLineHorizontalのインスタンスを生成できること")
         fun testSquareLineHorizontalFromPosition() {
+            val diskMap = mapOf<SquarePosition, Disk?>(
+                SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                SquarePosition(HorizontalPosition.C, VerticalPosition.TWO) to Disk(DiskType.Light),
+                SquarePosition(HorizontalPosition.E, VerticalPosition.TWO) to Disk(DiskType.Dark),
+                SquarePosition(HorizontalPosition.G, VerticalPosition.TWO) to Disk(DiskType.Dark),
+            )
             val square = assertDoesNotThrow<SquareLine.SquareLineHorizontal> {
-                SquareLine.SquareLineHorizontal.createFromPosition(SquarePosition(HorizontalPosition.A, VerticalPosition.TWO))
+                SquareLine.SquareLineHorizontal.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO),
+                    diskMap,
+                )
             }
             assertAll(
                 { assertEquals(VerticalPosition.TWO, square.squares[0].position.y) },
@@ -36,13 +54,29 @@ class SquareLineTest {
                 { assertEquals(VerticalPosition.TWO, square.squares[5].position.y) },
                 { assertEquals(VerticalPosition.TWO, square.squares[6].position.y) },
                 { assertEquals(VerticalPosition.TWO, square.squares[7].position.y) },
+                { assertEquals(DiskType.Light, square.squares[0].disk?.diskType) },
+                { assertEquals(null, square.squares[1].disk?.diskType) },
+                { assertEquals(DiskType.Light, square.squares[2].disk?.diskType) },
+                { assertEquals(null, square.squares[3].disk?.diskType) },
+                { assertEquals(DiskType.Dark, square.squares[4].disk?.diskType) },
+                { assertEquals(null, square.squares[5].disk?.diskType) },
+                { assertEquals(DiskType.Dark, square.squares[6].disk?.diskType) },
+                { assertEquals(null, square.squares[7].disk?.diskType) },
             )
         }
 
         @Test
         @DisplayName("SquareLineHorizontalのSquare数が不正の場合例外が発生すること")
         fun testSquareLineHorizontalSize() {
-            val horizontalPositions = listOf(HorizontalPosition.A, HorizontalPosition.B, HorizontalPosition.C, HorizontalPosition.D, HorizontalPosition.E, HorizontalPosition.F, HorizontalPosition.G)
+            val horizontalPositions = listOf(
+                HorizontalPosition.A,
+                HorizontalPosition.B,
+                HorizontalPosition.C,
+                HorizontalPosition.D,
+                HorizontalPosition.E,
+                HorizontalPosition.F,
+                HorizontalPosition.G,
+            )
             val squares = horizontalPositions.map { Square.create(SquarePosition(it, VerticalPosition.ONE), null) }
             val exception = assertThrows<CustomIllegalArgumentException> {
                 SquareLine.SquareLineHorizontal.create(squares)
@@ -79,6 +113,19 @@ class SquareLineTest {
                 { assertEquals("", exception.description) },
             )
         }
+
+//        @Test
+//        @DisplayName("相手のディスクを裏返す事が出来る場合にcanReverseがtrueを返すこと")
+//        fun testCanReverse() {
+//            val diskMap: Map<SquarePosition, Disk?> = mapOf(
+//                SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
+//                SquarePosition(HorizontalPosition.C, VerticalPosition.ONE) to Disk(DiskType.Light),
+//            )
+//            val line = SquareLine.SquareLineHorizontal.createFromPosition(
+//                SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+//                diskMap,
+//            )
+//        }
     }
 
     @Nested
@@ -87,8 +134,17 @@ class SquareLineTest {
         @Test
         @DisplayName("SquareLineVerticalのインスタンスを生成できること")
         fun testSquareLineVertical() {
-            val verticalPositions = listOf(VerticalPosition.ONE, VerticalPosition.TWO, VerticalPosition.THREE, VerticalPosition.FOUR, VerticalPosition.FIVE, VerticalPosition.SIX, VerticalPosition.SEVEN, VerticalPosition.EIGHT)
-            val squares = verticalPositions.map { Square.create(SquarePosition( HorizontalPosition.A, it), null) }
+            val verticalPositions = listOf(
+                VerticalPosition.ONE,
+                VerticalPosition.TWO,
+                VerticalPosition.THREE,
+                VerticalPosition.FOUR,
+                VerticalPosition.FIVE,
+                VerticalPosition.SIX,
+                VerticalPosition.SEVEN,
+                VerticalPosition.EIGHT,
+            )
+            val squares = verticalPositions.map { Square.create(SquarePosition(HorizontalPosition.A, it), null) }
             assertDoesNotThrow {
                 SquareLine.SquareLineVertical.create(squares)
             }
@@ -97,8 +153,17 @@ class SquareLineTest {
         @Test
         @DisplayName("座標を指定してSquareLineVerticalのインスタンスを生成できること")
         fun testSquareLineVerticalFromPosition() {
+            val diskMap = mapOf<SquarePosition, Disk?>(
+                SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
+                SquarePosition(HorizontalPosition.B, VerticalPosition.TWO) to Disk(DiskType.Light),
+                SquarePosition(HorizontalPosition.B, VerticalPosition.THREE) to Disk(DiskType.Dark),
+                SquarePosition(HorizontalPosition.B, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+            )
             val square = assertDoesNotThrow<SquareLine.SquareLineVertical> {
-                SquareLine.SquareLineVertical.createFromPosition(SquarePosition(HorizontalPosition.B, VerticalPosition.ONE))
+                SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.B, VerticalPosition.ONE),
+                    diskMap,
+                )
             }
             assertAll(
                 { assertEquals(HorizontalPosition.B, square.squares[0].position.x) },
@@ -109,6 +174,14 @@ class SquareLineTest {
                 { assertEquals(HorizontalPosition.B, square.squares[5].position.x) },
                 { assertEquals(HorizontalPosition.B, square.squares[6].position.x) },
                 { assertEquals(HorizontalPosition.B, square.squares[7].position.x) },
+                { assertEquals(DiskType.Light, square.squares[0].disk?.diskType) },
+                { assertEquals(DiskType.Light, square.squares[1].disk?.diskType) },
+                { assertEquals(DiskType.Dark, square.squares[2].disk?.diskType) },
+                { assertEquals(DiskType.Dark, square.squares[3].disk?.diskType) },
+                { assertEquals(null, square.squares[4].disk?.diskType) },
+                { assertEquals(null, square.squares[5].disk?.diskType) },
+                { assertEquals(null, square.squares[6].disk?.diskType) },
+                { assertEquals(null, square.squares[7].disk?.diskType) },
             )
         }
 
@@ -116,7 +189,15 @@ class SquareLineTest {
         @Test
         @DisplayName("SquareLineVerticalのSquare数が不正の場合例外が発生すること")
         fun testSquareLineVerticalSize() {
-            val verticalPositions = listOf(VerticalPosition.ONE, VerticalPosition.TWO, VerticalPosition.THREE, VerticalPosition.FOUR, VerticalPosition.FIVE, VerticalPosition.SIX, VerticalPosition.SEVEN)
+            val verticalPositions = listOf(
+                VerticalPosition.ONE,
+                VerticalPosition.TWO,
+                VerticalPosition.THREE,
+                VerticalPosition.FOUR,
+                VerticalPosition.FIVE,
+                VerticalPosition.SIX,
+                VerticalPosition.SEVEN,
+            )
             val squares = verticalPositions.map { Square.create(SquarePosition(HorizontalPosition.A, it), null) }
             val exception = assertThrows<CustomIllegalArgumentException> {
                 SquareLine.SquareLineVertical.create(squares)
@@ -179,11 +260,21 @@ class SquareLineTest {
         @Test
         @DisplayName("座標を指定してSquareLineDiagonalのインスタンスを生成できること")
         fun testSquareLineDiagonalFromPosition() {
+            // TODO: このへんテスト項目が足りてない
+            val diskMap = mapOf<SquarePosition, Disk?>()
             val squares = assertDoesNotThrow<List<SquareLine.SquareLineDiagonal>> {
-                SquareLine.SquareLineDiagonal.createLines(SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR))
+                SquareLine.SquareLineDiagonal.createLines(
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR),
+                    diskMap,
+                )
             }
             assertAll(
-                { assertEquals(SquarePosition(HorizontalPosition.A, VerticalPosition.ONE), squares[0].squares[0].position) },
+                {
+                    assertEquals(
+                        SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                        squares[0].squares[0].position
+                    )
+                },
             )
         }
 
@@ -218,7 +309,7 @@ class SquareLineTest {
             }
         }
 
-            @Test
+        @Test
         @DisplayName("SquareLineDiagonalのSquareが3個のインスタンスを生成できること")
         fun testSquareLineDiagonalThree2() {
             val squares = listOf(
@@ -231,7 +322,7 @@ class SquareLineTest {
             }
         }
 
-            @Test
+        @Test
         @DisplayName("SquareLineDiagonalの盤目の端から端に到達していないインスタンスを生成した場合例外が発生すること")
         fun testSquareLineDiagonalNotReach() {
             val squares = listOf(
@@ -253,7 +344,7 @@ class SquareLineTest {
             )
         }
 
-            @Test
+        @Test
         @DisplayName("SquareLineDiagonalのSquareが空の場合例外が発生すること")
         fun testSquareLineDiagonalSize() {
             val exception = assertThrows<CustomIllegalArgumentException> {
