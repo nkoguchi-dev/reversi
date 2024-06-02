@@ -1,6 +1,7 @@
 package org.koppepan.reversi.webapi.domain.board
 
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -116,9 +117,9 @@ class SquareLineTest {
 
         @Nested
         @DisplayName("裏返す事が可能な相手のディスクを返却できること")
-        inner class testGetReversibleDisks {
+        inner class GetReversibleDisks {
             @Test
-            @DisplayName("水平方向にプラス方向のディスクが裏返る場合に正常に動作すること")
+            @DisplayName("プラス方向のディスクが裏返る場合に正常に動作すること")
             fun testGetReversibleDisksPlus() {
                 val diskMap: Map<SquarePosition, Disk?> = mapOf(
                     SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
@@ -142,7 +143,7 @@ class SquareLineTest {
             }
 
             @Test
-            @DisplayName("水平方向にプラス方向のディスクが裏返る場合に余分なディスクを除外して正常に動作すること")
+            @DisplayName("プラス方向のディスクが裏返る場合に余分なディスクを除外して正常に動作すること")
             fun testGetReversibleDisksPlus2() {
                 val diskMap: Map<SquarePosition, Disk?> = mapOf(
                     SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
@@ -169,19 +170,19 @@ class SquareLineTest {
             }
 
             @Test
-            @DisplayName("水平方向にマイナス方向のディスクが裏返る場合に正常に動作すること")
+            @DisplayName("マイナス方向のディスクが裏返る場合に正常に動作すること")
             fun testGetReversibleDisksMinus() {
                 val diskMap: Map<SquarePosition, Disk?> = mapOf(
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.ONE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.C, VerticalPosition.ONE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE) to Disk(DiskType.Dark),
                     SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.C, VerticalPosition.ONE) to Disk(DiskType.Light),
                 )
                 val line = SquareLine.SquareLineHorizontal.createFromPosition(
-                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.ONE),
                     diskMap,
                 )
                 val actual = line.getReversibleDisks(
-                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.ONE),
                     Disk(DiskType.Dark),
                 )
 
@@ -193,28 +194,28 @@ class SquareLineTest {
             }
 
             @Test
-            @DisplayName("水平方向にマイナス方向のディスクが裏返る場合に余分なディスクを除外して正常に動作すること")
+            @DisplayName("マイナス方向のディスクが裏返る場合に余分なディスクを除外して正常に動作すること")
             fun testGetReversibleDisksMinus2() {
                 val diskMap: Map<SquarePosition, Disk?> = mapOf(
-                    SquarePosition(HorizontalPosition.G, VerticalPosition.ONE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.ONE) to Disk(DiskType.Light),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.ONE) to Disk(DiskType.Light),
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.ONE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.C, VerticalPosition.ONE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE) to Disk(DiskType.Dark),
                     SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.C, VerticalPosition.ONE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.ONE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.ONE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.ONE) to Disk(DiskType.Light),
                 )
                 val line = SquareLine.SquareLineHorizontal.createFromPosition(
-                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    SquarePosition(HorizontalPosition.G, VerticalPosition.ONE),
                     diskMap,
                 )
                 val actual = line.getReversibleDisks(
-                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    SquarePosition(HorizontalPosition.G, VerticalPosition.ONE),
                     Disk(DiskType.Dark),
                 )
 
                 val expected = mapOf(
-                    SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
-                    SquarePosition(HorizontalPosition.C, VerticalPosition.ONE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.ONE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.ONE) to Disk(DiskType.Light),
                 )
                 assertEquals(expected, actual)
             }
@@ -276,7 +277,7 @@ class SquareLineTest {
             fun testGetReversibleDisksPlusAndMinus2() {
                 val diskMap: Map<SquarePosition, Disk?> = mapOf(
                     SquarePosition(HorizontalPosition.A, VerticalPosition.ONE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
                     SquarePosition(HorizontalPosition.C, VerticalPosition.ONE) to Disk(DiskType.Light),
                     //SquarePosition(HorizontalPosition.D, VerticalPosition.ONE) to Disk(DiskType.Dark),
                     SquarePosition(HorizontalPosition.E, VerticalPosition.ONE) to Disk(DiskType.Light),
@@ -294,6 +295,7 @@ class SquareLineTest {
                 )
 
                 val expected = mapOf(
+                    SquarePosition(HorizontalPosition.B, VerticalPosition.ONE) to Disk(DiskType.Light),
                     SquarePosition(HorizontalPosition.C, VerticalPosition.ONE) to Disk(DiskType.Light),
                     SquarePosition(HorizontalPosition.E, VerticalPosition.ONE) to Disk(DiskType.Light),
                 )
@@ -435,6 +437,222 @@ class SquareLineTest {
                 },
                 { assertEquals("", exception.description) },
             )
+        }
+
+        @Nested
+        @DisplayName("裏返す事が可能な相手のディスクを返却できること")
+        inner class GetReversibleDisks {
+            @Test
+            @DisplayName("プラス方向のディスクが裏返る場合に正常に動作すること")
+            fun testGetReversibleDisksPlus() {
+                val diskMap: Map<SquarePosition, Disk?> = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                )
+                val line = SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    diskMap,
+                )
+                val actual = line.getReversibleDisks(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    Disk(DiskType.Dark),
+                )
+
+                val expected = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                )
+                assertEquals(expected, actual)
+            }
+
+            @Test
+            @DisplayName("プラス方向のディスクが裏返る場合に余分なディスクを除外して正常に動作すること")
+            fun testGetReversibleDisksPlus2() {
+                val diskMap: Map<SquarePosition, Disk?> = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SIX) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SEVEN) to Disk(DiskType.Dark),
+                )
+                val line = SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    diskMap,
+                )
+                val actual = line.getReversibleDisks(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    Disk(DiskType.Dark),
+                )
+
+                val expected = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                )
+                assertEquals(expected, actual)
+            }
+
+            @Test
+            @DisplayName("マイナス方向のディスクが裏返る場合に正常に動作すること")
+            fun testGetReversibleDisksMinus() {
+                val diskMap: Map<SquarePosition, Disk?> = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                )
+                val line = SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    diskMap,
+                )
+                val actual = line.getReversibleDisks(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR),
+                    Disk(DiskType.Dark),
+                )
+
+                val expected = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                )
+                assertEquals(expected, actual)
+            }
+
+            @Test
+            @DisplayName("マイナス方向のディスクが裏返る場合に余分なディスクを除外して正常に動作すること")
+            fun testGetReversibleDisksMinus2() {
+                val diskMap: Map<SquarePosition, Disk?> = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SIX) to Disk(DiskType.Light),
+                )
+                val line = SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SEVEN),
+                    diskMap,
+                )
+                val actual = line.getReversibleDisks(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SEVEN),
+                    Disk(DiskType.Dark),
+                )
+
+                val expected = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SIX) to Disk(DiskType.Light),
+                )
+                assertEquals(expected, actual)
+            }
+
+            @Test
+            @DisplayName("挟んだマスに相手のディスク以外に空欄がある場合に正常に動作すること")
+            fun testGetReversibleDisksEmpty() {
+                val diskMap: Map<SquarePosition, Disk?> = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                )
+                val line = SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    diskMap,
+                )
+                val actual = line.getReversibleDisks(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+                    Disk(DiskType.Dark),
+                )
+
+                val expected = emptyMap<SquarePosition, Disk?>()
+                assertEquals(expected, actual)
+            }
+
+            @Test
+            @DisplayName("双方向にあるディスクが裏返る場合に正常に動作すること")
+            fun testGetReversibleDisksPlusAndMinus() {
+                val diskMap: Map<SquarePosition, Disk?> = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                    //SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SIX) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SEVEN) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.EIGHT) to Disk(DiskType.Dark),
+                )
+                val line = SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR),
+                    diskMap,
+                )
+                val actual = line.getReversibleDisks(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR),
+                    Disk(DiskType.Dark),
+                )
+
+                val expected = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SIX) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SEVEN) to Disk(DiskType.Light),
+                )
+                assertEquals(expected, actual)
+            }
+
+            @Test
+            @DisplayName("双方向にあるディスクが裏返る場合に余分なディスクを除外して正常に動作すること")
+            fun testGetReversibleDisksPlusAndMinus2() {
+                val diskMap: Map<SquarePosition, Disk?> = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                    //SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SIX) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SEVEN) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.EIGHT) to Disk(DiskType.Dark),
+                )
+                val line = SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR),
+                    diskMap,
+                )
+                val actual = line.getReversibleDisks(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR),
+                    Disk(DiskType.Dark),
+                )
+
+                val expected = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                )
+                assertEquals(expected, actual)
+            }
+
+            @Test
+            @DisplayName("双方向にあるディスクが裏返る場合に空白のマスがある場合でも正常に動作すること")
+            fun testGetReversibleDisksPlusAndMinus3() {
+                val diskMap: Map<SquarePosition, Disk?> = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.ONE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.TWO) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.THREE) to null,
+                    //SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SIX) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.SEVEN) to null,
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.EIGHT) to Disk(DiskType.Dark),
+                )
+                val line = SquareLine.SquareLineVertical.createFromPosition(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR),
+                    diskMap,
+                )
+                val actual = line.getReversibleDisks(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FOUR),
+                    Disk(DiskType.Dark),
+                )
+
+                val expected = mapOf(
+                    SquarePosition(HorizontalPosition.A, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                )
+                assertEquals(expected, actual)
+            }
         }
     }
 

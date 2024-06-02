@@ -136,8 +136,45 @@ sealed interface SquareLine {
         }
 
         override fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk> {
-            // TODO: 未実装
-            return mapOf()
+            // 配置するディスクと同じ色で一番近いディスクの位置を取得する
+            val sameColorDisksOnMinusSide = squares
+                .filter { it.position.y < position.y }
+                .filter { it.disk?.diskType == disk.diskType }
+                .maxByOrNull { it.position.y }
+            val sameColorDisksOnPlusSide = squares
+                .filter { it.position.y > position.y }
+                .filter { it.disk?.diskType == disk.diskType }
+                .minByOrNull { it.position.y }
+
+            // ライン上にある同じ色のディスクの間にあるディスクを全て取得する
+            val reversibleDisksOnMinusSide = sameColorDisksOnMinusSide
+                ?.let { diskOnMinusSide ->
+                    squares
+                        .filter { it.position.y < position.y && it.position.y > diskOnMinusSide.position.y }
+                        .filter { it.disk?.diskType != disk.diskType }
+                        .map { it.position to it.disk }
+                } ?: emptyList()
+            val reversibleDisksOnPlusSide = sameColorDisksOnPlusSide
+                ?.let { diskOnPlusSide ->
+                    squares
+                        .filter { it.position.y > position.y && it.position.y < diskOnPlusSide.position.y }
+                        .filter { it.disk?.diskType != disk.diskType }
+                        .map { it.position to it.disk }
+                } ?: emptyList()
+
+            // 抽出したMapにDiskが置かれていないマスがある場合は相手のディスクを取れないので空のリストにする
+            val resultDisksOnMinusSide = reversibleDisksOnMinusSide
+                .takeUnless { it.any { pair -> pair.second == null } }
+                ?.filter { it.second != null }
+                ?.map { (position, disk) -> position to disk!! } // filterでnullを除外しているのでnullチェックは不要
+                ?: emptyList()
+            val resultDisksOnPlusSide = reversibleDisksOnPlusSide
+                .takeUnless { it.any { pair -> pair.second == null } }
+                ?.filter { it.second != null }
+                ?.map { (position, disk) -> position to disk!! } // filterでnullを除外しているのでnullチェックは不要
+                ?: emptyList()
+
+            return (resultDisksOnMinusSide + resultDisksOnPlusSide).toMap()
         }
     }
 
