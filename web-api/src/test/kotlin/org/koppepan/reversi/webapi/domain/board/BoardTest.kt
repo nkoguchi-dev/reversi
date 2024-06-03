@@ -64,24 +64,35 @@ class BoardTest {
             assertEquals("既にディスクが置かれている位置にディスクを置くことはできません。position: (D, FOUR)", exception.description)
         }
 
-//        @Test
-//        @DisplayName("隣り合う場所に相手のディスクがある場合はディスクを置く事ができる")
-//        fun testPutDiskToPositionWithOpponentDisk() {
-//            val board = Board.create()
-//            val newBoard = board.putDisk(SquarePosition(HorizontalPosition.FIVE, VerticalPosition.SIX), Disk(DiskType.Light))
-//            assertEquals(Disk(DiskType.Light), newBoard.getDisk(SquarePosition(HorizontalPosition.FIVE, VerticalPosition.SIX)))
-//        }
-//
-//        @Test
-//        @DisplayName("隣り合う場所に相手のディスクがない場合ディスクを置く事はできない")
-//        fun testPutDiskToPositionWithoutOpponentDisk() {
-//            val board = Board.create()
-//            val exception = assertThrows(CustomIllegalArgumentException::class.java) {
-//                board.putDisk(SquarePosition(HorizontalPosition.THREE, VerticalPosition.THREE), Disk(DiskType.Light))
-//            }
-//            assertEquals("ディスクを置く事はできません", exception.message)
-//            assertEquals("隣り合う場所に相手のディスクがありません。position: (THREE, THREE)", exception.description)
-//        }
+        @Test
+        @DisplayName("相手のディスクを裏返せる位置にディスクを置く事ができる")
+        fun testPutDiskToPositionWithOpponentDisk() {
+            val board = Board.create()
+            val newBoard = board.putDisk(
+                PlayerMove.create(
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
+                    Disk(DiskType.Dark),
+                )
+            )
+            val actual = newBoard.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX))
+            assertEquals(Disk(DiskType.Dark), actual)
+        }
+
+        @Test
+        @DisplayName("相手のディスクを裏返せない位置にディスクを置く事ができない")
+        fun testPutDiskToPositionWithoutOpponentDisk() {
+            val board = Board.create()
+            val exception = assertThrows(CustomIllegalArgumentException::class.java) {
+                board.putDisk(
+                    PlayerMove.create(
+                        SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
+                        Disk(DiskType.Light),
+                    )
+                )
+            }
+            assertEquals("ディスクを置く事はできません", exception.message)
+            assertEquals("相手のディスクを裏返す事ができない位置にディスクを置くことはできません。position: (E, SIX)", exception.description)
+        }
     }
 
 //    @Test
