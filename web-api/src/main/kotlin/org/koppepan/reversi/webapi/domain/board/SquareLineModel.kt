@@ -23,7 +23,7 @@ sealed interface SquareLine {
             return listOf(
                 SquareLineHorizontal.createFromPosition(position, diskMap),
                 SquareLineVertical.createFromPosition(position, diskMap),
-            ) + SquareLineDiagonal.createLines(position, diskMap)
+            ) + SquareLineDiagonal.createFromPosition(position, diskMap)
         }
     }
 
@@ -223,10 +223,10 @@ sealed interface SquareLine {
                 return SquareLineDiagonal(sortedSquares)
             }
 
-            fun createLines(position: SquarePosition, diskMap: Map<SquarePosition, Disk?>): List<SquareLineDiagonal> {
-                return listOf(
+            fun createFromPosition(position: SquarePosition, diskMap: Map<SquarePosition, Disk?>): List<SquareLineDiagonal> {
+                return listOfNotNull(
                     createDiagonalLineFromTopLeftToBottomRight(position, diskMap),
-                    createDiagonalLineFromBottomRightToTopLeft(position, diskMap)
+                    createDiagonalLineFromBottomRightToTopLeft(position, diskMap),
                 )
             }
 
@@ -234,7 +234,7 @@ sealed interface SquareLine {
             private fun createDiagonalLineFromTopLeftToBottomRight(
                 position: SquarePosition,
                 diskMap: Map<SquarePosition, Disk?>
-            ): SquareLineDiagonal {
+            ): SquareLineDiagonal? {
                 // 起点から左上に向かう斜めラインを生成
                 val squaresTopLeft = generateSequence(position) { current ->
                     val prevX = current.x.prev()
@@ -261,18 +261,22 @@ sealed interface SquareLine {
                 }.fold(mutableListOf<Square>()) { acc, current ->
                     acc.apply { add(Square.create(current, diskMap[SquarePosition(current.x, current.y)])) }
                 }
-                return create(
-                    (squaresTopLeft + squaresBottomRight)
-                        .distinctBy { it.position }
-                        .sortedBy { it.position.x }
-                )
+                return try {
+                    create(
+                        (squaresTopLeft + squaresBottomRight)
+                            .distinctBy { it.position }
+                            .sortedBy { it.position.x }
+                    )
+                } catch (_: Throwable) {
+                    null
+                }
             }
 
             // 右下から左上に向かう斜めラインを作成
             private fun createDiagonalLineFromBottomRightToTopLeft(
                 position: SquarePosition,
                 diskMap: Map<SquarePosition, Disk?>
-            ): SquareLineDiagonal {
+            ): SquareLineDiagonal? {
                 // 起点から右上に向かう斜めラインを生成
                 val squaresTopRight = generateSequence(position) { current ->
                     val nextX = current.x.next()
@@ -297,17 +301,58 @@ sealed interface SquareLine {
                 }.fold(mutableListOf<Square>()) { acc, current ->
                     acc.apply { add(Square.create(current, diskMap[SquarePosition(current.x, current.y)])) }
                 }
-                return create(
-                    (squaresTopRight + squaresBottomLeft)
-                        .distinctBy { it.position }
-                        .sortedBy { it.position.x }
-                )
+                return try {
+                    create(
+                        (squaresTopRight + squaresBottomLeft)
+                            .distinctBy { it.position }
+                            .sortedBy { it.position.x }
+                    )
+                } catch (_: Throwable) {
+                    null
+                }
             }
         }
 
         override fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk> {
-            // TODO: 未実装
-            return mapOf()
+            // 配置するディスクと同じ色で一番近いディスクの位置を取得する
+            val sameColorDisksOnMinusSide = squares
+                .filter { it.position.x < position.x }
+                .filter { it.disk?.diskType == disk.diskType }
+                .maxByOrNull { it.position.x }
+            val sameColorDisksOnPlusSide = squares
+                .filter { it.position.x > position.x }
+                .filter { it.disk?.diskType == disk.diskType }
+                .minByOrNull { it.position.x }
+
+            // ライン上にある同じ色のディスクの間にあるディスクを全て取得する
+            val reversibleDisksOnMinusSide = sameColorDisksOnMinusSide
+                ?.let { diskOnMinusSide ->
+                    squares
+                        .filter { it.position.x < position.x && it.position.x > diskOnMinusSide.position.x }
+                        .filter { it.disk?.diskType != disk.diskType }
+                        .map { it.position to it.disk }
+                } ?: emptyList()
+            val reversibleDisksOnPlusSide = sameColorDisksOnPlusSide
+                ?.let { diskOnPlusSide ->
+                    squares
+                        .filter { it.position.x > position.x && it.position.x < diskOnPlusSide.position.x }
+                        .filter { it.disk?.diskType != disk.diskType }
+                        .map { it.position to it.disk }
+                } ?: emptyList()
+
+            // 抽出したMapにDiskが置かれていないマスがある場合は相手のディスクを取れないので空のリストにする
+            val resultDisksOnMinusSide = reversibleDisksOnMinusSide
+                .takeUnless { it.any { pair -> pair.second == null } }
+                ?.filter { it.second != null }
+                ?.map { (position, disk) -> position to disk!! } // filterでnullを除外しているのでnullチェックは不要
+                ?: emptyList()
+            val resultDisksOnPlusSide = reversibleDisksOnPlusSide
+                .takeUnless { it.any { pair -> pair.second == null } }
+                ?.filter { it.second != null }
+                ?.map { (position, disk) -> position to disk!! } // filterでnullを除外しているのでnullチェックは不要
+                ?: emptyList()
+
+            return (resultDisksOnMinusSide + resultDisksOnPlusSide).toMap()
         }
     }
 }
