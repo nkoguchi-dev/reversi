@@ -97,6 +97,19 @@ class Board private constructor(
         }.reduce { acc, map -> acc + map }
         return DiskMap(map)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Board) return false
+
+        if (diskMap != other.diskMap) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return diskMap.hashCode()
+    }
 }
 
 @JvmInline
