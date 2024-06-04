@@ -65,11 +65,11 @@ sealed interface SquareLine {
             // 配置するディスクと同じ色で一番近いディスクの位置を取得する
             val sameColorDisksOnMinusSide = squares
                 .filter { it.position.x < position.x }
-                .filter { it.disk?.diskType == disk.diskType }
+                .filter { it.disk?.type == disk.type }
                 .maxByOrNull { it.position.x }
             val sameColorDisksOnPlusSide = squares
                 .filter { it.position.x > position.x }
-                .filter { it.disk?.diskType == disk.diskType }
+                .filter { it.disk?.type == disk.type }
                 .minByOrNull { it.position.x }
 
             // ライン上にある同じ色のディスクの間にあるディスクを全て取得する
@@ -77,14 +77,14 @@ sealed interface SquareLine {
                 ?.let { diskOnMinusSide ->
                     squares
                         .filter { it.position.x < position.x && it.position.x > diskOnMinusSide.position.x }
-                        .filter { it.disk?.diskType != disk.diskType }
+                        .filter { it.disk?.type != disk.type }
                         .map { it.position to it.disk }
                 } ?: emptyList()
             val reversibleDisksOnPlusSide = sameColorDisksOnPlusSide
                 ?.let { diskOnPlusSide ->
                     squares
                         .filter { it.position.x > position.x && it.position.x < diskOnPlusSide.position.x }
-                        .filter { it.disk?.diskType != disk.diskType }
+                        .filter { it.disk?.type != disk.type }
                         .map { it.position to it.disk }
                 } ?: emptyList()
 
@@ -139,11 +139,11 @@ sealed interface SquareLine {
             // 配置するディスクと同じ色で一番近いディスクの位置を取得する
             val sameColorDisksOnMinusSide = squares
                 .filter { it.position.y < position.y }
-                .filter { it.disk?.diskType == disk.diskType }
+                .filter { it.disk?.type == disk.type }
                 .maxByOrNull { it.position.y }
             val sameColorDisksOnPlusSide = squares
                 .filter { it.position.y > position.y }
-                .filter { it.disk?.diskType == disk.diskType }
+                .filter { it.disk?.type == disk.type }
                 .minByOrNull { it.position.y }
 
             // ライン上にある同じ色のディスクの間にあるディスクを全て取得する
@@ -151,14 +151,14 @@ sealed interface SquareLine {
                 ?.let { diskOnMinusSide ->
                     squares
                         .filter { it.position.y < position.y && it.position.y > diskOnMinusSide.position.y }
-                        .filter { it.disk?.diskType != disk.diskType }
+                        .filter { it.disk?.type != disk.type }
                         .map { it.position to it.disk }
                 } ?: emptyList()
             val reversibleDisksOnPlusSide = sameColorDisksOnPlusSide
                 ?.let { diskOnPlusSide ->
                     squares
                         .filter { it.position.y > position.y && it.position.y < diskOnPlusSide.position.y }
-                        .filter { it.disk?.diskType != disk.diskType }
+                        .filter { it.disk?.type != disk.type }
                         .map { it.position to it.disk }
                 } ?: emptyList()
 
@@ -317,11 +317,11 @@ sealed interface SquareLine {
             // 配置するディスクと同じ色で一番近いディスクの位置を取得する
             val sameColorDisksOnMinusSide = squares
                 .filter { it.position.x < position.x }
-                .filter { it.disk?.diskType == disk.diskType }
+                .filter { it.disk?.type == disk.type }
                 .maxByOrNull { it.position.x }
             val sameColorDisksOnPlusSide = squares
                 .filter { it.position.x > position.x }
-                .filter { it.disk?.diskType == disk.diskType }
+                .filter { it.disk?.type == disk.type }
                 .minByOrNull { it.position.x }
 
             // ライン上にある同じ色のディスクの間にあるディスクを全て取得する
@@ -329,14 +329,14 @@ sealed interface SquareLine {
                 ?.let { diskOnMinusSide ->
                     squares
                         .filter { it.position.x < position.x && it.position.x > diskOnMinusSide.position.x }
-                        .filter { it.disk?.diskType != disk.diskType }
+                        .filter { it.disk?.type != disk.type }
                         .map { it.position to it.disk }
                 } ?: emptyList()
             val reversibleDisksOnPlusSide = sameColorDisksOnPlusSide
                 ?.let { diskOnPlusSide ->
                     squares
                         .filter { it.position.x > position.x && it.position.x < diskOnPlusSide.position.x }
-                        .filter { it.disk?.diskType != disk.diskType }
+                        .filter { it.disk?.type != disk.type }
                         .map { it.position to it.disk }
                 } ?: emptyList()
 

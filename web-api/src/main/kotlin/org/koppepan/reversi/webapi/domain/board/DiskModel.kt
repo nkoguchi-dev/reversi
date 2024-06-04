@@ -4,11 +4,11 @@ package org.koppepan.reversi.webapi.domain.board
  * ディスク（駒）を表すクラス
  */
 class Disk(
-    val diskType: DiskType
+    val type: DiskType
 ) {
     private fun copy(diskType: DiskType): Disk = Disk(diskType)
 
-    fun reverse(): Disk = when (diskType) {
+    fun reverse(): Disk = when (type) {
         DiskType.Light -> this.copy(diskType = DiskType.Dark)
         DiskType.Dark -> this.copy(diskType = DiskType.Light)
     }
@@ -20,18 +20,18 @@ class Disk(
         if (other !is Disk) {
             return false
         }
-        if (diskType != other.diskType) {
+        if (type != other.type) {
             return false
         }
         return true
     }
 
     override fun hashCode(): Int {
-        return diskType.hashCode()
+        return type.hashCode()
     }
 
     override fun toString(): String {
-        return "Disk(diskType=$diskType)"
+        return "Disk(diskType=$type)"
     }
 }
 

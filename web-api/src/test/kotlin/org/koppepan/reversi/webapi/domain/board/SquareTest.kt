@@ -46,7 +46,7 @@ class SquareTest {
         assertAll(
             { assertEquals(HorizontalPosition.A, newSquare.position.x) },
             { assertEquals(VerticalPosition.ONE, newSquare.position.y) },
-            { assertEquals(DiskType.Dark, newSquare.disk?.diskType) },
+            { assertEquals(DiskType.Dark, newSquare.disk?.type) },
         )
     }
 
@@ -61,7 +61,7 @@ class SquareTest {
         assertAll(
             { assertEquals(HorizontalPosition.A, newSquare.position.x) },
             { assertEquals(VerticalPosition.ONE, newSquare.position.y) },
-            { assertEquals(DiskType.Light, newSquare.disk?.diskType) },
+            { assertEquals(DiskType.Light, newSquare.disk?.type) },
         )
     }
 }
