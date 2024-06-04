@@ -19,7 +19,7 @@ sealed interface SquareLine {
         /**
          * マス目の位置を含むラインのリストを生成する
          */
-        fun createFromPosition(position: SquarePosition, diskMap: Map<SquarePosition, Disk?>): List<SquareLine> {
+        fun createFromPosition(position: SquarePosition, diskMap: DiskMap): List<SquareLine> {
             return listOf(
                 SquareLineHorizontal.createFromPosition(position, diskMap),
                 SquareLineVertical.createFromPosition(position, diskMap),
@@ -52,10 +52,10 @@ sealed interface SquareLine {
 
             fun createFromPosition(
                 position: SquarePosition,
-                diskMap: Map<SquarePosition, Disk?>
+                diskMap: DiskMap,
             ): SquareLineHorizontal {
                 val squares = HorizontalPosition.entries.map { x ->
-                    Square.create(position.copy(x = x), diskMap[SquarePosition(x, position.y)])
+                    Square.create(position.copy(x = x), diskMap.getDisk(SquarePosition(x, position.y)))
                 }
                 return create(squares)
             }
@@ -127,9 +127,9 @@ sealed interface SquareLine {
                 return SquareLineVertical(squares)
             }
 
-            fun createFromPosition(position: SquarePosition, diskMap: Map<SquarePosition, Disk?>): SquareLineVertical {
+            fun createFromPosition(position: SquarePosition, diskMap: DiskMap): SquareLineVertical {
                 val squares = VerticalPosition.entries.map { y ->
-                    Square.create(position.copy(y = y), diskMap[SquarePosition(position.x, y)])
+                    Square.create(position.copy(y = y), diskMap.getDisk(SquarePosition(position.x, y)))
                 }
                 return create(squares)
             }
@@ -223,7 +223,7 @@ sealed interface SquareLine {
                 return SquareLineDiagonal(sortedSquares)
             }
 
-            fun createFromPosition(position: SquarePosition, diskMap: Map<SquarePosition, Disk?>): List<SquareLineDiagonal> {
+            fun createFromPosition(position: SquarePosition, diskMap: DiskMap): List<SquareLineDiagonal> {
                 return listOfNotNull(
                     createDiagonalLineFromTopLeftToBottomRight(position, diskMap),
                     createDiagonalLineFromBottomRightToTopLeft(position, diskMap),
@@ -233,7 +233,7 @@ sealed interface SquareLine {
             // 左上から右下に向かう斜めラインを作成
             private fun createDiagonalLineFromTopLeftToBottomRight(
                 position: SquarePosition,
-                diskMap: Map<SquarePosition, Disk?>
+                diskMap: DiskMap,
             ): SquareLineDiagonal? {
                 // 起点から左上に向かう斜めラインを生成
                 val squaresTopLeft = generateSequence(position) { current ->
@@ -246,7 +246,7 @@ sealed interface SquareLine {
                     }
                 }.fold(mutableListOf<Square>()) { acc, current ->
                     acc.apply {
-                        add(Square.create(current, diskMap[SquarePosition(current.x, current.y)]))
+                        add(Square.create(current, diskMap.getDisk(SquarePosition(current.x, current.y))))
                     }
                 }
                 // 起点から右下に向かう斜めラインを生成
@@ -259,7 +259,7 @@ sealed interface SquareLine {
                         null
                     }
                 }.fold(mutableListOf<Square>()) { acc, current ->
-                    acc.apply { add(Square.create(current, diskMap[SquarePosition(current.x, current.y)])) }
+                    acc.apply { add(Square.create(current, diskMap.getDisk(SquarePosition(current.x, current.y)))) }
                 }
                 return try {
                     create(
@@ -275,7 +275,7 @@ sealed interface SquareLine {
             // 右下から左上に向かう斜めラインを作成
             private fun createDiagonalLineFromBottomRightToTopLeft(
                 position: SquarePosition,
-                diskMap: Map<SquarePosition, Disk?>
+                diskMap: DiskMap,
             ): SquareLineDiagonal? {
                 // 起点から右上に向かう斜めラインを生成
                 val squaresTopRight = generateSequence(position) { current ->
@@ -287,7 +287,7 @@ sealed interface SquareLine {
                         null
                     }
                 }.fold(mutableListOf<Square>()) { acc, current ->
-                    acc.apply { add(Square.create(current, diskMap[SquarePosition(current.x, current.y)])) }
+                    acc.apply { add(Square.create(current, diskMap.getDisk(SquarePosition(current.x, current.y)))) }
                 }
                 // 起点から左下に向かう斜めラインを生成
                 val squaresBottomLeft = generateSequence(position) { current ->
@@ -299,7 +299,7 @@ sealed interface SquareLine {
                         null
                     }
                 }.fold(mutableListOf<Square>()) { acc, current ->
-                    acc.apply { add(Square.create(current, diskMap[SquarePosition(current.x, current.y)])) }
+                    acc.apply { add(Square.create(current, diskMap.getDisk(SquarePosition(current.x, current.y)))) }
                 }
                 return try {
                     create(

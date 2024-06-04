@@ -12,7 +12,7 @@ class BoardTest {
     fun testCreate() {
         val board = Board.create()
         val diskMap = board.diskMap
-        assertEquals(64, diskMap.size)
+        assertEquals(64, diskMap.value.size)
         assertEquals(
             Disk(DiskType.Light),
             board.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR))
@@ -91,13 +91,35 @@ class BoardTest {
                 )
             }
             assertEquals("ディスクを置く事はできません", exception.message)
-            assertEquals("相手のディスクを裏返す事ができない位置にディスクを置くことはできません。position: (E, SIX)", exception.description)
+            assertEquals("相手のディスクを裏返す事ができない位置にディスクを置くことはできません。PlayerMove(position=(E, SIX), disk=Disk(diskType=Light))", exception.description)
         }
     }
 
-//    @Test
-//    @DisplayName("垂直方向に挟んだ相手のディスクを裏返す事ができる")
-//    fun testReverseDisk() {
+    @Test
+    @DisplayName("垂直方向に挟んだ相手のディスクを裏返す事ができる")
+    fun testPutDiskToVerticalPosition() {
+        val board = Board.create()
+        val newBoard = board.putDisk(
+            PlayerMove.create(
+                SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
+                Disk(DiskType.Dark)
+            )
+        )
+        assertAll(
+            {
+                assertEquals(
+                    Disk(DiskType.Dark),
+                    newBoard.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.THREE))
+                )
+            },
+            {
+                assertEquals(
+                    Disk(DiskType.Dark),
+                    newBoard.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR))
+                )
+            },
+        )
+    }
 //        val diskMap: MutableMap<SquarePosition, Disk?> = mutableMapOf()
 //        diskMap[SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR)] = Disk(DiskType.Light)
 //        diskMap[SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FIVE)] = Disk(DiskType.Light)
