@@ -29,6 +29,10 @@ class Player private constructor(
         result = 31 * result + diskType.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "Player(name=$name, diskType=$diskType)"
+    }
 }
 
 @JvmInline

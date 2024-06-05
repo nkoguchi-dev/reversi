@@ -11,6 +11,7 @@ import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
+import org.springframework.test.context.ActiveProfiles
 
 @ExtendWith(MockitoExtension::class)
 class GameTest {
@@ -45,7 +46,6 @@ class GameTest {
         assertEquals(expected, actual)
     }
 
-    @Disabled("実装中")
     @Test
     @DisplayName("駒を置いてゲームを進行できること")
     fun putDisk() {

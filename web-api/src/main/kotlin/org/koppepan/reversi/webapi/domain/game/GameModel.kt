@@ -4,6 +4,8 @@ import org.koppepan.reversi.webapi.domain.board.*
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class Game private constructor(
     val gameId: GameId,
@@ -13,6 +15,8 @@ class Game private constructor(
     val nextPlayer: Player,
 ) {
     companion object {
+        val log: Logger = LoggerFactory.getLogger(this::class.java)
+
         fun start(
             idGenerator: IdGenerator,
             player1Name: String,
@@ -21,13 +25,15 @@ class Game private constructor(
             // 先手が黒で後手が白なのはReversiのルール
             val player1 = Player.create(PlayerName(player1Name), DiskType.Dark)
             val player2 = Player.create(PlayerName(player2Name), DiskType.Light)
-            return Game(
+            val game = Game(
                 gameId = GameId.generate(idGenerator),
                 board = Board.create(),
                 player1 = player1,
                 player2 = player2,
                 nextPlayer = player1,
             )
+            log.debug("Gameを開始しました。 {}", game)
+            return game
         }
 
         fun recreate(
@@ -59,7 +65,7 @@ class Game private constructor(
             player1.name,
             player2.name,
             board.diskMap.getPlacedDiskMap(),
-            player1.name,
+            nextPlayer.name,
         )
     }
 
@@ -84,10 +90,13 @@ class Game private constructor(
             player2.name -> player1
             else -> throw IllegalArgumentException("playerName is invalid")
         }
-        return this.copy(
+        val nextGame = this.copy(
             board = newBoard,
             nextPlayer = nextPlayer,
         )
+        log.debug("Diskを配置しました。playerName: {}, position: {}, nextGame: {}",
+            playerName, position, nextGame)
+        return nextGame
     }
 
     override fun equals(other: Any?): Boolean {
@@ -108,6 +117,10 @@ class Game private constructor(
         result = 31 * result + player1.hashCode()
         result = 31 * result + player2.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "Game(gameId=$gameId, board=$board, player1=$player1, player2=$player2, nextPlayer=$nextPlayer)"
     }
 }
 
