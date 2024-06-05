@@ -1,10 +1,14 @@
 package org.koppepan.reversi.webapi.domain.game
 
-import org.koppepan.reversi.webapi.domain.board.*
+import org.koppepan.reversi.webapi.domain.board.Board
+import org.koppepan.reversi.webapi.domain.board.DiskMap
+import org.koppepan.reversi.webapi.domain.board.DiskType
+import org.koppepan.reversi.webapi.domain.board.PlayerMove
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
+import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -70,6 +74,12 @@ class Game private constructor(
     ): Game = Game(gameId, board, player1, player2, nextPlayerNumber)
 
     fun putDisk(playerMove: PlayerMove): Game {
+        if (playerMove.number != nextPlayerNumber) {
+            throw CustomIllegalArgumentException(
+                message = "ディスクを置く事はできません",
+                description = "自分の順番ではないプレイヤーが駒を置くことはできません。playerMove: $playerMove, nextPlayerNumber: $nextPlayerNumber"
+            )
+        }
         val newBoard = board.putDisk(playerMove)
         val nextPlayerNumber = when (playerMove.number) {
             PlayerNumber.PLAYER1 -> PlayerNumber.PLAYER2

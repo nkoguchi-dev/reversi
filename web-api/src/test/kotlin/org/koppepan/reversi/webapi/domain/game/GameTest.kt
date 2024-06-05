@@ -1,13 +1,16 @@
 package org.koppepan.reversi.webapi.domain.game
 
+import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.koppepan.reversi.webapi.domain.board.*
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
+import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
@@ -80,5 +83,36 @@ class GameTest {
             nextPlayerNumber = PlayerNumber.PLAYER2,
         )
         assertEquals(expected, actual)
+    }
+
+    @Test
+    @DisplayName("自分の順番ではないプレイヤーが駒を置くとエラーが発生すること")
+    fun putDiskWhenNotYourTurn() {
+        whenever(idGenerator.generate())
+            .thenReturn("gameId")
+
+        val game = Game.start(
+            idGenerator = idGenerator,
+            player1Name = "player1",
+            player2Name = "player2",
+        )
+
+        val actual = assertThrows<CustomIllegalArgumentException> {
+            game.putDisk(
+                PlayerMove(
+                    PlayerNumber.PLAYER2,
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+                    Disk(DiskType.Light),
+                )
+            )
+        }
+        val expected = CustomIllegalArgumentException(
+            message = "ディスクを置く事はできません",
+            description = "自分の順番ではないプレイヤーが駒を置くことはできません。playerMove: PlayerMove(number=PLAYER2, position=(F, FIVE), disk=Disk(diskType=Light)), nextPlayerNumber: PLAYER1",
+        )
+        assertAll(
+            { assertEquals(expected.message, actual.message) },
+            { assertEquals(expected.description, actual.description) },
+        )
     }
 }
