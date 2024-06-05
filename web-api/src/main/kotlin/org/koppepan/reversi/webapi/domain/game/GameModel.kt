@@ -1,25 +1,44 @@
 package org.koppepan.reversi.webapi.domain.game
 
 import org.koppepan.reversi.webapi.domain.board.Board
+import org.koppepan.reversi.webapi.domain.board.DiskType
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
+import org.koppepan.reversi.webapi.domain.player.PlayerName
 
 class Game private constructor(
     val gameId: GameId,
     val board: Board,
-    val players: List<Player>,
+    val player1: Player,
+    val player2: Player,
 ) {
     companion object {
-        fun start(idGenerator: IdGenerator, players: List<Player>): Game {
+        fun start(
+            idGenerator: IdGenerator,
+            player1Name: String,
+            player2Name: String,
+        ): Game {
+            // 先手が黒で後手が白なのはReversiのルール
             return Game(
                 GameId.generate(idGenerator),
                 Board.create(),
-                players,
+                Player.create(PlayerName(player1Name), DiskType.Dark),
+                Player.create(PlayerName(player2Name), DiskType.Light),
             )
         }
 
-        fun recreate(gameId: GameId, board: Board, players: List<Player>): Game {
-            return Game(gameId, board, players)
+        fun recreate(
+            gameId: GameId,
+            board: Board,
+            player1Name: String,
+            player2Name: String,
+        ): Game {
+            return Game(
+                gameId,
+                board,
+                Player.create(PlayerName(player1Name), DiskType.Dark),
+                Player.create(PlayerName(player2Name), DiskType.Light),
+            )
         }
     }
 
@@ -29,7 +48,8 @@ class Game private constructor(
 
         if (gameId != other.gameId) return false
         if (board != other.board) return false
-        if (players != other.players) return false
+        if (player1 != other.player1) return false
+        if (player2 != other.player2) return false
 
         return true
     }
@@ -37,7 +57,8 @@ class Game private constructor(
     override fun hashCode(): Int {
         var result = gameId.hashCode()
         result = 31 * result + board.hashCode()
-        result = 31 * result + players.hashCode()
+        result = 31 * result + player1.hashCode()
+        result = 31 * result + player2.hashCode()
         return result
     }
 }

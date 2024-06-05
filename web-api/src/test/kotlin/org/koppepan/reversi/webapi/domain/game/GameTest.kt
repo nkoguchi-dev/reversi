@@ -3,10 +3,13 @@ package org.koppepan.reversi.webapi.domain.game
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.koppepan.reversi.webapi.domain.board.Board
+import org.koppepan.reversi.webapi.domain.board.DiskType
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
+import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
@@ -22,24 +25,14 @@ class GameTest {
         whenever(idGenerator.generate())
             .thenReturn("gameId")
 
-        val actual = Game.start(
-            idGenerator,
-            listOf(
-                Player("player1"),
-                Player("player2"),
-            )
-        )
+        val actual = Game.start(idGenerator, "player1", "player2")
 
         val expected = Game.recreate(
             GameId.recreate("gameId"),
             Board.create(),
-            listOf(
-                Player("player1"),
-                Player("player2"),
-            )
+            "player1",
+            "player2",
         )
-
         assertEquals(expected, actual)
     }
-
 }
