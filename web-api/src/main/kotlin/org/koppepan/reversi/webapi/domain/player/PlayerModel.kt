@@ -70,7 +70,7 @@ value class PlayerName (val value: String) {
     }
 }
 
-enum class PlayerNumber {
-    PLAYER1,
-    PLAYER2,
+enum class PlayerNumber(val diskType: DiskType) {
+    PLAYER1(DiskType.Dark),
+    PLAYER2(DiskType.Light),
 }

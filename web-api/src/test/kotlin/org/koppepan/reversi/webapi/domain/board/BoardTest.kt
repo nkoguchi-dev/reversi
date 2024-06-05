@@ -195,4 +195,22 @@ class BoardTest {
             )
         }
     }
+
+    @Nested
+    @DisplayName("配置可能な全てのSquareを取得するテスト")
+    inner class TestGetAllPuttableSquares {
+        @Test
+        @DisplayName("初期状態のDiskに配置可能な全てのSquareを取得する事ができる")
+        fun testGetAllPuttableSquares() {
+            val board = Board.create()
+            val actual = board.getAllPuttableSquares(PlayerNumber.PLAYER1)
+            val expected = listOf(
+                SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
+                SquarePosition(HorizontalPosition.C, VerticalPosition.FOUR),
+                SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+                SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
+            )
+            assertEquals(expected, actual)
+        }
+    }
 }

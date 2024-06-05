@@ -37,10 +37,6 @@ class Board private constructor(
         }
     }
 
-    fun copy(diskMap: DiskMap): Board {
-        return Board(diskMap)
-    }
-
     /**
      * 盤にディスクを置く
      */
@@ -62,6 +58,21 @@ class Board private constructor(
      */
     fun getDisk(position: SquarePosition): Disk? {
         return diskMap.getDisk(position)
+    }
+
+    /**
+     * 指定のプレイヤーが置ける全てのマスを取得する
+     */
+    fun getAllPuttableSquares(playerNumber: PlayerNumber): List<SquarePosition> {
+        return diskMap
+            .getAllEmptySquares()
+            .filter { position ->
+                getDisksToBeReversed(position, Disk(playerNumber.diskType)).value.isNotEmpty()
+            }
+    }
+
+    private fun copy(diskMap: DiskMap): Board {
+        return Board(diskMap)
     }
 
     /**
@@ -152,10 +163,16 @@ value class DiskMap(
     }
 
     /**
-     * ディスクが置かれいるマスのみ取得する
+     * 全てのディスクが置かれいるマスを取得する
      */
     fun getPlacedDiskMap(): DiskMap =
         DiskMap(value.filterValues { it != null })
+
+    /**
+     * 全ての空いているマスを取得する
+     */
+    fun getAllEmptySquares(): List<SquarePosition> =
+        value.filterValues { it == null }.keys.toList()
 }
 
 /**
