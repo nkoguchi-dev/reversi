@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.koppepan.reversi.webapi.domain.player.Player
+import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
 
@@ -205,12 +207,56 @@ class BoardTest {
             val board = Board.create()
             val actual = board.getAllPuttableSquares(PlayerNumber.PLAYER1)
             val expected = listOf(
-                SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
                 SquarePosition(HorizontalPosition.C, VerticalPosition.FOUR),
-                SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+                SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
                 SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
+                SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
             )
             assertEquals(expected, actual)
+        }
+
+        @Test
+        @DisplayName("１手進めた盤目に配置可能な全てのSquareを取得する事ができる")
+        fun testGetAllPuttableSquaresAfterOneMove() {
+            val board = Board.create()
+            val newBoard = board.putDisk(
+                PlayerMove(
+                    PlayerNumber.PLAYER1,
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+                    Disk(DiskType.Dark)
+                )
+            )
+            val actual = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
+            val expected = listOf(
+                SquarePosition(HorizontalPosition.D, VerticalPosition.SIX),
+                SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR),
+                SquarePosition(HorizontalPosition.F, VerticalPosition.SIX),
+            )
+            assertEquals(expected, actual)
+        }
+
+        @Test
+        @DisplayName("配置可能なSquareがない場合は空リストを返す")
+        fun testGetAllPuttableSquaresWhenNoPuttableSquare() {
+            val board = Board.create()
+            val player1 = Player.create(PlayerName("Player1"), DiskType.Dark, PlayerNumber.PLAYER1)
+            val player2 = Player.create(PlayerName("Player2"), DiskType.Light, PlayerNumber.PLAYER2)
+            val newBoard = board
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.C, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SEVEN)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
+            val actualPlayer1 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER1)
+            val actualPlayer2 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
+            assertAll(
+                { assertEquals(emptyList<SquarePosition>(), actualPlayer1) },
+                { assertEquals(emptyList<SquarePosition>(), actualPlayer2) },
+            )
         }
     }
 }

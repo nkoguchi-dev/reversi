@@ -66,9 +66,8 @@ class Board private constructor(
     fun getAllPuttableSquares(playerNumber: PlayerNumber): List<SquarePosition> {
         return diskMap
             .getAllEmptySquares()
-            .filter { position ->
-                getDisksToBeReversed(position, Disk(playerNumber.diskType)).value.isNotEmpty()
-            }
+            .filter { position -> getDisksToBeReversed(position, Disk(playerNumber.diskType)).value.isNotEmpty() }
+            .sortedBy { it.x.value + it.y.value }
     }
 
     private fun copy(diskMap: DiskMap): Board {
