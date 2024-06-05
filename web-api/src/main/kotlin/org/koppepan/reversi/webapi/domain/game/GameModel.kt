@@ -1,7 +1,6 @@
 package org.koppepan.reversi.webapi.domain.game
 
-import org.koppepan.reversi.webapi.domain.board.Board
-import org.koppepan.reversi.webapi.domain.board.DiskType
+import org.koppepan.reversi.webapi.domain.board.*
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
@@ -11,6 +10,7 @@ class Game private constructor(
     val board: Board,
     val player1: Player,
     val player2: Player,
+    val nextPlayer: Player,
 ) {
     companion object {
         fun start(
@@ -19,11 +19,14 @@ class Game private constructor(
             player2Name: String,
         ): Game {
             // 先手が黒で後手が白なのはReversiのルール
+            val player1 = Player.create(PlayerName(player1Name), DiskType.Dark)
+            val player2 = Player.create(PlayerName(player2Name), DiskType.Light)
             return Game(
-                GameId.generate(idGenerator),
-                Board.create(),
-                Player.create(PlayerName(player1Name), DiskType.Dark),
-                Player.create(PlayerName(player2Name), DiskType.Light),
+                gameId = GameId.generate(idGenerator),
+                board = Board.create(),
+                player1 = player1,
+                player2 = player2,
+                nextPlayer = player1,
             )
         }
 
@@ -32,14 +35,59 @@ class Game private constructor(
             board: Board,
             player1Name: String,
             player2Name: String,
+            nextPlayer: String,
         ): Game {
+            val player1 = Player.create(PlayerName(player1Name), DiskType.Dark)
+            val player2 = Player.create(PlayerName(player2Name), DiskType.Light)
             return Game(
-                gameId,
-                board,
-                Player.create(PlayerName(player1Name), DiskType.Dark),
-                Player.create(PlayerName(player2Name), DiskType.Light),
+                gameId = gameId,
+                board = board,
+                player1 = player1,
+                player2 = player2,
+                nextPlayer = when (nextPlayer) {
+                    player1Name -> player1
+                    player2Name -> player2
+                    else -> throw IllegalArgumentException("nextPlayer is invalid")
+                },
             )
         }
+    }
+
+    fun getGameStatus(): GameStatus {
+        return GameStatus(
+            gameId,
+            player1.name,
+            player2.name,
+            board.diskMap.getPlacedDiskMap(),
+            player1.name,
+        )
+    }
+
+    fun copy(
+        board: Board = this.board,
+        nextPlayer: Player = this.nextPlayer,
+    ): Game = Game(gameId, board, player1, player2, nextPlayer)
+
+    fun putDisk(playerName: PlayerName, position: SquarePosition): Game {
+        val disk = when (playerName) {
+            player1.name -> Disk(player1.diskType)
+            player2.name -> Disk(player2.diskType)
+            else -> throw IllegalArgumentException("playerName is invalid")
+        }
+        val playerMove = PlayerMove.create(
+            position = position,
+            disk = disk,
+        )
+        val newBoard = board.putDisk(playerMove)
+        val nextPlayer = when (playerName) {
+            player1.name -> player2
+            player2.name -> player1
+            else -> throw IllegalArgumentException("playerName is invalid")
+        }
+        return this.copy(
+            board = newBoard,
+            nextPlayer = nextPlayer,
+        )
     }
 
     override fun equals(other: Any?): Boolean {
@@ -73,3 +121,11 @@ value class GameId private constructor(
         fun recreate(value: String): GameId = GameId(value)
     }
 }
+
+data class GameStatus(
+    val gameId: GameId,
+    val player1Name: PlayerName,
+    val player2Name: PlayerName,
+    val diskMap: DiskMap,
+    val nextPlayerName: PlayerName,
+)

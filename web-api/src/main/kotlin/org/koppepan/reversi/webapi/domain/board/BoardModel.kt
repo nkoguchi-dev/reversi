@@ -149,6 +149,12 @@ value class DiskMap(
         }
         return DiskMap(newDiskMap)
     }
+
+    /**
+     * ディスクが置かれいるマスのみ取得する
+     */
+    fun getPlacedDiskMap(): DiskMap =
+        DiskMap(value.filterValues { it != null })
 }
 
 class PlayerMove private constructor(
