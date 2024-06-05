@@ -1,7 +1,6 @@
 package org.koppepan.reversi.webapi.domain.game
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -11,7 +10,6 @@ import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
-import org.springframework.test.context.ActiveProfiles
 
 @ExtendWith(MockitoExtension::class)
 class GameTest {
