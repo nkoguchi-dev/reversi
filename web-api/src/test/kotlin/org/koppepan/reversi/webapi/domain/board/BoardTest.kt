@@ -236,7 +236,7 @@ class BoardTest {
         }
 
         @Test
-        @DisplayName("配置可能なSquareがない場合は空リストを返す")
+        @DisplayName("配置可能なSquareがない場合は空リストを返す（黒が勝つパターン）")
         fun testGetAllPuttableSquaresWhenNoPuttableSquare() {
             val board = Board.create()
             val player1 = Player.create(PlayerName("Player1"), DiskType.Dark, PlayerNumber.PLAYER1)
@@ -251,6 +251,31 @@ class BoardTest {
                 .putDisk(player1.createMove(SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE)))
                 .putDisk(player2.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
                 .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
+            val actualPlayer1 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER1)
+            val actualPlayer2 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
+            assertAll(
+                { assertEquals(emptyList<SquarePosition>(), actualPlayer1) },
+                { assertEquals(emptyList<SquarePosition>(), actualPlayer2) },
+            )
+        }
+
+        @Test
+        @DisplayName("配置可能なSquareがない場合は空リストを返す（白が勝つパターン）")
+        fun testGetAllPuttableSquaresWhenNoPuttableSquare2() {
+            val board = Board.create()
+            val player1 = Player.create(PlayerName("Player1"), DiskType.Dark, PlayerNumber.PLAYER1)
+            val player2 = Player.create(PlayerName("Player2"), DiskType.Light, PlayerNumber.PLAYER2)
+            val newBoard = board
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.TWO)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.THREE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.C, VerticalPosition.FOUR)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.B, VerticalPosition.FOUR)))
             val actualPlayer1 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER1)
             val actualPlayer2 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
             assertAll(
