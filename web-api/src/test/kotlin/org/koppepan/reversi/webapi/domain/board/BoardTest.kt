@@ -105,30 +105,94 @@ class BoardTest {
         }
     }
 
-    @Test
-    @DisplayName("垂直方向に挟んだ相手のディスクを裏返す事ができる")
-    fun testPutDiskToVerticalPosition() {
-        val board = Board.create()
-        val newBoard = board.putDisk(
-            PlayerMove(
-                PlayerNumber.PLAYER1,
-                SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
-                Disk(DiskType.Dark)
+    @Nested
+    @DisplayName("ディスクを裏返すテスト")
+    inner class TestReverseDisk {
+        @Test
+        @DisplayName("垂直方向に挟んだ相手のディスクを裏返す事ができる")
+        fun testPutDiskToVerticalPosition() {
+            val board = Board.create()
+            val newBoard = board.putDisk(
+                PlayerMove(
+                    PlayerNumber.PLAYER1,
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
+                    Disk(DiskType.Dark)
+                )
             )
-        )
-        assertAll(
-            {
-                assertEquals(
-                    Disk(DiskType.Dark),
-                    newBoard.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.THREE))
+            assertAll(
+                {
+                    assertEquals(
+                        Disk(DiskType.Dark),
+                        newBoard.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.THREE))
+                    )
+                },
+                {
+                    assertEquals(
+                        Disk(DiskType.Dark),
+                        newBoard.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR))
+                    )
+                },
+            )
+        }
+
+        @Test
+        @DisplayName("水平方向に挟んだ相手のディスクを裏返す事ができる")
+        fun testPutDiskToHorizontalPosition() {
+            val board = Board.create()
+            val newBoard = board.putDisk(
+                PlayerMove(
+                    PlayerNumber.PLAYER1,
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+                    Disk(DiskType.Dark)
                 )
-            },
-            {
-                assertEquals(
-                    Disk(DiskType.Dark),
-                    newBoard.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR))
+            )
+            assertAll(
+                {
+                    assertEquals(
+                        Disk(DiskType.Dark),
+                        newBoard.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE))
+                    )
+                },
+                {
+                    assertEquals(
+                        Disk(DiskType.Dark),
+                        newBoard.getDisk(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE))
+                    )
+                },
+            )
+        }
+
+        @Test
+        @DisplayName("斜め方向に挟んだ相手のディスクを裏返す事ができる")
+        fun testPutDiskToDiagonalPosition() {
+            val board = Board.create()
+            val newBoard = board.putDisk(
+                PlayerMove(
+                    PlayerNumber.PLAYER1,
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+                    Disk(DiskType.Dark)
                 )
-            },
-        )
+            ).putDisk(
+                PlayerMove(
+                    PlayerNumber.PLAYER2,
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.SIX),
+                    Disk(DiskType.Light)
+                )
+            )
+            assertAll(
+                {
+                    assertEquals(
+                        Disk(DiskType.Light),
+                        newBoard.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE))
+                    )
+                },
+                {
+                    assertEquals(
+                        Disk(DiskType.Light),
+                        newBoard.getDisk(SquarePosition(HorizontalPosition.F, VerticalPosition.SIX))
+                    )
+                },
+            )
+        }
     }
 }
