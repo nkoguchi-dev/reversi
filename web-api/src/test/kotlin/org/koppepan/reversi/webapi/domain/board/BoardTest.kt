@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
 
 class BoardTest {
@@ -40,7 +41,7 @@ class BoardTest {
             val board = Board.create()
             val putPosition = SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)
             val newBoard = board.putDisk(
-                PlayerMove.create(putPosition, Disk(DiskType.Light))
+                PlayerMove(PlayerNumber.PLAYER1, putPosition, Disk(DiskType.Light))
             )
             assertEquals(
                 Disk(DiskType.Light),
@@ -54,14 +55,18 @@ class BoardTest {
             val board = Board.create()
             val exception = assertThrows(CustomIllegalArgumentException::class.java) {
                 board.putDisk(
-                    PlayerMove.create(
+                    PlayerMove(
+                        PlayerNumber.PLAYER1,
                         SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR),
                         Disk(DiskType.Light)
                     )
                 )
             }
             assertEquals("ディスクを置く事はできません", exception.message)
-            assertEquals("既にディスクが置かれている位置にディスクを置くことはできません。position: (D, FOUR)", exception.description)
+            assertEquals(
+                "既にディスクが置かれている位置にディスクを置くことはできません。position: (D, FOUR)",
+                exception.description
+            )
         }
 
         @Test
@@ -69,7 +74,8 @@ class BoardTest {
         fun testPutDiskToPositionWithOpponentDisk() {
             val board = Board.create()
             val newBoard = board.putDisk(
-                PlayerMove.create(
+                PlayerMove(
+                    PlayerNumber.PLAYER1,
                     SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
                     Disk(DiskType.Dark),
                 )
@@ -84,14 +90,18 @@ class BoardTest {
             val board = Board.create()
             val exception = assertThrows(CustomIllegalArgumentException::class.java) {
                 board.putDisk(
-                    PlayerMove.create(
+                    PlayerMove(
+                        PlayerNumber.PLAYER1,
                         SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
                         Disk(DiskType.Light),
                     )
                 )
             }
             assertEquals("ディスクを置く事はできません", exception.message)
-            assertEquals("相手のディスクを裏返す事ができない位置にディスクを置くことはできません。PlayerMove(position=(E, SIX), disk=Disk(diskType=Light))", exception.description)
+            assertEquals(
+                "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。PlayerMove(number=PLAYER1, position=(E, SIX), disk=Disk(diskType=Light))",
+                exception.description
+            )
         }
     }
 
@@ -100,7 +110,8 @@ class BoardTest {
     fun testPutDiskToVerticalPosition() {
         val board = Board.create()
         val newBoard = board.putDisk(
-            PlayerMove.create(
+            PlayerMove(
+                PlayerNumber.PLAYER1,
                 SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
                 Disk(DiskType.Dark)
             )
@@ -120,43 +131,4 @@ class BoardTest {
             },
         )
     }
-//        val diskMap: MutableMap<SquarePosition, Disk?> = mutableMapOf()
-//        diskMap[SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR)] = Disk(DiskType.Light)
-//        diskMap[SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FIVE)] = Disk(DiskType.Light)
-//        diskMap[SquarePosition(HorizontalPosition.FOUR, VerticalPosition.SIX)] = Disk(DiskType.Dark)
-//
-//        val board = Board.mappedInitialize(diskMap)
-//        val newBoard = board.putDisk(
-//            PlayerMove.create(
-//                SquarePosition(HorizontalPosition.FOUR, VerticalPosition.THREE),
-//                Disk(DiskType.Dark)
-//            )
-//        )
-//        assertAll(
-//            {
-//                assertEquals(
-//                    Disk(DiskType.Dark),
-//                    newBoard.getDisk(SquarePosition(HorizontalPosition.FOUR, VerticalPosition.THREE))
-//                )
-//            },
-//            {
-//                assertEquals(
-//                    Disk(DiskType.Dark),
-//                    newBoard.getDisk(SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FOUR))
-//                )
-//            },
-//            {
-//                assertEquals(
-//                    Disk(DiskType.Dark),
-//                    newBoard.getDisk(SquarePosition(HorizontalPosition.FOUR, VerticalPosition.FIVE))
-//                )
-//            },
-//            {
-//                assertEquals(
-//                    Disk(DiskType.Dark),
-//                    newBoard.getDisk(SquarePosition(HorizontalPosition.FOUR, VerticalPosition.SIX))
-//                )
-//            },
-//        )
-//    }
 }

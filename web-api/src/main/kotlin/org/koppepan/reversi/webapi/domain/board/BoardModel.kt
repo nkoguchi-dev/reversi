@@ -1,5 +1,6 @@
 package org.koppepan.reversi.webapi.domain.board
 
+import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
 
@@ -157,17 +158,15 @@ value class DiskMap(
         DiskMap(value.filterValues { it != null })
 }
 
-class PlayerMove private constructor(
+/**
+ * プレイヤーの行動を表すクラス
+ */
+class PlayerMove(
+    val number: PlayerNumber,
     val position: SquarePosition,
     val disk: Disk,
 ) {
-    companion object {
-        fun create(position: SquarePosition, disk: Disk): PlayerMove {
-            return PlayerMove(position, disk)
-        }
-    }
-
     override fun toString(): String {
-        return "PlayerMove(position=$position, disk=$disk)"
+        return "PlayerMove(number=$number, position=$position, disk=$disk)"
     }
 }

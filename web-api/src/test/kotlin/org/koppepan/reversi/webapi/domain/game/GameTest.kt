@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.koppepan.reversi.webapi.domain.board.*
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.PlayerName
+import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
@@ -39,7 +40,7 @@ class GameTest {
                 SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
                 SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Light),
             ),
-            PlayerName("player1"),
+            PlayerNumber.PLAYER1,
         )
         assertEquals(expected, actual)
     }
@@ -57,8 +58,11 @@ class GameTest {
         )
 
         val nextGame = game.putDisk(
-            PlayerName("player1"),
-            SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+            PlayerMove(
+                PlayerNumber.PLAYER1,
+                SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+                Disk(DiskType.Dark),
+            )
         )
 
         val actual = nextGame.getGameStatus()
@@ -73,7 +77,7 @@ class GameTest {
                 SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
                 SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
             ),
-            nextPlayerName = PlayerName("player2"),
+            nextPlayerNumber = PlayerNumber.PLAYER2,
         )
         assertEquals(expected, actual)
     }

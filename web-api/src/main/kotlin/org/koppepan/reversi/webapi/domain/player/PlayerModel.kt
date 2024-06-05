@@ -1,17 +1,28 @@
 package org.koppepan.reversi.webapi.domain.player
 
+import org.koppepan.reversi.webapi.domain.board.Disk
 import org.koppepan.reversi.webapi.domain.board.DiskType
+import org.koppepan.reversi.webapi.domain.board.PlayerMove
+import org.koppepan.reversi.webapi.domain.board.SquarePosition
 import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
 
 class Player private constructor(
     val name: PlayerName,
     val diskType: DiskType,
+    val number: PlayerNumber,
 ) {
     companion object {
-        fun create(name: PlayerName, diskType: DiskType): Player {
-            return Player(name, diskType)
+        fun create(name: PlayerName, diskType: DiskType, playerNumber: PlayerNumber): Player {
+            return Player(name, diskType, playerNumber)
         }
+    }
+
+    /**
+     * プレイヤーの行動を作成する
+     */
+    fun createMove(position: SquarePosition): PlayerMove {
+        return PlayerMove(number, position, Disk(diskType))
     }
 
     override fun equals(other: Any?): Boolean {
@@ -20,6 +31,7 @@ class Player private constructor(
 
         if (name != other.name) return false
         if (diskType != other.diskType) return false
+        if (number != other.number) return false
 
         return true
     }
@@ -27,11 +39,12 @@ class Player private constructor(
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + diskType.hashCode()
+        result = 31 * result + number.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "Player(name=$name, diskType=$diskType)"
+        return "Player(name=$name, diskType=$diskType, playerNumber=$number)"
     }
 }
 
@@ -55,4 +68,9 @@ value class PlayerName (val value: String) {
             )
         }
     }
+}
+
+enum class PlayerNumber {
+    PLAYER1,
+    PLAYER2,
 }

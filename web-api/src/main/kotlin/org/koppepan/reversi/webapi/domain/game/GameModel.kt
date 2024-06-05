@@ -4,6 +4,7 @@ import org.koppepan.reversi.webapi.domain.board.*
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
+import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -12,7 +13,7 @@ class Game private constructor(
     val board: Board,
     val player1: Player,
     val player2: Player,
-    val nextPlayer: Player,
+    val nextPlayerNumber: PlayerNumber,
 ) {
     companion object {
         val log: Logger = LoggerFactory.getLogger(this::class.java)
@@ -23,14 +24,14 @@ class Game private constructor(
             player2Name: String,
         ): Game {
             // 先手が黒で後手が白なのはReversiのルール
-            val player1 = Player.create(PlayerName(player1Name), DiskType.Dark)
-            val player2 = Player.create(PlayerName(player2Name), DiskType.Light)
+            val player1 = Player.create(PlayerName(player1Name), DiskType.Dark, PlayerNumber.PLAYER1)
+            val player2 = Player.create(PlayerName(player2Name), DiskType.Light, PlayerNumber.PLAYER2)
             val game = Game(
                 gameId = GameId.generate(idGenerator),
                 board = Board.create(),
                 player1 = player1,
                 player2 = player2,
-                nextPlayer = player1,
+                nextPlayerNumber = player1.number,
             )
             log.debug("Gameを開始しました。 {}", game)
             return game
@@ -39,22 +40,16 @@ class Game private constructor(
         fun recreate(
             gameId: GameId,
             board: Board,
-            player1Name: String,
-            player2Name: String,
-            nextPlayer: String,
+            player1: Player,
+            player2: Player,
+            nextPlayerNumber: PlayerNumber,
         ): Game {
-            val player1 = Player.create(PlayerName(player1Name), DiskType.Dark)
-            val player2 = Player.create(PlayerName(player2Name), DiskType.Light)
             return Game(
                 gameId = gameId,
                 board = board,
                 player1 = player1,
                 player2 = player2,
-                nextPlayer = when (nextPlayer) {
-                    player1Name -> player1
-                    player2Name -> player2
-                    else -> throw IllegalArgumentException("nextPlayer is invalid")
-                },
+                nextPlayerNumber = nextPlayerNumber,
             )
         }
     }
@@ -65,37 +60,26 @@ class Game private constructor(
             player1.name,
             player2.name,
             board.diskMap.getPlacedDiskMap(),
-            nextPlayer.name,
+            nextPlayerNumber,
         )
     }
 
     fun copy(
         board: Board = this.board,
-        nextPlayer: Player = this.nextPlayer,
-    ): Game = Game(gameId, board, player1, player2, nextPlayer)
+        nextPlayerNumber: PlayerNumber = this.nextPlayerNumber,
+    ): Game = Game(gameId, board, player1, player2, nextPlayerNumber)
 
-    fun putDisk(playerName: PlayerName, position: SquarePosition): Game {
-        val disk = when (playerName) {
-            player1.name -> Disk(player1.diskType)
-            player2.name -> Disk(player2.diskType)
-            else -> throw IllegalArgumentException("playerName is invalid")
-        }
-        val playerMove = PlayerMove.create(
-            position = position,
-            disk = disk,
-        )
+    fun putDisk(playerMove: PlayerMove): Game {
         val newBoard = board.putDisk(playerMove)
-        val nextPlayer = when (playerName) {
-            player1.name -> player2
-            player2.name -> player1
-            else -> throw IllegalArgumentException("playerName is invalid")
+        val nextPlayerNumber = when (playerMove.number) {
+            PlayerNumber.PLAYER1 -> PlayerNumber.PLAYER2
+            PlayerNumber.PLAYER2 -> PlayerNumber.PLAYER1
         }
         val nextGame = this.copy(
             board = newBoard,
-            nextPlayer = nextPlayer,
+            nextPlayerNumber = nextPlayerNumber,
         )
-        log.debug("Diskを配置しました。playerName: {}, position: {}, nextGame: {}",
-            playerName, position, nextGame)
+        log.debug("Diskを配置しました。playerMove: {}, nextGame: {}", playerMove, nextGame)
         return nextGame
     }
 
@@ -120,7 +104,7 @@ class Game private constructor(
     }
 
     override fun toString(): String {
-        return "Game(gameId=$gameId, board=$board, player1=$player1, player2=$player2, nextPlayer=$nextPlayer)"
+        return "Game(gameId=$gameId, board=$board, player1=$player1, player2=$player2, nextPlayerNumber=$nextPlayerNumber)"
     }
 }
 
@@ -140,5 +124,5 @@ data class GameStatus(
     val player1Name: PlayerName,
     val player2Name: PlayerName,
     val diskMap: DiskMap,
-    val nextPlayerName: PlayerName,
+    val nextPlayerNumber: PlayerNumber,
 )
