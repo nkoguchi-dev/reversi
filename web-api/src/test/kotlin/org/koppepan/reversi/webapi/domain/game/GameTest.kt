@@ -121,7 +121,7 @@ class GameTest {
     }
 
     @Nested
-    @DisplayName("ゲーム開始から終了までのテスト")
+    @DisplayName("ゲーム状態のテスト")
     inner class TestFromStartToFinish {
         @BeforeEach
         fun setUp() {
@@ -130,8 +130,54 @@ class GameTest {
         }
 
         @Test
-        @DisplayName("黒が勝利したゲームの状態を正しく出力できること")
-        fun testFromStartToFinish() {
+        @DisplayName("作成しただけのゲームの状態を正しく出力できること")
+        fun testFromStart() {
+            val game = Game.start(idGenerator, "player1", "player2")
+            val actual = game.getGameStatus()
+            val expected = GameState(
+                gameId = GameId.recreate("gameId"),
+                player1Name = PlayerName("player1"),
+                player2Name = PlayerName("player2"),
+                diskMap = DiskMap.of(
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                ),
+                nextPlayerNumber = PlayerNumber.PLAYER1,
+                progress = GameProgress.CREATED,
+            )
+            assertEquals(expected, actual)
+        }
+
+        @Test
+        @DisplayName("ゲーム中の状態を正しく出力できること")
+        fun testFromPlaying() {
+            val game = Game.start(idGenerator, "player1", "player2")
+            val player1 = game.player1
+            val actual = game
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .getGameStatus()
+            val expected = GameState(
+                gameId = GameId.recreate("gameId"),
+                player1Name = PlayerName("player1"),
+                player2Name = PlayerName("player2"),
+                diskMap = DiskMap.of(
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                ),
+                nextPlayerNumber = PlayerNumber.PLAYER2,
+                progress = GameProgress.PLAYING,
+            )
+            assertEquals(expected, actual)
+        }
+
+        @Test
+        @DisplayName("決着がついたゲームの状態を正しく出力できること")
+        fun testFromFinish() {
             val game = Game.start(idGenerator, "player1", "player2")
             val player1 = game.player1
             val player2 = game.player2

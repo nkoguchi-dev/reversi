@@ -167,6 +167,6 @@ data class GameState(
 enum class GameProgress {
     CREATED, // ゲームが作成されて開始されるまでの状態
     PLAYING, // ゲームが進行中の状態
-    SURRENDERED, // どちらかのプレイヤーが降参した状態
+    //SURRENDERED, // どちらかのプレイヤーが降参した状態
     FINISHED, // 勝敗が決まった状態
 }
