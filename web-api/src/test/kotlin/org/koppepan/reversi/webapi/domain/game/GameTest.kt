@@ -2,14 +2,15 @@ package org.koppepan.reversi.webapi.domain.game
 
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.koppepan.reversi.webapi.domain.board.*
+import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
+import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
@@ -123,15 +124,10 @@ class GameTest {
     @Nested
     @DisplayName("ゲーム状態のテスト")
     inner class TestFromStartToFinish {
-        @BeforeEach
-        fun setUp() {
-            whenever(idGenerator.generate())
-                .thenReturn("gameId")
-        }
-
         @Test
         @DisplayName("作成しただけのゲームの状態を正しく出力できること")
         fun testFromStart() {
+            whenever(idGenerator.generate()).thenReturn("gameId")
             val game = Game.start(idGenerator, "player1", "player2")
             val actual = game.getGameStatus()
             val expected = GameState(
@@ -153,6 +149,7 @@ class GameTest {
         @Test
         @DisplayName("ゲーム中の状態を正しく出力できること")
         fun testFromPlaying() {
+            whenever(idGenerator.generate()).thenReturn("gameId")
             val game = Game.start(idGenerator, "player1", "player2")
             val player1 = game.player1
             val actual = game
@@ -178,6 +175,7 @@ class GameTest {
         @Test
         @DisplayName("決着がついたゲームの状態を正しく出力できること")
         fun testFromFinish() {
+            whenever(idGenerator.generate()).thenReturn("gameId")
             val game = Game.start(idGenerator, "player1", "player2")
             val player1 = game.player1
             val player2 = game.player2
@@ -215,6 +213,31 @@ class GameTest {
                 progress = GameProgress.FINISHED,
             )
             assertEquals(expected, actual)
+        }
+
+        @Test
+        @DisplayName("決着がついたゲームで駒を置こうとした場合にエラーが発生すること")
+        fun testPutDiskWhenFinished() {
+            val game = Game.recreate(
+                gameId = GameId.recreate("gameId"),
+                board = Board.create(),
+                player1 = Player.create(PlayerName("player1"), DiskType.Dark, PlayerNumber.PLAYER1),
+                player2 = Player.create(PlayerName("player2"), DiskType.Light, PlayerNumber.PLAYER2),
+                nextPlayerNumber = PlayerNumber.PLAYER1,
+                progress = GameProgress.FINISHED,
+            )
+            val player1 = game.player1
+            val actual = assertThrows<GameAlreadyFinishedException> {
+                game.putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+            }
+            val expected = GameAlreadyFinishedException(
+                message = "ディスクを置く事はできません",
+                description = "ゲームが終了しているためディスクを配置することはできません。",
+            )
+            assertAll(
+                { assertEquals(expected.message, actual.message) },
+                { assertEquals(expected.description, actual.description) },
+            )
         }
     }
 }

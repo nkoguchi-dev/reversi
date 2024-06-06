@@ -4,6 +4,7 @@ import org.koppepan.reversi.webapi.domain.board.Board
 import org.koppepan.reversi.webapi.domain.board.DiskMap
 import org.koppepan.reversi.webapi.domain.board.DiskType
 import org.koppepan.reversi.webapi.domain.board.PlayerMove
+import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
@@ -80,16 +81,26 @@ class Game private constructor(
     ): Game = Game(gameId, board, player1, player2, nextPlayerNumber, progress)
 
     fun putDisk(playerMove: PlayerMove): Game {
+        validateState(playerMove)
+        val nextBoard = board.putDisk(playerMove)
+        log.debug("Diskを配置しました。playerMove: {}, nextBoard: {}", playerMove, nextBoard)
+
+        return this.getNextGame(nextBoard)
+    }
+
+    private fun validateState(playerMove: PlayerMove) {
+        if (this.progress == GameProgress.FINISHED) {
+            throw GameAlreadyFinishedException(
+                message = "ディスクを置く事はできません",
+                description = "ゲームが終了しているためディスクを配置することはできません。"
+            )
+        }
         if (playerMove.number != nextPlayerNumber) {
             throw CustomIllegalArgumentException(
                 message = "ディスクを置く事はできません",
                 description = "自分の順番ではないプレイヤーが駒を置くことはできません。playerMove: $playerMove, nextPlayerNumber: $nextPlayerNumber"
             )
         }
-        val nextBoard = board.putDisk(playerMove)
-        log.debug("Diskを配置しました。playerMove: {}, nextBoard: {}", playerMove, nextBoard)
-
-        return this.getNextGame(nextBoard)
     }
 
     private fun getNextGame(nextBoard: Board): Game {

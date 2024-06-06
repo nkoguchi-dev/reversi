@@ -1,6 +1,6 @@
 package org.koppepan.reversi.webapi.domain.shared
 
-class CustomIllegalArgumentException(
+open class CustomIllegalArgumentException(
     message: String,
     val description: String,
     cause: Throwable? = null
