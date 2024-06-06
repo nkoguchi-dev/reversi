@@ -2,7 +2,9 @@ package org.koppepan.reversi.webapi.domain.game
 
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,7 +35,7 @@ class GameTest {
         )
 
         val actual = game.getGameStatus()
-        val expected = GameStatus(
+        val expected = GameState(
             GameId.recreate("gameId"),
             PlayerName("player1"),
             PlayerName("player2"),
@@ -44,6 +46,7 @@ class GameTest {
                 SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Light),
             ),
             PlayerNumber.PLAYER1,
+            GameProgress.CREATED,
         )
         assertEquals(expected, actual)
     }
@@ -69,7 +72,7 @@ class GameTest {
         )
 
         val actual = nextGame.getGameStatus()
-        val expected = GameStatus(
+        val expected = GameState(
             gameId = GameId.recreate("gameId"),
             player1Name = PlayerName("player1"),
             player2Name = PlayerName("player2"),
@@ -81,6 +84,7 @@ class GameTest {
                 SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
             ),
             nextPlayerNumber = PlayerNumber.PLAYER2,
+            progress = GameProgress.PLAYING,
         )
         assertEquals(expected, actual)
     }
@@ -114,5 +118,57 @@ class GameTest {
             { assertEquals(expected.message, actual.message) },
             { assertEquals(expected.description, actual.description) },
         )
+    }
+
+    @Nested
+    @DisplayName("ゲーム開始から終了までのテスト")
+    inner class TestFromStartToFinish {
+        @BeforeEach
+        fun setUp() {
+            whenever(idGenerator.generate())
+                .thenReturn("gameId")
+        }
+
+        @Test
+        @DisplayName("黒が勝利したゲームの状態を正しく出力できること")
+        fun testFromStartToFinish() {
+            val game = Game.start(idGenerator, "player1", "player2")
+            val player1 = game.player1
+            val player2 = game.player2
+            val actual = game
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.C, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SEVEN)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
+                .getGameStatus()
+            val expected = GameState(
+                gameId = GameId.recreate("gameId"),
+                player1Name = PlayerName("player1"),
+                player2Name = PlayerName("player2"),
+                diskMap = DiskMap.of(
+                    SquarePosition(HorizontalPosition.C, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.D, VerticalPosition.SIX) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.THREE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.SIX) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.E, VerticalPosition.SEVEN) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.F, VerticalPosition.SIX) to Disk(DiskType.Dark),
+                    SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                ),
+                nextPlayerNumber = PlayerNumber.PLAYER1,
+                progress = GameProgress.FINISHED,
+            )
+            assertEquals(expected, actual)
+        }
     }
 }

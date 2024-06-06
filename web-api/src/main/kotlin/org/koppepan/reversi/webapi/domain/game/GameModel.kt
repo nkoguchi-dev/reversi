@@ -18,6 +18,7 @@ class Game private constructor(
     val player1: Player,
     val player2: Player,
     val nextPlayerNumber: PlayerNumber,
+    val progress: GameProgress,
 ) {
     companion object {
         val log: Logger = LoggerFactory.getLogger(this::class.java)
@@ -36,6 +37,7 @@ class Game private constructor(
                 player1 = player1,
                 player2 = player2,
                 nextPlayerNumber = player1.number,
+                progress = GameProgress.CREATED,
             )
             log.debug("Gameを開始しました。 {}", game)
             return game
@@ -47,6 +49,7 @@ class Game private constructor(
             player1: Player,
             player2: Player,
             nextPlayerNumber: PlayerNumber,
+            progress: GameProgress,
         ): Game {
             return Game(
                 gameId = gameId,
@@ -54,24 +57,27 @@ class Game private constructor(
                 player1 = player1,
                 player2 = player2,
                 nextPlayerNumber = nextPlayerNumber,
+                progress = progress,
             )
         }
     }
 
-    fun getGameStatus(): GameStatus {
-        return GameStatus(
+    fun getGameStatus(): GameState {
+        return GameState(
             gameId,
             player1.name,
             player2.name,
             board.diskMap.getPlacedDiskMap(),
             nextPlayerNumber,
+            progress,
         )
     }
 
     fun copy(
         board: Board = this.board,
         nextPlayerNumber: PlayerNumber = this.nextPlayerNumber,
-    ): Game = Game(gameId, board, player1, player2, nextPlayerNumber)
+        progress: GameProgress = this.progress,
+    ): Game = Game(gameId, board, player1, player2, nextPlayerNumber, progress)
 
     fun putDisk(playerMove: PlayerMove): Game {
         if (playerMove.number != nextPlayerNumber) {
@@ -80,17 +86,30 @@ class Game private constructor(
                 description = "自分の順番ではないプレイヤーが駒を置くことはできません。playerMove: $playerMove, nextPlayerNumber: $nextPlayerNumber"
             )
         }
-        val newBoard = board.putDisk(playerMove)
-        val nextPlayerNumber = when (playerMove.number) {
-            PlayerNumber.PLAYER1 -> PlayerNumber.PLAYER2
-            PlayerNumber.PLAYER2 -> PlayerNumber.PLAYER1
+        val nextBoard = board.putDisk(playerMove)
+        log.debug("Diskを配置しました。playerMove: {}, nextBoard: {}", playerMove, nextBoard)
+
+        return this.getNextGame(nextBoard)
+    }
+
+    private fun getNextGame(nextBoard: Board): Game {
+        val (currentPlayerNumber, nextPlayerNumber) = when (this.nextPlayerNumber) {
+            PlayerNumber.PLAYER1 -> Pair(PlayerNumber.PLAYER1, PlayerNumber.PLAYER2)
+            PlayerNumber.PLAYER2 -> Pair(PlayerNumber.PLAYER2, PlayerNumber.PLAYER1)
         }
-        val nextGame = this.copy(
-            board = newBoard,
-            nextPlayerNumber = nextPlayerNumber,
-        )
-        log.debug("Diskを配置しました。playerMove: {}, nextGame: {}", playerMove, nextGame)
-        return nextGame
+
+        // 次に駒を置くプレイヤーが配置できるマスを取得し次手のゲーム状態を決定する
+        val currentPlayersPuttableSquares = nextBoard.getAllPuttableSquares(currentPlayerNumber)
+        val nextPlayersPuttableSquares = nextBoard.getAllPuttableSquares(nextPlayerNumber)
+        return if (nextPlayersPuttableSquares.isEmpty() && currentPlayersPuttableSquares.isEmpty()) {
+            log.info("ゲームが終了しました。")
+            this.copy(board = nextBoard, progress = GameProgress.FINISHED)
+        } else if (nextPlayersPuttableSquares.isEmpty()) {
+            log.debug("{}が配置できるマスが無いため順序が飛ばされます。", nextPlayerNumber)
+            this.copy(board = nextBoard, nextPlayerNumber = currentPlayerNumber, progress = GameProgress.PLAYING)
+        } else {
+            this.copy(board = nextBoard, nextPlayerNumber = nextPlayerNumber, progress = GameProgress.PLAYING)
+        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -101,6 +120,8 @@ class Game private constructor(
         if (board != other.board) return false
         if (player1 != other.player1) return false
         if (player2 != other.player2) return false
+        if (nextPlayerNumber != other.nextPlayerNumber) return false
+        if (progress != other.progress) return false
 
         return true
     }
@@ -110,11 +131,13 @@ class Game private constructor(
         result = 31 * result + board.hashCode()
         result = 31 * result + player1.hashCode()
         result = 31 * result + player2.hashCode()
+        result = 31 * result + nextPlayerNumber.hashCode()
+        result = 31 * result + progress.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "Game(gameId=$gameId, board=$board, player1=$player1, player2=$player2, nextPlayerNumber=$nextPlayerNumber)"
+        return "Game(gameId=$gameId, board=$board, player1=$player1, player2=$player2, nextPlayerNumber=$nextPlayerNumber, progress=$progress)"
     }
 }
 
@@ -129,10 +152,21 @@ value class GameId private constructor(
     }
 }
 
-data class GameStatus(
+data class GameState(
     val gameId: GameId,
     val player1Name: PlayerName,
     val player2Name: PlayerName,
     val diskMap: DiskMap,
     val nextPlayerNumber: PlayerNumber,
+    val progress: GameProgress,
 )
+
+/**
+ * ゲームの進行状態
+ */
+enum class GameProgress {
+    CREATED, // ゲームが作成されて開始されるまでの状態
+    PLAYING, // ゲームが進行中の状態
+    SURRENDERED, // どちらかのプレイヤーが降参した状態
+    FINISHED, // 勝敗が決まった状態
+}
