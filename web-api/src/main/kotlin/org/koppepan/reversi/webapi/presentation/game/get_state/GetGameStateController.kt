@@ -16,7 +16,7 @@ class GetGameStateController(
         val status: String,
     )
 
-    @GetMapping("/api/game/{gameId}")
+    @GetMapping("/api/games/{gameId}")
     suspend fun get(
         @PathVariable gameId: String,
     ): GetGameStateResponse {

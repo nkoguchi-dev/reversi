@@ -10,21 +10,21 @@ class CreateGameController(
     private val createGameUseCase: CreateGameUseCase,
 ) {
     data class CreateGameRequest(
-        val player1Name: String,
-        val player2Name: String,
+        val player1: String,
+        val player2: String,
     )
 
     data class CreateGameResponse(
         val gameId: String,
     )
 
-    @PostMapping("/api/game/start")
+    @PostMapping("/api/games/start")
     suspend fun get(
         @RequestBody request: CreateGameRequest,
     ): CreateGameResponse {
         val input = CreateGameUseCase.Input(
-            player1Name = request.player1Name,
-            player2Name = request.player2Name,
+            player1Name = request.player1,
+            player2Name = request.player2,
         )
         return createGameUseCase
             .create(input)
