@@ -9,6 +9,15 @@ import org.springframework.web.bind.annotation.RestController
 class CreateGameController(
     private val createGameUseCase: CreateGameUseCase,
 ) {
+    data class CreateGameRequest(
+        val player1Name: String,
+        val player2Name: String,
+    )
+
+    data class CreateGameResponse(
+        val gameId: String,
+    )
+
     @PostMapping("/api/game/start")
     suspend fun get(
         @RequestBody request: CreateGameRequest,
@@ -30,12 +39,3 @@ class CreateGameController(
         }
     }
 }
-
-data class CreateGameRequest(
-    val player1Name: String,
-    val player2Name: String,
-)
-
-data class CreateGameResponse(
-    val gameId: String,
-)
