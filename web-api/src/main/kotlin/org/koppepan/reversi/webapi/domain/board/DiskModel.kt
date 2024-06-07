@@ -35,7 +35,7 @@ class Disk(
     }
 }
 
-enum class DiskType {
-    Light,
-    Dark,
+enum class DiskType(val value: String) {
+    Dark("DARK"),
+    Light("LIGHT"),
 }

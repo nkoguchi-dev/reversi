@@ -4,12 +4,13 @@ import org.komapper.annotation.*
 import java.time.Instant
 
 @KomapperEntity
-@KomapperTable("reversi.games")
-data class GameEntity(
+@KomapperTable("reversi.moves")
+data class MoveEntity(
     @KomapperId val gameId: String,
-    val player1Name: String,
-    val player2Name: String,
-    val status: String,
+    @KomapperId val moveId: String,
+    val playerNumber: String,
+    val horizontalPosition: String,
+    val verticalPosition: String,
     @KomapperCreatedAt val createdAt: Instant? = null,
     @KomapperUpdatedAt val updatedAt: Instant? = null,
 )

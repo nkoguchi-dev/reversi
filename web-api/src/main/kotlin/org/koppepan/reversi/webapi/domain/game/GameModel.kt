@@ -173,8 +173,8 @@ data class GameState(
 /**
  * ゲームの進行状態
  */
-enum class GameProgress {
-    CREATED, // ゲームが作成されて開始されるまでの状態
-    IN_PROGRESS, // ゲームが進行中の状態
-    FINISHED, // 勝敗が決まった状態
+enum class GameProgress(val value: String) {
+    CREATED("CREATED"), // ゲームが作成されて開始されるまでの状態
+    IN_PROGRESS("IN_PROGRESS"), // ゲームが進行中の状態
+    FINISHED("FINISHED"), // 勝敗が決まった状態
 }
