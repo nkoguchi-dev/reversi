@@ -11,22 +11,20 @@ spring:
 #    password: ${DATASOURCE_PASSWORD}
 #    hikari:
 #      maximum-pool-size: ${DATASOURCE_MAXIMUM_POOL_SIZE:10}
-
-  datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
+  r2dbc:
+    url: r2dbc:h2:mem:///reversi_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
 
   h2:
     console:
       enabled: true
+      settings:
+        web-allow-others: true
 
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-
-logging:
-  level:
-    root: DEBUG
+  flyway:
+    enabled: true
+    url: jdbc:h2:mem:reversi_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    user: sa
+    password:
+    locations: classpath:db/migration
