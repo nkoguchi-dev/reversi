@@ -1,20 +1,11 @@
 spring:
   application:
     name: web-api
-#  flyway:
-#    enabled: false
 
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
-#    url: ${DATASOURCE_URL}
-#    username: ${DATASOURCE_USERNAME}
-#    password: ${DATASOURCE_PASSWORD}
-#    hikari:
-#      maximum-pool-size: ${DATASOURCE_MAXIMUM_POOL_SIZE:10}
   r2dbc:
-    url: r2dbc:h2:mem:///reversi_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
+    url: ${R2DBC_URL}
+    username: ${R2DBC_USERNAME}
+    password: ${R2DBC_PASSWORD}
 
   h2:
     console:
@@ -24,7 +15,7 @@ spring:
 
   flyway:
     enabled: true
-    url: jdbc:h2:mem:reversi_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    user: sa
-    password:
+    url: ${FLYWAY_URL}
+    user: ${FLYWAY_USERNAME}
+    password: ${FLYWAY_PASSWORD}
     locations: classpath:db/migration
