@@ -2,10 +2,10 @@ package org.koppepan.reversi.webapi.domain.game
 
 import org.koppepan.reversi.webapi.domain.board.Board
 import org.koppepan.reversi.webapi.domain.board.DiskMap
-import org.koppepan.reversi.webapi.domain.board.PlayerMove
 import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
+import org.koppepan.reversi.webapi.domain.player.PlayerMove
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
@@ -115,9 +115,9 @@ class Game private constructor(
             this.copy(board = nextBoard, progress = GameProgress.FINISHED)
         } else if (nextPlayersPuttableSquares.isEmpty()) {
             log.debug("{}が配置できるマスが無いため順序が飛ばされます。", nextPlayerNumber)
-            this.copy(board = nextBoard, nextPlayerNumber = currentPlayerNumber, progress = GameProgress.PLAYING)
+            this.copy(board = nextBoard, nextPlayerNumber = currentPlayerNumber, progress = GameProgress.IN_PROGRESS)
         } else {
-            this.copy(board = nextBoard, nextPlayerNumber = nextPlayerNumber, progress = GameProgress.PLAYING)
+            this.copy(board = nextBoard, nextPlayerNumber = nextPlayerNumber, progress = GameProgress.IN_PROGRESS)
         }
     }
 
@@ -175,7 +175,6 @@ data class GameState(
  */
 enum class GameProgress {
     CREATED, // ゲームが作成されて開始されるまでの状態
-    PLAYING, // ゲームが進行中の状態
-    //SURRENDERED, // どちらかのプレイヤーが降参した状態
+    IN_PROGRESS, // ゲームが進行中の状態
     FINISHED, // 勝敗が決まった状態
 }

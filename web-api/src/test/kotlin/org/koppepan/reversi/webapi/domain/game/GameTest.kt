@@ -11,6 +11,7 @@ import org.koppepan.reversi.webapi.domain.board.*
 import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
+import org.koppepan.reversi.webapi.domain.player.PlayerMove
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
@@ -85,7 +86,7 @@ class GameTest {
                 SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
             ),
             nextPlayerNumber = PlayerNumber.PLAYER2,
-            progress = GameProgress.PLAYING,
+            progress = GameProgress.IN_PROGRESS,
         )
         assertEquals(expected, actual)
     }
@@ -167,7 +168,7 @@ class GameTest {
                     SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
                 ),
                 nextPlayerNumber = PlayerNumber.PLAYER2,
-                progress = GameProgress.PLAYING,
+                progress = GameProgress.IN_PROGRESS,
             )
             assertEquals(expected, actual)
         }

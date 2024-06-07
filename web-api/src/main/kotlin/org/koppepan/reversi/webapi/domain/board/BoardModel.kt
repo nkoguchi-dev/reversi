@@ -1,5 +1,6 @@
 package org.koppepan.reversi.webapi.domain.board
 
+import org.koppepan.reversi.webapi.domain.player.PlayerMove
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
@@ -172,17 +173,4 @@ value class DiskMap(
      */
     fun getAllEmptySquares(): List<SquarePosition> =
         value.filterValues { it == null }.keys.toList()
-}
-
-/**
- * プレイヤーの行動を表すクラス
- */
-class PlayerMove(
-    val number: PlayerNumber,
-    val position: SquarePosition,
-    val disk: Disk,
-) {
-    override fun toString(): String {
-        return "PlayerMove(number=$number, position=$position, disk=$disk)"
-    }
 }

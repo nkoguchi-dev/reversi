@@ -2,7 +2,6 @@ package org.koppepan.reversi.webapi.domain.player
 
 import org.koppepan.reversi.webapi.domain.board.Disk
 import org.koppepan.reversi.webapi.domain.board.DiskType
-import org.koppepan.reversi.webapi.domain.board.PlayerMove
 import org.koppepan.reversi.webapi.domain.board.SquarePosition
 import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
@@ -76,4 +75,17 @@ value class PlayerName (val value: String) {
 enum class PlayerNumber(val diskType: DiskType) {
     PLAYER1(DiskType.Dark),
     PLAYER2(DiskType.Light),
+}
+
+/**
+ * プレイヤーの行動を表すクラス
+ */
+class PlayerMove(
+    val number: PlayerNumber,
+    val position: SquarePosition,
+    val disk: Disk,
+) {
+    override fun toString(): String {
+        return "PlayerMove(number=$number, position=$position, disk=$disk)"
+    }
 }
