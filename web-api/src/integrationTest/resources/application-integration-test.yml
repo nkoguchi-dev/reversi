@@ -1,5 +1,3 @@
 spring:
   flyway:
     locations: classpath:db/migration
-  datasource:
-    driver-class-name: org.postgresql.Driver
