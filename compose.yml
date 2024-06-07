@@ -1,19 +1,6 @@
 version: '3'
 
 services:
-  reversi_db:
-    container_name: reversi_db
-    build:
-      context: ./db
-    ports:
-      - "15432:5432"
-    environment:
-      POSTGRES_USER: pgadmin
-      POSTGRES_PASSWORD: pgadmin
-    volumes:
-      - ./db/data:/var/lib/postgresql/data
-      - ./db/init:/docker-entrypoint-initdb.d
-
   reversi_web-api:
     build:
       context: ./web-api
@@ -21,8 +8,6 @@ services:
     volumes:
       - ./web-api:/project/web-api
       - /project/web-api/.gradle
-    depends_on:
-      - reversi_db
     ports:
       - "18080:8080"
       - "15005:5005"
