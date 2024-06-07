@@ -5,7 +5,7 @@ import org.koppepan.reversi.webapi.domain.board.DiskMap
 import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
-import org.koppepan.reversi.webapi.domain.player.PlayerMove
+import org.koppepan.reversi.webapi.domain.player.Move
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
@@ -78,25 +78,25 @@ class Game private constructor(
         progress: GameProgress = this.progress,
     ): Game = Game(gameId, board, player1, player2, nextPlayerNumber, progress)
 
-    fun putDisk(playerMove: PlayerMove): Game {
-        validateState(playerMove)
-        val nextBoard = board.putDisk(playerMove)
-        log.debug("Diskを配置しました。playerMove: {}, nextBoard: {}", playerMove, nextBoard)
+    fun putDisk(move: Move): Game {
+        validateState(move)
+        val nextBoard = board.putDisk(move)
+        log.debug("Diskを配置しました。move: {}, nextBoard: {}", move, nextBoard)
 
         return this.getNextGame(nextBoard)
     }
 
-    private fun validateState(playerMove: PlayerMove) {
+    private fun validateState(move: Move) {
         if (this.progress == GameProgress.FINISHED) {
             throw GameAlreadyFinishedException(
                 message = "ディスクを置く事はできません",
                 description = "ゲームが終了しているためディスクを配置することはできません。"
             )
         }
-        if (playerMove.number != nextPlayerNumber) {
+        if (move.number != nextPlayerNumber) {
             throw CustomIllegalArgumentException(
                 message = "ディスクを置く事はできません",
-                description = "自分の順番ではないプレイヤーが駒を置くことはできません。playerMove: $playerMove, nextPlayerNumber: $nextPlayerNumber"
+                description = "自分の順番ではないプレイヤーが駒を置くことはできません。playerMove: $move, nextPlayerNumber: $nextPlayerNumber"
             )
         }
     }

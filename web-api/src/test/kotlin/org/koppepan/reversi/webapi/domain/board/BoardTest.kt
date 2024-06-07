@@ -4,13 +4,21 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
-import org.koppepan.reversi.webapi.domain.player.PlayerMove
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.whenever
 
+@ExtendWith(MockitoExtension::class)
 class BoardTest {
+    @Mock
+    private lateinit var idGenerator: IdGenerator
+
     @Test
     @DisplayName("初期状態のBoardを作成する事ができる")
     fun testCreate() {
@@ -41,13 +49,13 @@ class BoardTest {
         @Test
         @DisplayName("ディスクを置く事ができる")
         fun testPutDisk() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
-            val putPosition = SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)
-            val newBoard = board.putDisk(
-                PlayerMove(PlayerNumber.PLAYER1, putPosition, Disk(DiskType.Light))
-            )
+            val putPosition = SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)
+            val newBoard = board.putDisk(player1.createMove(idGenerator, putPosition))
             assertEquals(
-                Disk(DiskType.Light),
+                Disk(DiskType.Dark),
                 newBoard.getDisk(putPosition),
             )
         }
@@ -55,15 +63,11 @@ class BoardTest {
         @Test
         @DisplayName("既にディスクが置かれている場所にディスクを置く事はできない")
         fun testPutDiskToAlreadyOccupiedPosition() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val exception = assertThrows(CustomIllegalArgumentException::class.java) {
-                board.putDisk(
-                    PlayerMove(
-                        PlayerNumber.PLAYER1,
-                        SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR),
-                        Disk(DiskType.Light)
-                    )
-                )
+                board.putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR)))
             }
             assertEquals("ディスクを置く事はできません", exception.message)
             assertEquals(
@@ -75,13 +79,11 @@ class BoardTest {
         @Test
         @DisplayName("相手のディスクを裏返せる位置にディスクを置く事ができる")
         fun testPutDiskToPositionWithOpponentDisk() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val newBoard = board.putDisk(
-                PlayerMove(
-                    PlayerNumber.PLAYER1,
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
-                    Disk(DiskType.Dark),
-                )
+                player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX))
             )
             val actual = newBoard.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX))
             assertEquals(Disk(DiskType.Dark), actual)
@@ -90,19 +92,17 @@ class BoardTest {
         @Test
         @DisplayName("相手のディスクを裏返せない位置にディスクを置く事ができない")
         fun testPutDiskToPositionWithoutOpponentDisk() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player2 = Player.createPlayer2(PlayerName("Player2"))
             val board = Board.create()
             val exception = assertThrows(CustomIllegalArgumentException::class.java) {
                 board.putDisk(
-                    PlayerMove(
-                        PlayerNumber.PLAYER1,
-                        SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
-                        Disk(DiskType.Light),
-                    )
+                    player2.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX))
                 )
             }
             assertEquals("ディスクを置く事はできません", exception.message)
             assertEquals(
-                "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。PlayerMove(number=PLAYER1, position=(E, SIX), disk=Disk(diskType=Light))",
+                "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。PlayerMove(moveId=mockedId, number=PLAYER2, position=(E, SIX))",
                 exception.description
             )
         }
@@ -114,13 +114,11 @@ class BoardTest {
         @Test
         @DisplayName("垂直方向に挟んだ相手のディスクを裏返す事ができる")
         fun testPutDiskToVerticalPosition() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val newBoard = board.putDisk(
-                PlayerMove(
-                    PlayerNumber.PLAYER1,
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
-                    Disk(DiskType.Dark)
-                )
+                player1.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.THREE))
             )
             assertAll(
                 {
@@ -141,13 +139,11 @@ class BoardTest {
         @Test
         @DisplayName("水平方向に挟んだ相手のディスクを裏返す事ができる")
         fun testPutDiskToHorizontalPosition() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val newBoard = board.putDisk(
-                PlayerMove(
-                    PlayerNumber.PLAYER1,
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
-                    Disk(DiskType.Dark)
-                )
+                player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE))
             )
             assertAll(
                 {
@@ -168,20 +164,13 @@ class BoardTest {
         @Test
         @DisplayName("斜め方向に挟んだ相手のディスクを裏返す事ができる")
         fun testPutDiskToDiagonalPosition() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
+            val player2 = Player.createPlayer2(PlayerName("Player2"))
             val board = Board.create()
-            val newBoard = board.putDisk(
-                PlayerMove(
-                    PlayerNumber.PLAYER1,
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
-                    Disk(DiskType.Dark)
-                )
-            ).putDisk(
-                PlayerMove(
-                    PlayerNumber.PLAYER2,
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.SIX),
-                    Disk(DiskType.Light)
-                )
-            )
+            val newBoard = board
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
             assertAll(
                 {
                     assertEquals(
@@ -219,14 +208,11 @@ class BoardTest {
         @Test
         @DisplayName("１手進めた盤目に配置可能な全てのSquareを取得する事ができる")
         fun testGetAllPuttableSquaresAfterOneMove() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
-            val newBoard = board.putDisk(
-                PlayerMove(
-                    PlayerNumber.PLAYER1,
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
-                    Disk(DiskType.Dark)
-                )
-            )
+            val newBoard = board
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
             val actual = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
             val expected = listOf(
                 SquarePosition(HorizontalPosition.D, VerticalPosition.SIX),
@@ -239,19 +225,20 @@ class BoardTest {
         @Test
         @DisplayName("配置可能なSquareがない場合は空リストを返す（黒が勝つパターン）")
         fun testGetAllPuttableSquaresWhenNoPuttableSquare() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
             val board = Board.create()
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val player2 = Player.createPlayer2(PlayerName("Player2"))
             val newBoard = board
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.C, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SEVEN)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.C, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SEVEN)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
             val actualPlayer1 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER1)
             val actualPlayer2 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
             assertAll(
@@ -263,20 +250,21 @@ class BoardTest {
         @Test
         @DisplayName("配置可能なSquareがない場合は空リストを返す（白が勝つパターン）")
         fun testGetAllPuttableSquaresWhenNoPuttableSquare2() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
             val board = Board.create()
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val player2 = Player.createPlayer2(PlayerName("Player2"))
             val newBoard = board
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.TWO)))
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.THREE)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(SquarePosition(HorizontalPosition.C, VerticalPosition.FOUR)))
-                .putDisk(player2.createMove(SquarePosition(HorizontalPosition.B, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.TWO)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.THREE)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.C, VerticalPosition.FOUR)))
+                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.B, VerticalPosition.FOUR)))
             val actualPlayer1 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER1)
             val actualPlayer2 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
             assertAll(

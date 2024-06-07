@@ -3,6 +3,7 @@ package org.koppepan.reversi.webapi.domain.player
 import org.koppepan.reversi.webapi.domain.board.Disk
 import org.koppepan.reversi.webapi.domain.board.DiskType
 import org.koppepan.reversi.webapi.domain.board.SquarePosition
+import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
 
@@ -23,8 +24,11 @@ class Player private constructor(
     /**
      * プレイヤーの行動を作成する
      */
-    fun createMove(position: SquarePosition): PlayerMove {
-        return PlayerMove(number, position, Disk(diskType))
+    fun createMove(
+        idGenerator: IdGenerator,
+        position: SquarePosition,
+    ): Move {
+        return Move(MoveId.generate(idGenerator), number, position)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -51,7 +55,7 @@ class Player private constructor(
 }
 
 @JvmInline
-value class PlayerName (val value: String) {
+value class PlayerName(val value: String) {
     companion object {
         private const val MAX_LENGTH = 200
     }
@@ -74,18 +78,31 @@ value class PlayerName (val value: String) {
 
 enum class PlayerNumber(val diskType: DiskType) {
     PLAYER1(DiskType.Dark),
-    PLAYER2(DiskType.Light),
+    PLAYER2(DiskType.Light);
+
+    fun disk(): Disk = Disk(diskType)
 }
 
 /**
  * プレイヤーの行動を表すクラス
  */
-class PlayerMove(
+class Move(
+    val moveId: MoveId,
     val number: PlayerNumber,
     val position: SquarePosition,
-    val disk: Disk,
 ) {
     override fun toString(): String {
-        return "PlayerMove(number=$number, position=$position, disk=$disk)"
+        return "PlayerMove(moveId=${moveId.value}, number=$number, position=$position)"
+    }
+}
+
+@JvmInline
+value class MoveId private constructor(
+    val value: String
+) {
+    companion object {
+        fun generate(idGenerator: IdGenerator): MoveId = MoveId(idGenerator.generate())
+
+        fun recreate(value: String): MoveId = MoveId(value)
     }
 }

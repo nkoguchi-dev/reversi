@@ -1,6 +1,6 @@
 package org.koppepan.reversi.webapi.domain.board
 
-import org.koppepan.reversi.webapi.domain.player.PlayerMove
+import org.koppepan.reversi.webapi.domain.player.Move
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
@@ -41,16 +41,16 @@ class Board private constructor(
     /**
      * 盤にディスクを置く
      */
-    fun putDisk(playerMove: PlayerMove): Board {
-        validateDiskExist(playerMove.position)
-        val reversedDiskMap = getDisksToBeReversed(playerMove.position, playerMove.disk)
+    fun putDisk(move: Move): Board {
+        validateDiskExist(move.position)
+        val reversedDiskMap = getDisksToBeReversed(move.position, move.number.disk())
         requireOrThrow(reversedDiskMap.value.isNotEmpty()) {
             CustomExceptionMessage(
                 message = "ディスクを置く事はできません",
-                description = "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。${playerMove}"
+                description = "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。${move}"
             )
         }
-        return this.putDiskWithoutAdjacentCheck(playerMove.position, playerMove.disk)
+        return this.putDiskWithoutAdjacentCheck(move.position, move.number.disk())
             .reverseDisks(reversedDiskMap)
     }
 

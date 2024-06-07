@@ -1,8 +1,8 @@
 CREATE TABLE reversi.games
 (
     game_id      VARCHAR(64),
-    player1_name VARCHAR(100)             NOT NULL,
-    player2_name VARCHAR(100)             NOT NULL,
+    player1_name VARCHAR(200)             NOT NULL,
+    player2_name VARCHAR(200)             NOT NULL,
     status       VARCHAR(20)              NOT NULL,
     created_at   TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at   TIMESTAMP WITH TIME ZONE NOT NULL,
