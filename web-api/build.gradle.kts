@@ -22,44 +22,52 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
-    // coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.0")
-
-    // R2DBC + PostgreSQL
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("org.postgresql:r2dbc-postgresql:1.0.5.RELEASE")
-    implementation("org.postgresql:postgresql")
-
-    // Komapper
-    val komapperVersion = "1.17.0"
-    platform("org.komapper:komapper-platform:$komapperVersion").let {
-        implementation(it)
-        ksp(it)
-    }
-    implementation("org.komapper:komapper-starter-r2dbc")
-    implementation("org.komapper:komapper-dialect-postgresql-r2dbc")
-    ksp("org.komapper:komapper-processor")
-
-    // flyway
-    runtimeOnly("org.flywaydb:flyway-core:10.11.1")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:10.11.1")
-
-    // テスト
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.flywaydb:flyway-core")
-    testImplementation("org.testcontainers:testcontainers")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.testcontainers:postgresql")
+
+//    implementation("org.springframework.boot:spring-boot-starter-webflux")
+//    implementation("org.jetbrains.kotlin:kotlin-reflect")
+//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
+//    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+//
+//    // coroutines
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.0")
+//
+//    // R2DBC + PostgreSQL
+//    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+//    implementation("org.postgresql:r2dbc-postgresql:1.0.5.RELEASE")
+//    implementation("org.postgresql:postgresql")
+//
+//    // Komapper
+//    val komapperVersion = "1.17.0"
+//    platform("org.komapper:komapper-platform:$komapperVersion").let {
+//        implementation(it)
+//        ksp(it)
+//    }
+//    implementation("org.komapper:komapper-starter-r2dbc")
+//    implementation("org.komapper:komapper-dialect-postgresql-r2dbc")
+//    ksp("org.komapper:komapper-processor")
+//
+//    // flyway
+//    runtimeOnly("org.flywaydb:flyway-core:10.11.1")
+//    runtimeOnly("org.flywaydb:flyway-database-postgresql:10.11.1")
+//
+//    // テスト
+//    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+//    testImplementation("org.springframework.boot:spring-boot-starter-test")
+//    testImplementation("org.springframework.security:spring-security-test")
+//    testImplementation("org.flywaydb:flyway-core")
+//    testImplementation("org.testcontainers:testcontainers")
+//    testImplementation("org.testcontainers:junit-jupiter")
+//    testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
+//    testImplementation("io.projectreactor:reactor-test")
+//    testImplementation("org.testcontainers:postgresql")
 }
 
 
