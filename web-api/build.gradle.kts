@@ -38,14 +38,14 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.0")
 
     // Komapper
-//    val komapperVersion = "1.17.0"
-//    platform("org.komapper:komapper-platform:$komapperVersion").let {
-//        implementation(it)
-//        ksp(it)
-//    }
-//    implementation("org.komapper:komapper-starter-r2dbc")
-//    implementation("org.komapper:komapper-dialect-postgresql-r2dbc")
-//    ksp("org.komapper:komapper-processor")
+    val komapperVersion = "1.17.0"
+    platform("org.komapper:komapper-platform:$komapperVersion").let {
+        implementation(it)
+        ksp(it)
+    }
+    implementation("org.komapper:komapper-starter-r2dbc")
+    implementation("org.komapper:komapper-dialect-h2-r2dbc")
+    ksp("org.komapper:komapper-processor")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
