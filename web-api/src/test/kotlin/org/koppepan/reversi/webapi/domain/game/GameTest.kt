@@ -221,8 +221,8 @@ class GameTest {
             val game = Game.recreate(
                 gameId = GameId.recreate("gameId"),
                 board = Board.create(),
-                player1 = Player.create(PlayerName("player1"), DiskType.Dark, PlayerNumber.PLAYER1),
-                player2 = Player.create(PlayerName("player2"), DiskType.Light, PlayerNumber.PLAYER2),
+                player1 = Player.createPlayer1(PlayerName("player1")),
+                player2 = Player.createPlayer2(PlayerName("player2")),
                 nextPlayerNumber = PlayerNumber.PLAYER1,
                 progress = GameProgress.FINISHED,
             )

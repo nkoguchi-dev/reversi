@@ -13,9 +13,12 @@ class Player private constructor(
     val number: PlayerNumber,
 ) {
     companion object {
-        fun create(name: PlayerName, diskType: DiskType, playerNumber: PlayerNumber): Player {
-            return Player(name, diskType, playerNumber)
-        }
+        // 先手が黒で後手が白なのはReversiのルール
+        fun createPlayer1(name: PlayerName): Player =
+            Player(name, DiskType.Dark, PlayerNumber.PLAYER1)
+
+        fun createPlayer2(name: PlayerName): Player =
+            Player(name, DiskType.Light, PlayerNumber.PLAYER2)
     }
 
     /**

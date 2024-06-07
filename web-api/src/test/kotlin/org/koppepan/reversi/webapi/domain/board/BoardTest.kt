@@ -239,8 +239,8 @@ class BoardTest {
         @DisplayName("配置可能なSquareがない場合は空リストを返す（黒が勝つパターン）")
         fun testGetAllPuttableSquaresWhenNoPuttableSquare() {
             val board = Board.create()
-            val player1 = Player.create(PlayerName("Player1"), DiskType.Dark, PlayerNumber.PLAYER1)
-            val player2 = Player.create(PlayerName("Player2"), DiskType.Light, PlayerNumber.PLAYER2)
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
+            val player2 = Player.createPlayer2(PlayerName("Player2"))
             val newBoard = board
                 .putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
                 .putDisk(player2.createMove(SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
@@ -263,8 +263,8 @@ class BoardTest {
         @DisplayName("配置可能なSquareがない場合は空リストを返す（白が勝つパターン）")
         fun testGetAllPuttableSquaresWhenNoPuttableSquare2() {
             val board = Board.create()
-            val player1 = Player.create(PlayerName("Player1"), DiskType.Dark, PlayerNumber.PLAYER1)
-            val player2 = Player.create(PlayerName("Player2"), DiskType.Light, PlayerNumber.PLAYER2)
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
+            val player2 = Player.createPlayer2(PlayerName("Player2"))
             val newBoard = board
                 .putDisk(player1.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
                 .putDisk(player2.createMove(SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))

@@ -5,7 +5,6 @@ import org.komapper.core.dsl.QueryDsl
 import org.komapper.core.dsl.query.singleOrNull
 import org.komapper.r2dbc.R2dbcDatabase
 import org.koppepan.reversi.webapi.domain.board.Board
-import org.koppepan.reversi.webapi.domain.board.DiskType
 import org.koppepan.reversi.webapi.domain.game.Game
 import org.koppepan.reversi.webapi.domain.game.GameId
 import org.koppepan.reversi.webapi.domain.game.GameProgress
@@ -38,8 +37,8 @@ class GetGameRepositoryImpl(
             return Game.recreate(
                 gameId = GameId.recreate(this.gameId),
                 board = Board.create(),
-                player1 = Player.create(PlayerName(this.player1Name), DiskType.Light, PlayerNumber.PLAYER1),
-                player2 = Player.create(PlayerName(this.player2Name), DiskType.Dark, PlayerNumber.PLAYER2),
+                player1 = Player.createPlayer1(PlayerName(this.player1Name)),
+                player2 = Player.createPlayer2(PlayerName(this.player2Name)),
                 nextPlayerNumber = PlayerNumber.PLAYER1,
                 progress = GameProgress.CREATED,
             )

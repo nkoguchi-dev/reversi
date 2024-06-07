@@ -2,7 +2,6 @@ package org.koppepan.reversi.webapi.domain.game
 
 import org.koppepan.reversi.webapi.domain.board.Board
 import org.koppepan.reversi.webapi.domain.board.DiskMap
-import org.koppepan.reversi.webapi.domain.board.DiskType
 import org.koppepan.reversi.webapi.domain.board.PlayerMove
 import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
@@ -29,9 +28,8 @@ class Game private constructor(
             player1Name: String,
             player2Name: String,
         ): Game {
-            // 先手が黒で後手が白なのはReversiのルール
-            val player1 = Player.create(PlayerName(player1Name), DiskType.Dark, PlayerNumber.PLAYER1)
-            val player2 = Player.create(PlayerName(player2Name), DiskType.Light, PlayerNumber.PLAYER2)
+            val player1 = Player.createPlayer1(PlayerName(player1Name))
+            val player2 = Player.createPlayer2(PlayerName(player2Name))
             val game = Game(
                 gameId = GameId.generate(idGenerator),
                 board = Board.create(),
