@@ -9,6 +9,6 @@ data class GameEntity(
     @KomapperId val gameId: String,
     val player1Name: String,
     val player2Name: String,
-    @KomapperCreatedAt val createdAt: Instant,
-    @KomapperUpdatedAt val updatedAt: Instant,
+    @KomapperCreatedAt val createdAt: Instant? = null,
+    @KomapperUpdatedAt val updatedAt: Instant? = null,
 )
