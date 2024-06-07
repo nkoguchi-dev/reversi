@@ -19,3 +19,5 @@ spring:
     user: ${FLYWAY_USERNAME}
     password: ${FLYWAY_PASSWORD}
     locations: classpath:db/migration
+    schemas: reversi
+    defaultSchema: reversi
