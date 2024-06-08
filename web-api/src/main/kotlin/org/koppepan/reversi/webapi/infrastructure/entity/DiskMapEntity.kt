@@ -7,8 +7,8 @@ import java.time.Instant
 @KomapperTable("reversi.disk_maps")
 data class DiskMapEntity(
     @KomapperId val gameId: String,
-    @KomapperId val horizontalPosition: Int,
-    @KomapperId val verticalPosition: Int,
+    @KomapperId val horizontalPosition: String,
+    @KomapperId val verticalPosition: String,
     val diskType: String,
     @KomapperCreatedAt val createdAt: Instant? = null,
     @KomapperUpdatedAt val updatedAt: Instant? = null,

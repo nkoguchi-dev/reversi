@@ -72,10 +72,10 @@ class GameTest(
         val actualDiskMapSet = db.runQuery(getDiskMapQuery)
             .map { it.copy(createdAt = null, updatedAt = null) }
         val expectedDiskMapSet = listOf(
-            DiskMapEntity(gameId = gameId, horizontalPosition = 4, verticalPosition = 4, diskType = "LIGHT"),
-            DiskMapEntity(gameId = gameId, horizontalPosition = 4, verticalPosition = 5, diskType = "DARK"),
-            DiskMapEntity(gameId = gameId, horizontalPosition = 5, verticalPosition = 4, diskType = "DARK"),
-            DiskMapEntity(gameId = gameId, horizontalPosition = 5, verticalPosition = 5, diskType = "LIGHT"),
+            DiskMapEntity(gameId = gameId, horizontalPosition = "D", verticalPosition = "4", diskType = "LIGHT"),
+            DiskMapEntity(gameId = gameId, horizontalPosition = "D", verticalPosition = "5", diskType = "DARK"),
+            DiskMapEntity(gameId = gameId, horizontalPosition = "E", verticalPosition = "4", diskType = "DARK"),
+            DiskMapEntity(gameId = gameId, horizontalPosition = "E", verticalPosition = "5", diskType = "LIGHT"),
         )
         assertEquals(expectedDiskMapSet, actualDiskMapSet)
     }

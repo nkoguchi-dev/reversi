@@ -61,8 +61,8 @@ class Position(
     }
 
     override fun hashCode(): Int {
-        var result = x.value
-        result = 31 * result + y.value
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
         return result
     }
 
@@ -71,54 +71,54 @@ class Position(
     }
 }
 
-enum class HorizontalPosition(val value: Int, val prev: Int?, val next: Int?) {
-    A(1, null, 2),
-    B(2, 1, 3),
-    C(3, 2, 4),
-    D(4, 3, 5),
-    E(5, 4, 6),
-    F(6, 5, 7),
-    G(7, 6, 8),
-    H(8, 7, null),
+enum class HorizontalPosition(val value: String, val prev: String?, val next: String?) {
+    A("A", null,"B"),
+    B("B", "A", "C"),
+    C("C", "B", "D"),
+    D("D", "C", "E"),
+    E("E", "D", "F"),
+    F("F", "E", "G"),
+    G("G", "F", "H"),
+    H("H", "G", null),
     ;
 
     companion object {
-        fun valueOf(value: Int?): HorizontalPosition? {
+        fun of(value: String?): HorizontalPosition? {
             return HorizontalPosition.entries.find { it.value == value }
         }
     }
 
     fun prev(): HorizontalPosition? {
-        return prev?.let { HorizontalPosition.valueOf(it) }
+        return prev?.let { HorizontalPosition.of(it) }
     }
 
     fun next(): HorizontalPosition? {
-        return next?.let { HorizontalPosition.valueOf(it) }
+        return next?.let { HorizontalPosition.of(it) }
     }
 }
 
-enum class VerticalPosition(val value: Int, val prev: Int?, val next: Int?) {
-    ONE(1, null, 2),
-    TWO(2, 1, 3),
-    THREE(3, 2, 4),
-    FOUR(4, 3, 5),
-    FIVE(5, 4, 6),
-    SIX(6, 5, 7),
-    SEVEN(7, 6, 8),
-    EIGHT(8, 7, null),
+enum class VerticalPosition(val value: String, val prev: String?, val next: String?) {
+    ONE("1", null, "2"),
+    TWO("2", "1", "3"),
+    THREE("3", "2", "4"),
+    FOUR("4", "3", "5"),
+    FIVE("5", "4", "6"),
+    SIX("6", "5", "7"),
+    SEVEN("7", "6", "8"),
+    EIGHT("8", "7", null),
     ;
 
     companion object {
-        fun valueOf(value: Int?): VerticalPosition? {
+        fun of(value: String?): VerticalPosition? {
             return VerticalPosition.entries.find { it.value == value }
         }
     }
 
     fun prev(): VerticalPosition? {
-        return prev?.let { VerticalPosition.valueOf(it) }
+        return prev?.let { VerticalPosition.of(it) }
     }
 
     fun next(): VerticalPosition? {
-        return next?.let { VerticalPosition.valueOf(it) }
+        return next?.let { VerticalPosition.of(it) }
     }
 }

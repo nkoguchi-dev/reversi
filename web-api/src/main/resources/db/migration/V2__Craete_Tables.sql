@@ -14,8 +14,8 @@ GRANT ALL ON reversi.games TO reversi_user;
 CREATE TABLE reversi.disk_maps
 (
     game_id             VARCHAR(255)             NOT NULL,
-    horizontal_position INT                      NOT NULL,
-    vertical_position   INT                      NOT NULL,
+    horizontal_position VARCHAR(1)               NOT NULL,
+    vertical_position   VARCHAR(1)               NOT NULL,
     disk_type           VARCHAR(10)              NOT NULL,
     created_at          TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at          TIMESTAMP WITH TIME ZONE NOT NULL,
