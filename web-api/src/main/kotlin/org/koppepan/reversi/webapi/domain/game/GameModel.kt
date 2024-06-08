@@ -4,13 +4,11 @@ import org.koppepan.reversi.webapi.domain.board.Board
 import org.koppepan.reversi.webapi.domain.board.DiskMap
 import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
-import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.Move
+import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 class Game private constructor(
     val gameId: GameId,
