@@ -21,8 +21,6 @@ class Game private constructor(
     val progress: GameProgress,
 ) {
     companion object {
-        val log: Logger = LoggerFactory.getLogger(this::class.java)
-
         fun start(
             idGenerator: IdGenerator,
             player1Name: String,
@@ -38,7 +36,6 @@ class Game private constructor(
                 nextPlayerNumber = player1.number,
                 progress = GameProgress.CREATED,
             )
-            log.debug("Gameを開始しました。 {}", game)
             return game
         }
 
@@ -81,7 +78,7 @@ class Game private constructor(
     fun putDisk(move: Move): Game {
         validateState(move)
         val nextBoard = board.putDisk(move)
-        log.debug("Diskを配置しました。move: {}, nextBoard: {}", move, nextBoard)
+        //log.debug("Diskを配置しました。move: {}, nextBoard: {}", move, nextBoard)
 
         return this.getNextGame(nextBoard)
     }
@@ -111,10 +108,10 @@ class Game private constructor(
         val currentPlayersPuttableSquares = nextBoard.getAllPuttableSquares(currentPlayerNumber)
         val nextPlayersPuttableSquares = nextBoard.getAllPuttableSquares(nextPlayerNumber)
         return if (nextPlayersPuttableSquares.isEmpty() && currentPlayersPuttableSquares.isEmpty()) {
-            log.info("ゲームが終了しました。")
+            //log.info("ゲームが終了しました。")
             this.copy(board = nextBoard, progress = GameProgress.FINISHED)
         } else if (nextPlayersPuttableSquares.isEmpty()) {
-            log.debug("{}が配置できるマスが無いため順序が飛ばされます。", nextPlayerNumber)
+            //log.debug("{}が配置できるマスが無いため順序が飛ばされます。", nextPlayerNumber)
             this.copy(board = nextBoard, nextPlayerNumber = currentPlayerNumber, progress = GameProgress.IN_PROGRESS)
         } else {
             this.copy(board = nextBoard, nextPlayerNumber = nextPlayerNumber, progress = GameProgress.IN_PROGRESS)
