@@ -2,7 +2,6 @@ package org.koppepan.reversi.webapi.game
 
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.komapper.core.dsl.Meta
@@ -40,12 +39,26 @@ class GameTest(
                 }
                 """.trimIndent()
             )
+            .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk
             .expectBody<CreateGameController.CreateGameResponse>()
             .returnResult()
 
-        assertNotNull(response.responseBody?.gameId)
+        val expected = CreateGameController.CreateGameResponse(
+            gameId = response.responseBody?.gameId!!,
+            player1Name = "ペンギン",
+            player2Name = "パンダ",
+            nextPlayer = "PLAYER1",
+            progress = "CREATED",
+            diskMap = mapOf(
+                "D:4" to "LIGHT",
+                "D:5" to "DARK",
+                "E:4" to "DARK",
+                "E:5" to "LIGHT",
+            )
+        )
+        assertEquals(expected, response.responseBody)
 
         // ゲーム情報が正しく永続化されている事の確認
         // TODO: 状態取得APIを作成した後はDBを直接確認するのではなく状態取得APIを用いて検証する

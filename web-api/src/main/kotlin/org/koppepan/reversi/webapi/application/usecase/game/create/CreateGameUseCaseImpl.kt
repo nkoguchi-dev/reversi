@@ -13,7 +13,7 @@ class CreateGameUseCaseImpl(
     private val idGenerator: IdGenerator,
     private val createGameRepository: CreateGameRepository,
     private val db: R2dbcDatabase,
-): CreateGameUseCase {
+) : CreateGameUseCase {
     companion object {
         val log: Logger = LoggerFactory.getLogger(this::class.java)
     }
@@ -32,6 +32,20 @@ class CreateGameUseCaseImpl(
         log.debug("Gameを開始しました。 {}", game)
         return CreateGameUseCase.Output(
             gameId = game.gameId.value,
+            player1Name = game.player1.name.value,
+            player2Name = game.player2.name.value,
+            nextPlayer = game.nextPlayerNumber.name,
+            progress = game.progress.value,
+            diskMap = game.board.diskMap.getPlacedDiskMap()
+                .value
+                .entries
+                .filter { (_, playerNumber) -> playerNumber != null }
+                .associate { (position, playerNumber) ->
+                    CreateGameUseCase.Output.Position(
+                        x = position.x.value,
+                        y = position.y.value,
+                    ) to playerNumber!!.type.value
+                },
         )
     }
 }

@@ -16,6 +16,11 @@ class CreateGameController(
 
     data class CreateGameResponse(
         val gameId: String,
+        val player1Name: String,
+        val player2Name: String,
+        val nextPlayer: String,
+        val progress: String,
+        val diskMap: Map<String, String>
     )
 
     @PostMapping("/api/games/start")
@@ -35,6 +40,15 @@ class CreateGameController(
         private fun CreateGameUseCase.Output.toResponse(): CreateGameResponse {
             return CreateGameResponse(
                 gameId = this.gameId,
+                player1Name = this.player1Name,
+                player2Name = this.player2Name,
+                nextPlayer = this.nextPlayer,
+                progress = this.progress,
+                diskMap = this.diskMap
+                    .entries
+                    .associate { (position, playerType) ->
+                        "${position.x}:${position.y}" to playerType
+                    }
             )
         }
     }
