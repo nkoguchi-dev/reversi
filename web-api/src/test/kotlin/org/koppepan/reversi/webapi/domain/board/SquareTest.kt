@@ -9,7 +9,7 @@ class SquareTest {
     @DisplayName("Squareのインスタンスを生成できること")
     fun testSquare() {
         val square = Square.create(
-            position = SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+            position = Position(HorizontalPosition.A, VerticalPosition.ONE),
             disk = null,
         )
         assertAll(
@@ -23,7 +23,7 @@ class SquareTest {
     @DisplayName("Squareにdiskを配置できること")
     fun testPutDisk() {
         val square = Square.create(
-            position = SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+            position = Position(HorizontalPosition.A, VerticalPosition.ONE),
             disk = null,
         )
         val disk = Disk(DiskType.Light)
@@ -39,7 +39,7 @@ class SquareTest {
     @DisplayName("Squareに配置したDiskを白から黒に反転できること")
     fun testReverseDiskToDark() {
         val square = Square.create(
-            position = SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+            position = Position(HorizontalPosition.A, VerticalPosition.ONE),
             disk = Disk(DiskType.Light),
         )
         val newSquare = square.reverseDisk()
@@ -54,7 +54,7 @@ class SquareTest {
     @DisplayName("Squareに配置したDiskを黒から白に反転できること")
     fun testReverseDiskToLight() {
         val square = Square.create(
-            position = SquarePosition(HorizontalPosition.A, VerticalPosition.ONE),
+            position = Position(HorizontalPosition.A, VerticalPosition.ONE),
             disk = Disk(DiskType.Dark),
         )
         val newSquare = square.reverseDisk()

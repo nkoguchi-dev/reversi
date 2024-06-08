@@ -15,24 +15,24 @@ class Board private constructor(
         fun create(): Board {
             val positions = HorizontalPosition.entries.flatMap { x ->
                 VerticalPosition.entries.map { y ->
-                    SquarePosition(x, y)
+                    Position(x, y)
                 }
             }
             return Board(DiskMap(positions.associateWith { null }))
                 .putDiskWithoutAdjacentCheck(
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR),
+                    Position(HorizontalPosition.D, VerticalPosition.FOUR),
                     Disk(DiskType.Light)
                 )
                 .putDiskWithoutAdjacentCheck(
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE),
+                    Position(HorizontalPosition.E, VerticalPosition.FIVE),
                     Disk(DiskType.Light)
                 )
                 .putDiskWithoutAdjacentCheck(
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE),
+                    Position(HorizontalPosition.D, VerticalPosition.FIVE),
                     Disk(DiskType.Dark)
                 )
                 .putDiskWithoutAdjacentCheck(
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR),
+                    Position(HorizontalPosition.E, VerticalPosition.FOUR),
                     Disk(DiskType.Dark)
                 )
         }
@@ -57,14 +57,14 @@ class Board private constructor(
     /**
      * 指定の位置に置かれているディスクを取得する
      */
-    fun getDisk(position: SquarePosition): Disk? {
+    fun getDisk(position: Position): Disk? {
         return diskMap.getDisk(position)
     }
 
     /**
      * 指定のプレイヤーが置ける全てのマスを取得する
      */
-    fun getAllPuttableSquares(playerNumber: PlayerNumber): List<SquarePosition> {
+    fun getAllPuttableSquares(playerNumber: PlayerNumber): List<Position> {
         return diskMap
             .getAllEmptySquares()
             .filter { position -> getDisksToBeReversed(position, Disk(playerNumber.diskType)).value.isNotEmpty() }
@@ -78,7 +78,7 @@ class Board private constructor(
     /**
      * 裏返す事が可能な相手の駒があるか？のチェックを行わずに盤に駒を置く
      */
-    private fun putDiskWithoutAdjacentCheck(position: SquarePosition, disk: Disk?): Board {
+    private fun putDiskWithoutAdjacentCheck(position: Position, disk: Disk?): Board {
         validateDiskExist(position)
         return Board(diskMap.putDisk(position, disk))
     }
@@ -90,7 +90,7 @@ class Board private constructor(
     /**
      * 指定のPositionにすでにディスクが置かれているかどうかチェックする
      */
-    private fun validateDiskExist(position: SquarePosition) {
+    private fun validateDiskExist(position: Position) {
         requireOrThrow(diskMap.getDisk(position) == null) {
             CustomExceptionMessage(
                 message = "ディスクを置く事はできません",
@@ -102,7 +102,7 @@ class Board private constructor(
     /**
      * 指定の位置にディスクを置いた場合に裏返るディスクを取得する
      */
-    private fun getDisksToBeReversed(position: SquarePosition, disk: Disk): DiskMap {
+    private fun getDisksToBeReversed(position: Position, disk: Disk): DiskMap {
         val lines = SquareLine.createFromPosition(position, diskMap)
         val map = lines.map {
             it.getReversibleDisks(position, disk)
@@ -126,10 +126,10 @@ class Board private constructor(
 
 @JvmInline
 value class DiskMap(
-    val value: Map<SquarePosition, Disk?>,
+    val value: Map<Position, Disk?>,
 ) {
     companion object {
-        fun of(vararg pairs: Pair<SquarePosition, Disk?>): DiskMap {
+        fun of(vararg pairs: Pair<Position, Disk?>): DiskMap {
             return DiskMap(pairs.toMap())
         }
     }
@@ -137,14 +137,14 @@ value class DiskMap(
     /**
      * 指定位置にあるディスクを取得する
      */
-    fun getDisk(position: SquarePosition): Disk? {
+    fun getDisk(position: Position): Disk? {
         return value[position]
     }
 
     /**
      * 指定位置にディスクを置く
      */
-    fun putDisk(position: SquarePosition, disk: Disk?): DiskMap {
+    fun putDisk(position: Position, disk: Disk?): DiskMap {
         val newDiskMap = value.toMutableMap()
         newDiskMap[position] = disk
         return DiskMap(newDiskMap)
@@ -171,6 +171,6 @@ value class DiskMap(
     /**
      * 全ての空いているマスを取得する
      */
-    fun getAllEmptySquares(): List<SquarePosition> =
+    fun getAllEmptySquares(): List<Position> =
         value.filterValues { it == null }.keys.toList()
 }

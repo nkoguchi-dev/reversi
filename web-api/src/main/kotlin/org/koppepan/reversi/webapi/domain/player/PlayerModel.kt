@@ -2,7 +2,7 @@ package org.koppepan.reversi.webapi.domain.player
 
 import org.koppepan.reversi.webapi.domain.board.Disk
 import org.koppepan.reversi.webapi.domain.board.DiskType
-import org.koppepan.reversi.webapi.domain.board.SquarePosition
+import org.koppepan.reversi.webapi.domain.board.Position
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
@@ -26,7 +26,7 @@ class Player private constructor(
      */
     fun createMove(
         idGenerator: IdGenerator,
-        position: SquarePosition,
+        position: Position,
     ): Move {
         return Move(MoveId.generate(idGenerator), number, position)
     }
@@ -89,7 +89,7 @@ enum class PlayerNumber(val diskType: DiskType) {
 class Move(
     val moveId: MoveId,
     val number: PlayerNumber,
-    val position: SquarePosition,
+    val position: Position,
 ) {
     override fun toString(): String {
         return "PlayerMove(moveId=${moveId.value}, number=$number, position=$position)"

@@ -7,15 +7,15 @@ import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
  * 盤のマス目１つを表すクラス
  */
 class Square private constructor(
-    val position: SquarePosition,
+    val position: Position,
     val disk: Disk?,
 ) {
     companion object {
-        fun create(position: SquarePosition, disk: Disk?): Square = Square(position, disk)
+        fun create(position: Position, disk: Disk?): Square = Square(position, disk)
     }
 
     private fun copy(
-        position: SquarePosition = this.position,
+        position: Position = this.position,
         disk: Disk? = this.disk
     ): Square {
         requireOrThrow(position == this.position) {

@@ -41,10 +41,10 @@ class GameTest {
             PlayerName("player1"),
             PlayerName("player2"),
             DiskMap.of(
-                SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
-                SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
-                SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                Position(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
+                Position(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                Position(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                Position(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Light),
             ),
             PlayerNumber.PLAYER1,
             GameProgress.CREATED,
@@ -64,7 +64,7 @@ class GameTest {
         )
 
         val nextGame = game
-            .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+            .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
 
         val actual = nextGame.getGameStatus()
         val expected = GameState(
@@ -72,11 +72,11 @@ class GameTest {
             player1Name = PlayerName("player1"),
             player2Name = PlayerName("player2"),
             diskMap = DiskMap.of(
-                SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
-                SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
-                SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                Position(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
+                Position(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                Position(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                Position(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                Position(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
             ),
             nextPlayerNumber = PlayerNumber.PLAYER2,
             progress = GameProgress.IN_PROGRESS,
@@ -96,7 +96,7 @@ class GameTest {
         )
 
         val actual = assertThrows<CustomIllegalArgumentException> {
-            game.putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+            game.putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
         }
         val expected = CustomIllegalArgumentException(
             message = "ディスクを置く事はできません",
@@ -122,10 +122,10 @@ class GameTest {
                 player1Name = PlayerName("player1"),
                 player2Name = PlayerName("player2"),
                 diskMap = DiskMap.of(
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Light),
+                    Position(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
+                    Position(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Light),
                 ),
                 nextPlayerNumber = PlayerNumber.PLAYER1,
                 progress = GameProgress.CREATED,
@@ -140,18 +140,18 @@ class GameTest {
             val game = Game.start(idGenerator, "player1", "player2")
             val player1 = game.player1
             val actual = game
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
                 .getGameStatus()
             val expected = GameState(
                 gameId = GameId.recreate("gameId"),
                 player1Name = PlayerName("player1"),
                 player2Name = PlayerName("player2"),
                 diskMap = DiskMap.of(
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Light),
+                    Position(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
                 ),
                 nextPlayerNumber = PlayerNumber.PLAYER2,
                 progress = GameProgress.IN_PROGRESS,
@@ -167,34 +167,34 @@ class GameTest {
             val player1 = game.player1
             val player2 = game.player2
             val actual = game
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.C, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SEVEN)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.C, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.SEVEN)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.G, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.THREE)))
                 .getGameStatus()
             val expected = GameState(
                 gameId = GameId.recreate("gameId"),
                 player1Name = PlayerName("player1"),
                 player2Name = PlayerName("player2"),
                 diskMap = DiskMap.of(
-                    SquarePosition(HorizontalPosition.C, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.D, VerticalPosition.SIX) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.THREE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.SIX) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.E, VerticalPosition.SEVEN) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.F, VerticalPosition.SIX) to Disk(DiskType.Dark),
-                    SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.C, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.D, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.D, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.D, VerticalPosition.SIX) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.THREE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.SIX) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.E, VerticalPosition.SEVEN) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.F, VerticalPosition.FOUR) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.F, VerticalPosition.FIVE) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.F, VerticalPosition.SIX) to Disk(DiskType.Dark),
+                    Position(HorizontalPosition.G, VerticalPosition.FIVE) to Disk(DiskType.Dark),
                 ),
                 nextPlayerNumber = PlayerNumber.PLAYER1,
                 progress = GameProgress.FINISHED,
@@ -216,7 +216,7 @@ class GameTest {
             )
             val player1 = game.player1
             val actual = assertThrows<GameAlreadyFinishedException> {
-                game.putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                game.putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
             }
             val expected = GameAlreadyFinishedException(
                 message = "ディスクを置く事はできません",

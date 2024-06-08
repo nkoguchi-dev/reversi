@@ -13,13 +13,13 @@ sealed interface SquareLine {
     /**
      * 指定した位置にディスクを置けるかどうかを返す
      */
-    fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk>
+    fun getReversibleDisks(position: Position, disk: Disk): Map<Position, Disk>
 
     companion object {
         /**
          * マス目の位置を含むラインのリストを生成する
          */
-        fun createFromPosition(position: SquarePosition, diskMap: DiskMap): List<SquareLine> {
+        fun createFromPosition(position: Position, diskMap: DiskMap): List<SquareLine> {
             return listOf(
                 SquareLineHorizontal.createFromPosition(position, diskMap),
                 SquareLineVertical.createFromPosition(position, diskMap),
@@ -51,17 +51,17 @@ sealed interface SquareLine {
             }
 
             fun createFromPosition(
-                position: SquarePosition,
+                position: Position,
                 diskMap: DiskMap,
             ): SquareLineHorizontal {
                 val squares = HorizontalPosition.entries.map { x ->
-                    Square.create(position.copy(x = x), diskMap.getDisk(SquarePosition(x, position.y)))
+                    Square.create(position.copy(x = x), diskMap.getDisk(Position(x, position.y)))
                 }
                 return create(squares)
             }
         }
 
-        override fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk> {
+        override fun getReversibleDisks(position: Position, disk: Disk): Map<Position, Disk> {
             // 配置するディスクと同じ色で一番近いディスクの位置を取得する
             val sameColorDisksOnMinusSide = squares
                 .filter { it.position.x < position.x }
@@ -127,15 +127,15 @@ sealed interface SquareLine {
                 return SquareLineVertical(squares)
             }
 
-            fun createFromPosition(position: SquarePosition, diskMap: DiskMap): SquareLineVertical {
+            fun createFromPosition(position: Position, diskMap: DiskMap): SquareLineVertical {
                 val squares = VerticalPosition.entries.map { y ->
-                    Square.create(position.copy(y = y), diskMap.getDisk(SquarePosition(position.x, y)))
+                    Square.create(position.copy(y = y), diskMap.getDisk(Position(position.x, y)))
                 }
                 return create(squares)
             }
         }
 
-        override fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk> {
+        override fun getReversibleDisks(position: Position, disk: Disk): Map<Position, Disk> {
             // 配置するディスクと同じ色で一番近いディスクの位置を取得する
             val sameColorDisksOnMinusSide = squares
                 .filter { it.position.y < position.y }
@@ -223,7 +223,7 @@ sealed interface SquareLine {
                 return SquareLineDiagonal(sortedSquares)
             }
 
-            fun createFromPosition(position: SquarePosition, diskMap: DiskMap): List<SquareLineDiagonal> {
+            fun createFromPosition(position: Position, diskMap: DiskMap): List<SquareLineDiagonal> {
                 return listOfNotNull(
                     createDiagonalLineFromTopLeftToBottomRight(position, diskMap),
                     createDiagonalLineFromBottomRightToTopLeft(position, diskMap),
@@ -232,7 +232,7 @@ sealed interface SquareLine {
 
             // 左上から右下に向かう斜めラインを作成
             private fun createDiagonalLineFromTopLeftToBottomRight(
-                position: SquarePosition,
+                position: Position,
                 diskMap: DiskMap,
             ): SquareLineDiagonal? {
                 // 起点から左上に向かう斜めラインを生成
@@ -246,7 +246,7 @@ sealed interface SquareLine {
                     }
                 }.fold(mutableListOf<Square>()) { acc, current ->
                     acc.apply {
-                        add(Square.create(current, diskMap.getDisk(SquarePosition(current.x, current.y))))
+                        add(Square.create(current, diskMap.getDisk(Position(current.x, current.y))))
                     }
                 }
                 // 起点から右下に向かう斜めラインを生成
@@ -259,7 +259,7 @@ sealed interface SquareLine {
                         null
                     }
                 }.fold(mutableListOf<Square>()) { acc, current ->
-                    acc.apply { add(Square.create(current, diskMap.getDisk(SquarePosition(current.x, current.y)))) }
+                    acc.apply { add(Square.create(current, diskMap.getDisk(Position(current.x, current.y)))) }
                 }
                 return try {
                     create(
@@ -274,7 +274,7 @@ sealed interface SquareLine {
 
             // 右下から左上に向かう斜めラインを作成
             private fun createDiagonalLineFromBottomRightToTopLeft(
-                position: SquarePosition,
+                position: Position,
                 diskMap: DiskMap,
             ): SquareLineDiagonal? {
                 // 起点から右上に向かう斜めラインを生成
@@ -287,7 +287,7 @@ sealed interface SquareLine {
                         null
                     }
                 }.fold(mutableListOf<Square>()) { acc, current ->
-                    acc.apply { add(Square.create(current, diskMap.getDisk(SquarePosition(current.x, current.y)))) }
+                    acc.apply { add(Square.create(current, diskMap.getDisk(Position(current.x, current.y)))) }
                 }
                 // 起点から左下に向かう斜めラインを生成
                 val squaresBottomLeft = generateSequence(position) { current ->
@@ -299,7 +299,7 @@ sealed interface SquareLine {
                         null
                     }
                 }.fold(mutableListOf<Square>()) { acc, current ->
-                    acc.apply { add(Square.create(current, diskMap.getDisk(SquarePosition(current.x, current.y)))) }
+                    acc.apply { add(Square.create(current, diskMap.getDisk(Position(current.x, current.y)))) }
                 }
                 return try {
                     create(
@@ -313,7 +313,7 @@ sealed interface SquareLine {
             }
         }
 
-        override fun getReversibleDisks(position: SquarePosition, disk: Disk): Map<SquarePosition, Disk> {
+        override fun getReversibleDisks(position: Position, disk: Disk): Map<Position, Disk> {
             // 配置するディスクと同じ色で一番近いディスクの位置を取得する
             val sameColorDisksOnMinusSide = squares
                 .filter { it.position.x < position.x }

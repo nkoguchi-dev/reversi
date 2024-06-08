@@ -3,38 +3,38 @@ package org.koppepan.reversi.webapi.domain.board
 /**
  * マス目の座標を表すクラス
  */
-class SquarePosition(
+class Position(
     val x: HorizontalPosition,
     val y: VerticalPosition,
 ) {
-    fun getAdjacentPositions(): List<SquarePosition> {
-        val adjacentPositions = mutableListOf<SquarePosition>()
+    fun getAdjacentPositions(): List<Position> {
+        val adjacentPositions = mutableListOf<Position>()
         val prevX = x.prev()
         val nextX = x.next()
         val prevY = y.prev()
         val nextY = y.next()
         prevX?.let { px ->
             prevY?.let { py ->
-                adjacentPositions.add(SquarePosition(px, py))
+                adjacentPositions.add(Position(px, py))
             }
-            adjacentPositions.add(SquarePosition(px, y))
+            adjacentPositions.add(Position(px, y))
             nextY?.let { ny ->
-                adjacentPositions.add(SquarePosition(px, ny))
+                adjacentPositions.add(Position(px, ny))
             }
         }
         prevY?.let { py ->
-            adjacentPositions.add(SquarePosition(x, py))
+            adjacentPositions.add(Position(x, py))
         }
         nextY?.let { ny ->
-            adjacentPositions.add(SquarePosition(x, ny))
+            adjacentPositions.add(Position(x, ny))
         }
         nextX?.let { nx ->
             prevY?.let { py ->
-                adjacentPositions.add(SquarePosition(nx, py))
+                adjacentPositions.add(Position(nx, py))
             }
-            adjacentPositions.add(SquarePosition(nx, y))
+            adjacentPositions.add(Position(nx, y))
             nextY?.let { ny ->
-                adjacentPositions.add(SquarePosition(nx, ny))
+                adjacentPositions.add(Position(nx, ny))
             }
         }
         return adjacentPositions.toList()
@@ -43,15 +43,15 @@ class SquarePosition(
     fun copy(
         x: HorizontalPosition = this.x,
         y: VerticalPosition = this.y
-    ): SquarePosition {
-        return SquarePosition(x, y)
+    ): Position {
+        return Position(x, y)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
-        if (other !is SquarePosition) {
+        if (other !is Position) {
             return false
         }
         if (x != other.x || y != other.y) {

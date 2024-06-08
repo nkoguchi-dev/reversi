@@ -27,19 +27,19 @@ class BoardTest {
         assertEquals(64, diskMap.value.size)
         assertEquals(
             Disk(DiskType.Light),
-            board.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR))
+            board.getDisk(Position(HorizontalPosition.D, VerticalPosition.FOUR))
         )
         assertEquals(
             Disk(DiskType.Light),
-            board.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE))
+            board.getDisk(Position(HorizontalPosition.E, VerticalPosition.FIVE))
         )
         assertEquals(
             Disk(DiskType.Dark),
-            board.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FIVE))
+            board.getDisk(Position(HorizontalPosition.D, VerticalPosition.FIVE))
         )
         assertEquals(
             Disk(DiskType.Dark),
-            board.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.FOUR))
+            board.getDisk(Position(HorizontalPosition.E, VerticalPosition.FOUR))
         )
     }
 
@@ -52,7 +52,7 @@ class BoardTest {
             whenever(idGenerator.generate()).thenReturn("mockedId")
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
-            val putPosition = SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)
+            val putPosition = Position(HorizontalPosition.F, VerticalPosition.FIVE)
             val newBoard = board.putDisk(player1.createMove(idGenerator, putPosition))
             assertEquals(
                 Disk(DiskType.Dark),
@@ -67,7 +67,7 @@ class BoardTest {
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val exception = assertThrows(CustomIllegalArgumentException::class.java) {
-                board.putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR)))
+                board.putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.FOUR)))
             }
             assertEquals("ディスクを置く事はできません", exception.message)
             assertEquals(
@@ -83,9 +83,9 @@ class BoardTest {
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val newBoard = board.putDisk(
-                player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX))
+                player1.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.SIX))
             )
-            val actual = newBoard.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.SIX))
+            val actual = newBoard.getDisk(Position(HorizontalPosition.E, VerticalPosition.SIX))
             assertEquals(Disk(DiskType.Dark), actual)
         }
 
@@ -97,7 +97,7 @@ class BoardTest {
             val board = Board.create()
             val exception = assertThrows(CustomIllegalArgumentException::class.java) {
                 board.putDisk(
-                    player2.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX))
+                    player2.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.SIX))
                 )
             }
             assertEquals("ディスクを置く事はできません", exception.message)
@@ -118,19 +118,19 @@ class BoardTest {
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val newBoard = board.putDisk(
-                player1.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.THREE))
+                player1.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.THREE))
             )
             assertAll(
                 {
                     assertEquals(
                         Disk(DiskType.Dark),
-                        newBoard.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.THREE))
+                        newBoard.getDisk(Position(HorizontalPosition.D, VerticalPosition.THREE))
                     )
                 },
                 {
                     assertEquals(
                         Disk(DiskType.Dark),
-                        newBoard.getDisk(SquarePosition(HorizontalPosition.D, VerticalPosition.FOUR))
+                        newBoard.getDisk(Position(HorizontalPosition.D, VerticalPosition.FOUR))
                     )
                 },
             )
@@ -143,19 +143,19 @@ class BoardTest {
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val newBoard = board.putDisk(
-                player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE))
+                player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE))
             )
             assertAll(
                 {
                     assertEquals(
                         Disk(DiskType.Dark),
-                        newBoard.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE))
+                        newBoard.getDisk(Position(HorizontalPosition.E, VerticalPosition.FIVE))
                     )
                 },
                 {
                     assertEquals(
                         Disk(DiskType.Dark),
-                        newBoard.getDisk(SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE))
+                        newBoard.getDisk(Position(HorizontalPosition.F, VerticalPosition.FIVE))
                     )
                 },
             )
@@ -169,19 +169,19 @@ class BoardTest {
             val player2 = Player.createPlayer2(PlayerName("Player2"))
             val board = Board.create()
             val newBoard = board
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.SIX)))
             assertAll(
                 {
                     assertEquals(
                         Disk(DiskType.Light),
-                        newBoard.getDisk(SquarePosition(HorizontalPosition.E, VerticalPosition.FIVE))
+                        newBoard.getDisk(Position(HorizontalPosition.E, VerticalPosition.FIVE))
                     )
                 },
                 {
                     assertEquals(
                         Disk(DiskType.Light),
-                        newBoard.getDisk(SquarePosition(HorizontalPosition.F, VerticalPosition.SIX))
+                        newBoard.getDisk(Position(HorizontalPosition.F, VerticalPosition.SIX))
                     )
                 },
             )
@@ -197,10 +197,10 @@ class BoardTest {
             val board = Board.create()
             val actual = board.getAllPuttableSquares(PlayerNumber.PLAYER1)
             val expected = listOf(
-                SquarePosition(HorizontalPosition.C, VerticalPosition.FOUR),
-                SquarePosition(HorizontalPosition.D, VerticalPosition.THREE),
-                SquarePosition(HorizontalPosition.E, VerticalPosition.SIX),
-                SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE),
+                Position(HorizontalPosition.C, VerticalPosition.FOUR),
+                Position(HorizontalPosition.D, VerticalPosition.THREE),
+                Position(HorizontalPosition.E, VerticalPosition.SIX),
+                Position(HorizontalPosition.F, VerticalPosition.FIVE),
             )
             assertEquals(expected, actual)
         }
@@ -212,12 +212,12 @@ class BoardTest {
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
             val newBoard = board
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
             val actual = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
             val expected = listOf(
-                SquarePosition(HorizontalPosition.D, VerticalPosition.SIX),
-                SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR),
-                SquarePosition(HorizontalPosition.F, VerticalPosition.SIX),
+                Position(HorizontalPosition.D, VerticalPosition.SIX),
+                Position(HorizontalPosition.F, VerticalPosition.FOUR),
+                Position(HorizontalPosition.F, VerticalPosition.SIX),
             )
             assertEquals(expected, actual)
         }
@@ -230,20 +230,20 @@ class BoardTest {
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val player2 = Player.createPlayer2(PlayerName("Player2"))
             val newBoard = board
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.C, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SEVEN)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.G, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.C, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.SEVEN)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.G, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.THREE)))
             val actualPlayer1 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER1)
             val actualPlayer2 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
             assertAll(
-                { assertEquals(emptyList<SquarePosition>(), actualPlayer1) },
-                { assertEquals(emptyList<SquarePosition>(), actualPlayer2) },
+                { assertEquals(emptyList<Position>(), actualPlayer1) },
+                { assertEquals(emptyList<Position>(), actualPlayer2) },
             )
         }
 
@@ -255,21 +255,21 @@ class BoardTest {
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val player2 = Player.createPlayer2(PlayerName("Player2"))
             val newBoard = board
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FIVE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.SIX)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.F, VerticalPosition.FOUR)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.E, VerticalPosition.THREE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.TWO)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.THREE)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.D, VerticalPosition.SIX)))
-                .putDisk(player1.createMove(idGenerator, SquarePosition(HorizontalPosition.C, VerticalPosition.FOUR)))
-                .putDisk(player2.createMove(idGenerator, SquarePosition(HorizontalPosition.B, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.SIX)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FOUR)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.THREE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.TWO)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.THREE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.SIX)))
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.C, VerticalPosition.FOUR)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.B, VerticalPosition.FOUR)))
             val actualPlayer1 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER1)
             val actualPlayer2 = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER2)
             assertAll(
-                { assertEquals(emptyList<SquarePosition>(), actualPlayer1) },
-                { assertEquals(emptyList<SquarePosition>(), actualPlayer2) },
+                { assertEquals(emptyList<Position>(), actualPlayer1) },
+                { assertEquals(emptyList<Position>(), actualPlayer2) },
             )
         }
     }
