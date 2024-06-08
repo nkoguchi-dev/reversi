@@ -1,11 +1,11 @@
 package org.koppepan.reversi.webapi.domain.game.exception
 
-import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
+import org.koppepan.reversi.webapi.domain.shared.IllegalArgumentDomainException
 
-class GameAlreadyFinishedException(
+class GameAlreadyFinishedDomainException(
     message: String,
     description: String,
-) : CustomIllegalArgumentException(
+) : IllegalArgumentDomainException(
     message = message,
     description = description
 )

@@ -9,7 +9,7 @@ import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
-import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
+import org.koppepan.reversi.webapi.domain.shared.IllegalArgumentDomainException
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
@@ -66,7 +66,7 @@ class BoardTest {
             whenever(idGenerator.generate()).thenReturn("mockedId")
             val player1 = Player.createPlayer1(PlayerName("Player1"))
             val board = Board.create()
-            val exception = assertThrows(CustomIllegalArgumentException::class.java) {
+            val exception = assertThrows(IllegalArgumentDomainException::class.java) {
                 board.putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.FOUR)))
             }
             assertEquals("ディスクを置く事はできません", exception.message)
@@ -95,7 +95,7 @@ class BoardTest {
             whenever(idGenerator.generate()).thenReturn("mockedId")
             val player2 = Player.createPlayer2(PlayerName("Player2"))
             val board = Board.create()
-            val exception = assertThrows(CustomIllegalArgumentException::class.java) {
+            val exception = assertThrows(IllegalArgumentDomainException::class.java) {
                 board.putDisk(
                     player2.createMove(idGenerator, Position(HorizontalPosition.E, VerticalPosition.SIX))
                 )

@@ -4,7 +4,7 @@ import org.koppepan.reversi.webapi.domain.board.Disk
 import org.koppepan.reversi.webapi.domain.board.DiskType
 import org.koppepan.reversi.webapi.domain.board.Position
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
-import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
+import org.koppepan.reversi.webapi.domain.shared.ExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
 
 class Player private constructor(
@@ -62,13 +62,13 @@ value class PlayerName(val value: String) {
 
     init {
         requireOrThrow(value.isNotBlank()) {
-            CustomExceptionMessage(
+            ExceptionMessage(
                 message = "プレイヤー名を作成する事ができません",
                 description = "プレイヤー名は必ず指定してください"
             )
         }
         requireOrThrow(value.length <= MAX_LENGTH) {
-            CustomExceptionMessage(
+            ExceptionMessage(
                 message = "プレイヤー名を作成する事ができません",
                 description = "プレイヤー名は${MAX_LENGTH}文字以内で指定してください"
             )

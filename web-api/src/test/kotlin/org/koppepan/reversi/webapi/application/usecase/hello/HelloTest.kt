@@ -3,7 +3,7 @@ package org.koppepan.reversi.webapi.application.usecase.hello
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
+import org.koppepan.reversi.webapi.domain.shared.IllegalArgumentDomainException
 
 class HelloTest {
     @Test
@@ -16,7 +16,7 @@ class HelloTest {
     @Test
     @DisplayName("空のHelloNameのインスタンスは作成できないこと")
     fun testHelloNameEmpty() {
-        val exception = assertThrows(CustomIllegalArgumentException::class.java) {
+        val exception = assertThrows(IllegalArgumentDomainException::class.java) {
             HelloName("")
         }
         assertEquals("名前を設定してください", exception.message)
@@ -33,7 +33,7 @@ class HelloTest {
     @Test
     @DisplayName("空のHelloMessageのインスタンスは作成できないこと")
     fun testHelloMessageEmpty() {
-        val exception = assertThrows(CustomIllegalArgumentException::class.java) {
+        val exception = assertThrows(IllegalArgumentDomainException::class.java) {
             HelloMessage("")
         }
         assertEquals("メッセージを設定してください", exception.message)

@@ -2,7 +2,7 @@ package org.koppepan.reversi.webapi.application.usecase.game.get_state
 
 import org.komapper.r2dbc.R2dbcDatabase
 import org.koppepan.reversi.webapi.domain.game.GetGameRepository
-import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
+import org.koppepan.reversi.webapi.domain.shared.IllegalArgumentDomainException
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +16,7 @@ class GetGameStateUseCaseImpl(
         }
 
         requireNotNull(game) {
-            throw CustomIllegalArgumentException(
+            throw IllegalArgumentDomainException(
                 message = "ゲームが見つかりません",
                 description = "指定されたゲームIDに対応するゲームが見つかりませんでした。GameId=${input.gameId}",
             )

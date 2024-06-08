@@ -92,4 +92,121 @@ class GameTest(
         )
         assertEquals(expectedDiskMapSet, actualDiskMapSet)
     }
+
+    @Test
+    @DisplayName("プレイヤー１の名前に空文字を指定してゲームを開始するとBadRequestが返却されること")
+    fun testStartWithEmptyPlayerName() = runTest {
+        webTestClient
+            .post()
+            .uri("/api/games/start")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(
+                """
+                {
+                    "player1": "",
+                    "player2": "パンダ"
+                }
+                """.trimIndent()
+            )
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectBody()
+            .json(
+                """
+                {
+                    "message": "プレイヤー名を作成する事ができません",
+                    "description": "プレイヤー名は必ず指定してください"
+                }
+                """.trimIndent()
+            )
+    }
+
+    @Test
+    @DisplayName("プレイヤー２の名前に空文字を指定してゲームを開始するとBadRequestが返却されること")
+    fun testStartWithEmptyPlayer2Name() = runTest {
+        webTestClient
+            .post()
+            .uri("/api/games/start")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(
+                """
+                {
+                    "player1": "ペンギン",
+                    "player2": ""
+                }
+                """.trimIndent()
+            )
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectBody()
+            .json(
+                """
+                {
+                    "message": "プレイヤー名を作成する事ができません",
+                    "description": "プレイヤー名は必ず指定してください"
+                }
+                """.trimIndent()
+            )
+    }
+
+    @Test
+    @DisplayName("プレイヤー１の名前に200文字以上を指定してゲームを開始するとBadRequestが返却されること")
+    fun testStartWithTooLongPlayerName() = runTest {
+        webTestClient
+            .post()
+            .uri("/api/games/start")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(
+                """
+                {
+                    "player1": "${"a".repeat(201)}",
+                    "player2": "パンダ"
+                }
+                """.trimIndent()
+            )
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectBody()
+            .json(
+                """
+                {
+                    "message": "プレイヤー名を作成する事ができません",
+                    "description": "プレイヤー名は200文字以内で指定してください"
+                }
+                """.trimIndent()
+            )
+    }
+
+    @Test
+    @DisplayName("プレイヤー２の名前に200文字以上を指定してゲームを開始するとBadRequestが返却されること")
+    fun testStartWithTooLongPlayer2Name() = runTest {
+        webTestClient
+            .post()
+            .uri("/api/games/start")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(
+                """
+                {
+                    "player1": "ペンギン",
+                    "player2": "${"a".repeat(201)}"
+                }
+                """.trimIndent()
+            )
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectBody()
+            .json(
+                """
+                {
+                    "message": "プレイヤー名を作成する事ができません",
+                    "description": "プレイヤー名は200文字以内で指定してください"
+                }
+                """.trimIndent()
+            )
+    }
+
 }

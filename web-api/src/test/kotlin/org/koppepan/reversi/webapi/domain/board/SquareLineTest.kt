@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
+import org.koppepan.reversi.webapi.domain.shared.IllegalArgumentDomainException
 
 class SquareLineTest {
     @Nested
@@ -78,7 +78,7 @@ class SquareLineTest {
                 HorizontalPosition.G,
             )
             val squares = horizontalPositions.map { Square.create(Position(it, VerticalPosition.ONE), null) }
-            val exception = assertThrows<CustomIllegalArgumentException> {
+            val exception = assertThrows<IllegalArgumentDomainException> {
                 SquareLine.SquareLineHorizontal.create(squares)
             }
             assertAll(
@@ -100,7 +100,7 @@ class SquareLineTest {
                 Square.create(Position(HorizontalPosition.G, VerticalPosition.ONE), null),
                 Square.create(Position(HorizontalPosition.H, VerticalPosition.ONE), null),
             )
-            val exception = assertThrows<CustomIllegalArgumentException> {
+            val exception = assertThrows<IllegalArgumentDomainException> {
                 SquareLine.SquareLineHorizontal.create(squares)
             }
             assertAll(
@@ -399,7 +399,7 @@ class SquareLineTest {
                 VerticalPosition.SEVEN,
             )
             val squares = verticalPositions.map { Square.create(Position(HorizontalPosition.A, it), null) }
-            val exception = assertThrows<CustomIllegalArgumentException> {
+            val exception = assertThrows<IllegalArgumentDomainException> {
                 SquareLine.SquareLineVertical.create(squares)
             }
             assertAll(
@@ -421,7 +421,7 @@ class SquareLineTest {
                 Square.create(Position(HorizontalPosition.A, VerticalPosition.SEVEN), null),
                 Square.create(Position(HorizontalPosition.A, VerticalPosition.EIGHT), null),
             )
-            val exception = assertThrows<CustomIllegalArgumentException> {
+            val exception = assertThrows<IllegalArgumentDomainException> {
                 SquareLine.SquareLineVertical.create(squares)
             }
             assertAll(
@@ -743,7 +743,7 @@ class SquareLineTest {
                 Square.create(Position(HorizontalPosition.B, VerticalPosition.TWO), null),
                 Square.create(Position(HorizontalPosition.C, VerticalPosition.THREE), null),
             )
-            val exception = assertThrows<CustomIllegalArgumentException> {
+            val exception = assertThrows<IllegalArgumentDomainException> {
                 SquareLine.SquareLineDiagonal.create(squares)
             }
             assertAll(
@@ -760,7 +760,7 @@ class SquareLineTest {
         @Test
         @DisplayName("SquareLineDiagonalのSquareが空の場合例外が発生すること")
         fun testSquareLineDiagonalSize() {
-            val exception = assertThrows<CustomIllegalArgumentException> {
+            val exception = assertThrows<IllegalArgumentDomainException> {
                 SquareLine.SquareLineDiagonal.create(listOf())
             }
             assertAll(
@@ -782,7 +782,7 @@ class SquareLineTest {
                 Square.create(Position(HorizontalPosition.G, VerticalPosition.SEVEN), null),
                 Square.create(Position(HorizontalPosition.H, VerticalPosition.SEVEN), null),
             )
-            val exception = assertThrows<CustomIllegalArgumentException> {
+            val exception = assertThrows<IllegalArgumentDomainException> {
                 SquareLine.SquareLineDiagonal.create(squares)
             }
             assertAll(

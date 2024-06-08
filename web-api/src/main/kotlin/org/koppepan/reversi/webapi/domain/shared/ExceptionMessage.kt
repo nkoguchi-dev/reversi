@@ -1,6 +1,6 @@
 package org.koppepan.reversi.webapi.domain.shared
 
-data class CustomExceptionMessage(
+data class ExceptionMessage(
     val message: String,
     val description: String,
 )

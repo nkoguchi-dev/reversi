@@ -2,7 +2,7 @@ package org.koppepan.reversi.webapi.domain.board
 
 import org.koppepan.reversi.webapi.domain.player.Move
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
-import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
+import org.koppepan.reversi.webapi.domain.shared.ExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
 
 /**
@@ -45,7 +45,7 @@ class Board private constructor(
         validateDiskExist(move.position)
         val reversedDiskMap = getDisksToBeReversed(move.position, move.number.disk())
         requireOrThrow(reversedDiskMap.value.isNotEmpty()) {
-            CustomExceptionMessage(
+            ExceptionMessage(
                 message = "ディスクを置く事はできません",
                 description = "相手のディスクを裏返す事ができない位置にディスクを置くことはできません。${move}"
             )
@@ -92,7 +92,7 @@ class Board private constructor(
      */
     private fun validateDiskExist(position: Position) {
         requireOrThrow(diskMap.getDisk(position) == null) {
-            CustomExceptionMessage(
+            ExceptionMessage(
                 message = "ディスクを置く事はできません",
                 description = "既にディスクが置かれている位置にディスクを置くことはできません。position: $position"
             )

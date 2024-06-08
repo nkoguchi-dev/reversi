@@ -1,6 +1,6 @@
 package org.koppepan.reversi.webapi.domain.board
 
-import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
+import org.koppepan.reversi.webapi.domain.shared.ExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
 
 /**
@@ -19,13 +19,13 @@ class Square private constructor(
         disk: Disk? = this.disk
     ): Square {
         requireOrThrow(position == this.position) {
-            CustomExceptionMessage(
+            ExceptionMessage(
                 message = "Squareのpositionは変更できません",
                 description = "",
             )
         }
         requireOrThrow(this.disk == null || disk != null) {
-            CustomExceptionMessage(
+            ExceptionMessage(
                 message = "Squareからdiskを取り除く事はできません",
                 description = "",
             )

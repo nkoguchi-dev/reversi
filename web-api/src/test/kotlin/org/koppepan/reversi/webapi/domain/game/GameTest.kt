@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.koppepan.reversi.webapi.domain.board.*
-import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
+import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedDomainException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
-import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
+import org.koppepan.reversi.webapi.domain.shared.IllegalArgumentDomainException
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
@@ -95,10 +95,10 @@ class GameTest {
             player2Name = "player2",
         )
 
-        val actual = assertThrows<CustomIllegalArgumentException> {
+        val actual = assertThrows<IllegalArgumentDomainException> {
             game.putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
         }
-        val expected = CustomIllegalArgumentException(
+        val expected = IllegalArgumentDomainException(
             message = "ディスクを置く事はできません",
             description = "自分の順番ではないプレイヤーが駒を置くことはできません。playerMove: PlayerMove(moveId=mockedId, number=PLAYER2, position=(F, FIVE)), nextPlayerNumber: PLAYER1",
         )
@@ -215,10 +215,10 @@ class GameTest {
                 progress = GameProgress.FINISHED,
             )
             val player1 = game.player1
-            val actual = assertThrows<GameAlreadyFinishedException> {
+            val actual = assertThrows<GameAlreadyFinishedDomainException> {
                 game.putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
             }
-            val expected = GameAlreadyFinishedException(
+            val expected = GameAlreadyFinishedDomainException(
                 message = "ディスクを置く事はできません",
                 description = "ゲームが終了しているためディスクを配置することはできません。",
             )

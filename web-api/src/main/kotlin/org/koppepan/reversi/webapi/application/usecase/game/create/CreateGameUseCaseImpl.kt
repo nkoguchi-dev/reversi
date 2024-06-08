@@ -19,11 +19,16 @@ class CreateGameUseCaseImpl(
     }
 
     override suspend fun create(input: CreateGameUseCase.Input): CreateGameUseCase.Output {
-        val game = Game.start(
-            idGenerator = idGenerator,
-            player1Name = input.player1Name,
-            player2Name = input.player2Name,
-        )
+        val game = try {
+            Game.start(
+                idGenerator = idGenerator,
+                player1Name = input.player1Name,
+                player2Name = input.player2Name,
+            )
+        } catch (e: Exception) {
+            log.error("Gameの開始に失敗しました。", e)
+            throw e
+        }
 
         db.withTransaction {
             createGameRepository.create(game)

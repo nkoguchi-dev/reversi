@@ -2,13 +2,13 @@ package org.koppepan.reversi.webapi.domain.game
 
 import org.koppepan.reversi.webapi.domain.board.Board
 import org.koppepan.reversi.webapi.domain.board.DiskMap
-import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedException
+import org.koppepan.reversi.webapi.domain.game.exception.GameAlreadyFinishedDomainException
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.Move
 import org.koppepan.reversi.webapi.domain.player.Player
 import org.koppepan.reversi.webapi.domain.player.PlayerName
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
-import org.koppepan.reversi.webapi.domain.shared.CustomIllegalArgumentException
+import org.koppepan.reversi.webapi.domain.shared.IllegalArgumentDomainException
 
 class Game private constructor(
     val gameId: GameId,
@@ -83,13 +83,13 @@ class Game private constructor(
 
     private fun validateState(move: Move) {
         if (this.progress == GameProgress.FINISHED) {
-            throw GameAlreadyFinishedException(
+            throw GameAlreadyFinishedDomainException(
                 message = "ディスクを置く事はできません",
                 description = "ゲームが終了しているためディスクを配置することはできません。"
             )
         }
         if (move.number != nextPlayerNumber) {
-            throw CustomIllegalArgumentException(
+            throw IllegalArgumentDomainException(
                 message = "ディスクを置く事はできません",
                 description = "自分の順番ではないプレイヤーが駒を置くことはできません。playerMove: $move, nextPlayerNumber: $nextPlayerNumber"
             )

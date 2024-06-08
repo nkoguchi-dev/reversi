@@ -1,9 +1,9 @@
 package org.koppepan.reversi.webapi.domain.shared
 
-inline fun requireOrThrow(value: Boolean, lazyMessage: () -> CustomExceptionMessage) {
+inline fun requireOrThrow(value: Boolean, lazyMessage: () -> ExceptionMessage) {
     if (!value) {
         val message = lazyMessage()
-        throw CustomIllegalArgumentException(
+        throw IllegalArgumentDomainException(
             message = message.message,
             description = message.description
         )

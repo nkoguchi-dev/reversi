@@ -1,6 +1,6 @@
 package org.koppepan.reversi.webapi.domain.board
 
-import org.koppepan.reversi.webapi.domain.shared.CustomExceptionMessage
+import org.koppepan.reversi.webapi.domain.shared.ExceptionMessage
 import org.koppepan.reversi.webapi.domain.shared.requireOrThrow
 
 
@@ -36,13 +36,13 @@ sealed interface SquareLine {
         companion object {
             fun create(squares: List<Square>): SquareLineHorizontal {
                 requireOrThrow(squares.size == HorizontalPosition.entries.size) {
-                    CustomExceptionMessage(
+                    ExceptionMessage(
                         message = "SquareLineHorizontalは${HorizontalPosition.entries.size}個の要素を持つ必要があります",
                         description = "",
                     )
                 }
                 requireOrThrow(squares.all { it.position.y == squares.first().position.y }) {
-                    CustomExceptionMessage(
+                    ExceptionMessage(
                         message = "SquareLineHorizontalは全てのSquareが同じy座標を持つ必要があります",
                         description = "",
                     )
@@ -113,13 +113,13 @@ sealed interface SquareLine {
         companion object {
             fun create(squares: List<Square>): SquareLineVertical {
                 requireOrThrow(squares.size == VerticalPosition.entries.size) {
-                    CustomExceptionMessage(
+                    ExceptionMessage(
                         message = "SquareLineVerticalは${VerticalPosition.entries.size}個の要素を持つ必要があります",
                         description = "",
                     )
                 }
                 requireOrThrow(squares.all { it.position.x == squares.first().position.x }) {
-                    CustomExceptionMessage(
+                    ExceptionMessage(
                         message = "SquareLineVerticalは全てのSquareが同じx座標を持つ必要があります",
                         description = "",
                     )
@@ -191,7 +191,7 @@ sealed interface SquareLine {
 
                 // マスが3つ以下の斜めラインは反転チェックをする必要がないため除外
                 requireOrThrow(sortedSquares.size >= 3) {
-                    CustomExceptionMessage(
+                    ExceptionMessage(
                         message = "SquareLineDiagonalは3つ以上の要素を持つ必要があります",
                         description = "",
                     )
@@ -204,7 +204,7 @@ sealed interface SquareLine {
                                 || (curr.position.x.next() == prev.position.x) && (curr.position.y.prev() == prev.position.y)
                     }
                 ) {
-                    CustomExceptionMessage(
+                    ExceptionMessage(
                         message = "SquareLineDiagonalは斜めの要素を持つ必要があります",
                         description = "",
                     )
@@ -215,7 +215,7 @@ sealed interface SquareLine {
                     (sortedSquares.first().position.x == HorizontalPosition.A && (sortedSquares.last().position.y == VerticalPosition.ONE || sortedSquares.last().position.y == VerticalPosition.EIGHT))
                             || (sortedSquares.last().position.x == HorizontalPosition.H && (sortedSquares.first().position.y == VerticalPosition.ONE || sortedSquares.first().position.y == VerticalPosition.EIGHT))
                 ) {
-                    CustomExceptionMessage(
+                    ExceptionMessage(
                         message = "SquareLineDiagonalはBoardの端から端に並ぶ要素を持つ必要があります",
                         description = "",
                     )
