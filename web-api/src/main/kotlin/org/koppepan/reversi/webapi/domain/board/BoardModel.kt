@@ -38,7 +38,12 @@ class Board private constructor(
         }
 
         fun recreate(diskMap: DiskMap): Board {
-            return Board(diskMap)
+            val positions: Map<Position, Disk?> = HorizontalPosition.entries.flatMap { x ->
+                VerticalPosition.entries.map { y ->
+                    Pair(Position(x, y), diskMap.getDisk(Position(x, y)))
+                }
+            }.toMap()
+            return Board(DiskMap(positions))
         }
     }
 

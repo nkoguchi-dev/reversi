@@ -142,7 +142,6 @@ class GameTest(
         assertEquals(expected, response.responseBody)
 
         // ゲーム情報が正しく永続化されている事の確認
-        // TODO: 状態取得APIを作成した後はDBを直接確認するのではなく状態取得APIを用いて検証する
         val gameId = response.responseBody?.gameId
         val getGameQuery = QueryDsl
             .from(Meta.gameEntity)
@@ -380,6 +379,36 @@ class GameTest(
         assertEquals(expected, response.responseBody)
 
         // ゲーム情報が正しく永続化されている事の確認
+        val getGameQuery = QueryDsl
+            .from(Meta.gameEntity)
+            .where { Meta.gameEntity.gameId eq "gameId" }
+            .singleOrNull()
+        val actualGameEntity = db.runQuery(getGameQuery)
+            ?.copy(createdAt = null, updatedAt = null)
+        val expectedGameEntity = GameEntity(
+            gameId = "gameId",
+            player1Name = "player1",
+            player2Name = "player2",
+            status = "IN_PROGRESS",
+            nextPlayerNumber = "PLAYER1",
+        )
+        assertEquals(expectedGameEntity, actualGameEntity)
 
+        // DiskMap情報が正しく永続化されている事の確認
+        val getDiskMapQuery = QueryDsl
+            .from(Meta.diskMapEntity)
+            .where { Meta.diskMapEntity.gameId eq "gameId" }
+            .orderBy(Meta.diskMapEntity.horizontalPosition, Meta.diskMapEntity.verticalPosition)
+        val actualDiskMapSet = db.runQuery(getDiskMapQuery)
+            .map { it.copy(createdAt = null, updatedAt = null) }
+        val expectedDiskMapSet = listOf(
+            DiskMapEntity(gameId = "gameId", horizontalPosition = "D", verticalPosition = "4", diskType = "LIGHT"),
+            DiskMapEntity(gameId = "gameId", horizontalPosition = "D", verticalPosition = "5", diskType = "LIGHT"),
+            DiskMapEntity(gameId = "gameId", horizontalPosition = "D", verticalPosition = "6", diskType = "LIGHT"),
+            DiskMapEntity(gameId = "gameId", horizontalPosition = "E", verticalPosition = "4", diskType = "DARK"),
+            DiskMapEntity(gameId = "gameId", horizontalPosition = "E", verticalPosition = "5", diskType = "DARK"),
+            DiskMapEntity(gameId = "gameId", horizontalPosition = "F", verticalPosition = "5", diskType = "DARK"),
+        )
+        assertEquals(expectedDiskMapSet, actualDiskMapSet)
     }
 }

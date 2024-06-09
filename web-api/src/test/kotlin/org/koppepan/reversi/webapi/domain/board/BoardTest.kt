@@ -223,6 +223,27 @@ class BoardTest {
         }
 
         @Test
+        @DisplayName("２手進めた盤目に配置可能な全てのSquareを取得する事ができる")
+        fun testGetAllPuttableSquaresAfterTwoMove() {
+            whenever(idGenerator.generate()).thenReturn("mockedId")
+            val player1 = Player.createPlayer1(PlayerName("Player1"))
+            val player2 = Player.createPlayer2(PlayerName("Player2"))
+            val board = Board.create()
+            val newBoard = board
+                .putDisk(player1.createMove(idGenerator, Position(HorizontalPosition.F, VerticalPosition.FIVE)))
+                .putDisk(player2.createMove(idGenerator, Position(HorizontalPosition.D, VerticalPosition.SIX)))
+            val actual = newBoard.getAllPuttableSquares(PlayerNumber.PLAYER1)
+            val expected = listOf(
+                Position(HorizontalPosition.C, VerticalPosition.THREE),
+                Position(HorizontalPosition.C, VerticalPosition.FOUR),
+                Position(HorizontalPosition.C, VerticalPosition.FIVE),
+                Position(HorizontalPosition.C, VerticalPosition.SIX),
+                Position(HorizontalPosition.C, VerticalPosition.SEVEN),
+            )
+            assertEquals(expected, actual)
+        }
+
+        @Test
         @DisplayName("配置可能なSquareがない場合は空リストを返す（黒が勝つパターン）")
         fun testGetAllPuttableSquaresWhenNoPuttableSquare() {
             whenever(idGenerator.generate()).thenReturn("mockedId")
