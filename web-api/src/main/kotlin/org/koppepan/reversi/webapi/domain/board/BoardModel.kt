@@ -36,6 +36,10 @@ class Board private constructor(
                     Disk(DiskType.Dark)
                 )
         }
+
+        fun recreate(diskMap: DiskMap): Board {
+            return Board(diskMap)
+        }
     }
 
     /**
@@ -131,6 +135,10 @@ value class DiskMap(
     companion object {
         fun of(vararg pairs: Pair<Position, Disk?>): DiskMap {
             return DiskMap(pairs.toMap())
+        }
+
+        fun of(pairs: Map<Position, Disk?>): DiskMap {
+            return DiskMap(pairs)
         }
     }
 

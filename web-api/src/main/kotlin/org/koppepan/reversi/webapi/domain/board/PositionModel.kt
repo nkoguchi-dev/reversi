@@ -72,7 +72,7 @@ class Position(
 }
 
 enum class HorizontalPosition(val value: String, val prev: String?, val next: String?) {
-    A("A", null,"B"),
+    A("A", null, "B"),
     B("B", "A", "C"),
     C("C", "B", "D"),
     D("D", "C", "E"),
@@ -83,8 +83,9 @@ enum class HorizontalPosition(val value: String, val prev: String?, val next: St
     ;
 
     companion object {
-        fun of(value: String?): HorizontalPosition? {
-            return HorizontalPosition.entries.find { it.value == value }
+        fun of(value: String?): HorizontalPosition {
+            return HorizontalPosition.entries.firstOrNull { it.value == value }
+                ?: throw IllegalArgumentException("Invalid HorizontalPosition value: $value")
         }
     }
 
@@ -109,8 +110,9 @@ enum class VerticalPosition(val value: String, val prev: String?, val next: Stri
     ;
 
     companion object {
-        fun of(value: String?): VerticalPosition? {
-            return VerticalPosition.entries.find { it.value == value }
+        fun of(value: String?): VerticalPosition {
+            return VerticalPosition.entries.firstOrNull { it.value == value }
+                ?: throw IllegalArgumentException("Invalid VerticalPosition value: $value")
         }
     }
 

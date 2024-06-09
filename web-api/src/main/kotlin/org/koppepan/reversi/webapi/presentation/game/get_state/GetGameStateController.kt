@@ -13,7 +13,9 @@ class GetGameStateController(
         val gameId: String,
         val player1Name: String,
         val player2Name: String,
-        val status: String,
+        val nextPlayer: String,
+        val progress: String,
+        val diskMap: Map<String, String>
     )
 
     @GetMapping("/api/games/{gameId}")
@@ -34,7 +36,13 @@ class GetGameStateController(
                 gameId = this.gameId,
                 player1Name = this.player1Name,
                 player2Name = this.player2Name,
-                status = this.status,
+                nextPlayer = this.nextPlayer,
+                progress = this.progress,
+                diskMap = this.diskMap
+                    .entries
+                    .associate { (position, playerType) ->
+                        "${position.x}:${position.y}" to playerType
+                    }
             )
         }
     }

@@ -37,5 +37,13 @@ class Disk(
 
 enum class DiskType(val value: String) {
     Dark("DARK"),
-    Light("LIGHT"),
+    Light("LIGHT");
+
+    companion object {
+        fun of(value: String?): DiskType = when (value?.uppercase()) {
+            "DARK" -> Dark
+            "LIGHT" -> Light
+            else -> throw IllegalArgumentException("Invalid DiskType value: $value")
+        }
+    }
 }

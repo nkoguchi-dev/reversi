@@ -76,11 +76,19 @@ value class PlayerName(val value: String) {
     }
 }
 
-enum class PlayerNumber(val diskType: DiskType) {
-    PLAYER1(DiskType.Dark),
-    PLAYER2(DiskType.Light);
+enum class PlayerNumber(val value: String, val diskType: DiskType) {
+    PLAYER1("PLAYER1", DiskType.Dark),
+    PLAYER2("PLAYER2", DiskType.Light);
 
     fun disk(): Disk = Disk(diskType)
+
+    companion object {
+        fun of(value: String?): PlayerNumber = when (value?.uppercase()) {
+            PLAYER1.value -> PLAYER1
+            PLAYER2.value -> PLAYER2
+            else -> throw IllegalArgumentException("PlayerNumberが不正です")
+        }
+    }
 }
 
 /**

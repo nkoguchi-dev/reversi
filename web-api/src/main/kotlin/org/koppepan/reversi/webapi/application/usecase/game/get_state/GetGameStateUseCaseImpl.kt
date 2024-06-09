@@ -1,6 +1,7 @@
 package org.koppepan.reversi.webapi.application.usecase.game.get_state
 
 import org.komapper.r2dbc.R2dbcDatabase
+import org.koppepan.reversi.webapi.application.usecase.game.create.CreateGameUseCase
 import org.koppepan.reversi.webapi.domain.game.GetGameRepository
 import org.koppepan.reversi.webapi.domain.shared.IllegalArgumentDomainException
 import org.springframework.stereotype.Service
@@ -26,7 +27,18 @@ class GetGameStateUseCaseImpl(
             gameId = game.gameId.value,
             player1Name = game.player1.name.value,
             player2Name = game.player2.name.value,
-            status = game.progress.name,
+            nextPlayer = game.nextPlayerNumber.name,
+            progress = game.progress.value,
+            diskMap = game.board.diskMap.getPlacedDiskMap()
+                .value
+                .entries
+                .filter { (_, playerNumber) -> playerNumber != null }
+                .associate { (position, playerNumber) ->
+                    CreateGameUseCase.Output.Position(
+                        x = position.x.value,
+                        y = position.y.value,
+                    ) to playerNumber!!.type.value
+                },
         )
     }
 }

@@ -36,6 +36,7 @@ class CreateGameRepositoryImpl(
                 player1Name = this.player1.name.value,
                 player2Name = this.player2.name.value,
                 status = this.progress.value,
+                nextPlayerNumber = this.nextPlayerNumber.value,
             )
         }
 

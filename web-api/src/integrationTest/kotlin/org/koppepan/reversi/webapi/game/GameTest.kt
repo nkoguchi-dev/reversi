@@ -1,7 +1,9 @@
 package org.koppepan.reversi.webapi.game
 
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.komapper.core.dsl.Meta
@@ -14,16 +16,86 @@ import org.koppepan.reversi.webapi.infrastructure.entity.GameEntity
 import org.koppepan.reversi.webapi.infrastructure.entity.diskMapEntity
 import org.koppepan.reversi.webapi.infrastructure.entity.gameEntity
 import org.koppepan.reversi.webapi.presentation.game.create.CreateGameController
+import org.koppepan.reversi.webapi.presentation.game.get_state.GetGameStateController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
+import java.time.Instant
 
 @IntegrationTest
 class GameTest(
     @Autowired private var webTestClient: WebTestClient,
     @Autowired private val db: R2dbcDatabase,
 ) {
+    @BeforeEach
+    fun setUp() {
+        runBlocking {
+            val now = Instant.now()
+            db.runQuery(
+                QueryDsl
+                    .insert(Meta.gameEntity)
+                    .single(
+                        GameEntity(
+                            gameId = "gameId",
+                            player1Name = "player1",
+                            player2Name = "player2",
+                            status = "IN_PROGRESS",
+                            nextPlayerNumber = "PLAYER2",
+                            createdAt = now,
+                            updatedAt = now,
+                        )
+                    )
+            )
+            db.runQuery(
+                QueryDsl
+                    .insert(Meta.diskMapEntity)
+                    .multiple(
+                        DiskMapEntity(
+                            gameId = "gameId",
+                            horizontalPosition = "D",
+                            verticalPosition = "4",
+                            diskType = "LIGHT",
+                            createdAt = now,
+                            updatedAt = now,
+                        ),
+                        DiskMapEntity(
+                            gameId = "gameId",
+                            horizontalPosition = "D",
+                            verticalPosition = "5",
+                            diskType = "DARK",
+                            createdAt = now,
+                            updatedAt = now,
+                        ),
+                        DiskMapEntity(
+                            gameId = "gameId",
+                            horizontalPosition = "E",
+                            verticalPosition = "4",
+                            diskType = "DARK",
+                            createdAt = now,
+                            updatedAt = now,
+                        ),
+                        DiskMapEntity(
+                            gameId = "gameId",
+                            horizontalPosition = "E",
+                            verticalPosition = "5",
+                            diskType = "DARK",
+                            createdAt = now,
+                            updatedAt = now,
+                        ),
+                        DiskMapEntity(
+                            gameId = "gameId",
+                            horizontalPosition = "F",
+                            verticalPosition = "5",
+                            diskType = "DARK",
+                            createdAt = now,
+                            updatedAt = now,
+                        ),
+                    )
+            )
+        }
+    }
+
     @Test
     @DisplayName("正常にゲームを開始できること")
     fun testStart() = runTest {
@@ -74,6 +146,7 @@ class GameTest(
             player1Name = "ペンギン",
             player2Name = "パンダ",
             status = "CREATED",
+            nextPlayerNumber = "PLAYER1",
         )
         assertEquals(expectedGameEntity, actualGameEntity)
 
@@ -209,4 +282,32 @@ class GameTest(
             )
     }
 
+    @Test
+    @DisplayName("ゲームのステータスを取得できること")
+    fun testGetStatus() = runTest {
+        val response = webTestClient
+            .get()
+            .uri("/api/games/gameId")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<GetGameStateController.GetGameStateResponse>()
+            .returnResult()
+
+        val expected = GetGameStateController.GetGameStateResponse(
+            gameId = "gameId",
+            player1Name = "player1",
+            player2Name = "player2",
+            nextPlayer = "PLAYER2",
+            progress = "IN_PROGRESS",
+            diskMap = mapOf(
+                "D:4" to "LIGHT",
+                "D:5" to "DARK",
+                "E:4" to "DARK",
+                "E:5" to "DARK",
+                "F:5" to "DARK",
+            )
+        )
+        assertEquals(expected, response.responseBody)
+    }
 }
