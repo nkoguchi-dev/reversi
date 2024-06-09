@@ -339,4 +339,47 @@ class GameTest(
                 """.trimIndent()
             )
     }
+
+    @Test
+    @DisplayName("ディスクを置くことができること")
+    fun testPutDisk() = runTest {
+        val response = webTestClient
+            .put()
+            .uri("/api/games/gameId")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(
+                """
+                {
+                    "playerNumber": "PLAYER2",
+                    "horizontalPosition": "D",
+                    "verticalPosition": "6"
+                }
+                """.trimIndent()
+            )
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<GetGameStateController.GetGameStateResponse>()
+            .returnResult()
+
+        val expected = GetGameStateController.GetGameStateResponse(
+            gameId = "gameId",
+            player1Name = "player1",
+            player2Name = "player2",
+            nextPlayer = "PLAYER1",
+            progress = "IN_PROGRESS",
+            diskMap = mapOf(
+                "D:4" to "LIGHT",
+                "D:5" to "LIGHT",
+                "D:6" to "LIGHT",
+                "E:4" to "DARK",
+                "E:5" to "DARK",
+                "F:5" to "DARK",
+            )
+        )
+        assertEquals(expected, response.responseBody)
+
+        // ゲーム情報が正しく永続化されている事の確認
+
+    }
 }
