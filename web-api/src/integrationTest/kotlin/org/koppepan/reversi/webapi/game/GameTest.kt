@@ -2,6 +2,7 @@ package org.koppepan.reversi.webapi.game
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -93,6 +94,14 @@ class GameTest(
                         ),
                     )
             )
+        }
+    }
+
+    @AfterEach
+    fun tearDown() {
+        runBlocking {
+            db.runQuery(QueryDsl.delete(Meta.diskMapEntity).all())
+            db.runQuery(QueryDsl.delete(Meta.gameEntity).all())
         }
     }
 
@@ -309,5 +318,25 @@ class GameTest(
             )
         )
         assertEquals(expected, response.responseBody)
+    }
+
+    @Test
+    @DisplayName("存在しないゲームIDを指定してゲームのステータスを取得するとNotFoundが返却されること")
+    fun testGetStatusWithNonExistentGameId() = runTest {
+        webTestClient
+            .get()
+            .uri("/api/games/nonExistentGameId")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isNotFound
+            .expectBody()
+            .json(
+                """
+                {
+                    "message": "ゲームが見つかりません",
+                    "description": "指定されたゲームが見つかりませんでした。GameId=nonExistentGameId"
+                }
+                """.trimIndent()
+            )
     }
 }
