@@ -3,7 +3,7 @@ package org.koppepan.reversi.webapi.infrastructure.game
 import org.komapper.core.dsl.Meta
 import org.komapper.core.dsl.QueryDsl
 import org.komapper.r2dbc.R2dbcDatabase
-import org.koppepan.reversi.webapi.domain.game.CreateGameRepository
+import org.koppepan.reversi.webapi.domain.game.SaveGameRepository
 import org.koppepan.reversi.webapi.domain.game.Game
 import org.koppepan.reversi.webapi.infrastructure.entity.DiskMapEntity
 import org.koppepan.reversi.webapi.infrastructure.entity.GameEntity
@@ -12,14 +12,15 @@ import org.koppepan.reversi.webapi.infrastructure.entity.gameEntity
 import org.springframework.stereotype.Repository
 
 @Repository
-class CreateGameRepositoryImpl(
+class SaveGameRepositoryImpl(
     private val db: R2dbcDatabase,
-) : CreateGameRepository {
-    override suspend fun create(game: Game): Game {
-        val insertGameQuery = QueryDsl
+) : SaveGameRepository {
+    override suspend fun save(game: Game): Game {
+        val upsertGameQuery = QueryDsl
             .insert(Meta.gameEntity)
+            .onDuplicateKeyUpdate()
             .single(game.toGameEntity())
-        db.runQuery(insertGameQuery)
+        db.runQuery(upsertGameQuery)
 
         val upsertDiskMapQuery = QueryDsl
             .insert(Meta.diskMapEntity)

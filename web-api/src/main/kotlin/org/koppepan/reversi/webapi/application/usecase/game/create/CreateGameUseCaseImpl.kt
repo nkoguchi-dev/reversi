@@ -1,7 +1,7 @@
 package org.koppepan.reversi.webapi.application.usecase.game.create
 
 import org.komapper.r2dbc.R2dbcDatabase
-import org.koppepan.reversi.webapi.domain.game.CreateGameRepository
+import org.koppepan.reversi.webapi.domain.game.SaveGameRepository
 import org.koppepan.reversi.webapi.domain.game.Game
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.slf4j.Logger
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class CreateGameUseCaseImpl(
     private val idGenerator: IdGenerator,
-    private val createGameRepository: CreateGameRepository,
+    private val saveGameRepository: SaveGameRepository,
     private val db: R2dbcDatabase,
 ) : CreateGameUseCase {
     companion object {
@@ -31,7 +31,7 @@ class CreateGameUseCaseImpl(
         }
 
         db.withTransaction {
-            createGameRepository.create(game)
+            saveGameRepository.save(game)
         }
 
         log.debug("Gameを開始しました。 {}", game)
