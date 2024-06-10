@@ -13,3 +13,14 @@ services:
       - "15005:5005"
     env_file:
       - ./web-api/app-settings.env
+
+  reversi_web-front:
+    build:
+      context: ./web-front
+    container_name: reversi_web-front
+    volumes:
+      - ./web-front:/projects
+    depends_on:
+      - reversi_web-api
+    ports:
+      - "14200:4200"
