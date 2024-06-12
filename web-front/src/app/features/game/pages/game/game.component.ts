@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, inject, OnDestroy} from '@angular/core';
+import {GameStartResponse, GameStartService} from "../../services/game-start.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-game',
@@ -7,8 +9,24 @@ import { Component } from '@angular/core';
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
-export class GameComponent {
+export class GameComponent implements OnDestroy {
+  private _gameStartService = inject(GameStartService);
+  private _subscription: Subscription = new Subscription();
+
+  ngOnDestroy(): void {
+    this._subscription.unsubscribe();
+  }
+
   onButtonClick() {
-    console.log('Button clicked');
+    this._subscription.add(
+      this._gameStartService
+        .startGame({
+          player1: 'player1',
+          player2: 'player2',
+        })
+        .subscribe((response: GameStartResponse) => {
+          console.log(response);
+        })
+    );
   }
 }
