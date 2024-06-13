@@ -4,6 +4,8 @@ plugins {
     id("org.springframework.boot") version "3.2.5"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.google.devtools.ksp") version "1.9.23-1.0.19"
+    id("org.sonarqube") version "5.0.0.4638"
+    id("jacoco")
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.spring") version "1.9.23"
 }
@@ -84,6 +86,43 @@ configurations {
     }
     getByName("integrationTestRuntimeOnly") {
         extendsFrom(configurations.getByName("testRuntimeOnly"))
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", System.getenv("REVERSI_WEB_API_SONAR_PROJECT_KEY") ?: "")
+        property("sonar.projectName", System.getenv("REVERSI_WEB_API_SONAR_PROJECT_NAME") ?: "")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            "${layout.buildDirectory}/jacoco-xml-report/test.xml"
+        )
+        property("sonar.host.url", System.getenv("REVERSI_WEB_API_SONAR_HOST_URL") ?: "")
+        property("sonar.token", System.getenv("REVERSI_WEB_API_SONAR_TOKEN") ?: "")
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.9"
+    reportsDirectory.set(layout.buildDirectory.dir("jacoco-xml-report"))
+}
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+    executionData.setFrom(
+        fileTree(
+            mapOf(
+                "dir" to layout.buildDirectory.dir("jacoco"),
+                "includes" to listOf("test.exec", "integrationTest.exec"),
+            )
+        )
+    )
+    sourceDirectories.setFrom(sourceSets.main.get().allSource.srcDirs)
+
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(false)
+        xml.outputLocation.set(file("${layout.buildDirectory}/jacoco-xml-report/test.xml"))
     }
 }
 

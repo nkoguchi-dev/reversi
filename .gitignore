@@ -56,3 +56,6 @@ web-front/coverage/*
 # vscode
 *.code-workspace
 .vscode
+
+# environment file
+.env
