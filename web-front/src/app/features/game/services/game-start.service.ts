@@ -2,21 +2,18 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 
-export type GameStartRequest = {
+export interface GameStartRequest {
   "player1": string,
   "player2": string,
 }
 
-
-export type GameStartResponse = {
+export interface GameStartResponse {
   gameId: string;
   player1Name: string;
   player2Name: string;
   nextPlayer: string;
   progress: string;
-  diskMap: {
-    [key: string]: string | 'LIGHT' | 'DARK' | null;
-  };
+  diskMap: Record<string, string | 'LIGHT' | 'DARK' | null>;
 }
 
 @Injectable({
