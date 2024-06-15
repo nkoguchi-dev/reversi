@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameComponent } from './game.component';
+import {provideHttpClient} from "@angular/common/http";
 
 describe('GameComponent', () => {
   let component: GameComponent;
@@ -8,7 +9,8 @@ describe('GameComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GameComponent]
+      imports: [GameComponent],
+      providers: [provideHttpClient()],
     })
     .compileComponents();
 
