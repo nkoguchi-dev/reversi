@@ -33,11 +33,11 @@ dependencies {
     runtimeOnly("io.r2dbc:r2dbc-h2")
 
     // Flyway
-    runtimeOnly("org.flywaydb:flyway-core:10.14.0")
+    runtimeOnly("org.flywaydb:flyway-core")
 
     // coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
     // Komapper
     val komapperVersion = "1.17.0"
@@ -143,6 +143,7 @@ tasks.named<Copy>("processIntegrationTestResources") {
 
 tasks.register<Test>("integrationTest") {
     group = "verification"
+    description = "Runs integration tests."
     testClassesDirs = sourceSets["integrationTest"].output.classesDirs
     classpath = sourceSets["integrationTest"].runtimeClasspath
     systemProperty(

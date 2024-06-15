@@ -1,6 +1,5 @@
 package org.koppepan.reversi.webapi.application.usecase.game.create
 
-@FunctionalInterface
 interface CreateGameUseCase {
     data class Input(
         val player1Name: String,
