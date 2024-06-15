@@ -13,7 +13,7 @@ export interface GameStartResponse {
   player2Name: string;
   nextPlayer: string;
   progress: string;
-  diskMap: Record<string, string | 'LIGHT' | 'DARK' | null>;
+  diskMap: Record<string, 'LIGHT' | 'DARK' | null>;
 }
 
 @Injectable({
