@@ -1,6 +1,7 @@
 import {Component, inject, OnDestroy} from '@angular/core';
 import {GameStartResponse, GameStartService} from "../../services/game-start.service";
 import {Subscription} from "rxjs";
+import {GameState} from "../../models/game-state.module";
 
 @Component({
   selector: 'app-game',
@@ -25,7 +26,19 @@ export class GameComponent implements OnDestroy {
           player2: 'player2',
         })
         .subscribe((response: GameStartResponse) => {
-          console.log(response);
+          const gameState = GameState.of(
+            response.gameId,
+            response.nextPlayer,
+            response.progress,
+            new Map(Object.entries(response.diskMap)),
+          );
+          console.log(`gameId: ${gameState.gameId}`);
+          console.log(`nextPlayer: ${gameState.nextPlayer}`);
+          console.log(`progress: ${gameState.progress}`);
+          gameState.diskMap.forEach((diskType, position) => {
+              console.log(`position: ${position.horizontalPosition}:${position.verticalPosition}`);
+              console.log(`diskType: ${diskType}`);
+            });
         })
     );
   }
