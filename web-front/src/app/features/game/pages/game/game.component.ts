@@ -2,11 +2,14 @@ import {Component, inject, OnDestroy} from '@angular/core';
 import {GameStartResponse, GameStartService} from "../../services/game-start.service";
 import {Subscription} from "rxjs";
 import {GameState} from "../../models/game-state.module";
+import {BoardComponent} from "../../components/board/board.component";
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [],
+  imports: [
+    BoardComponent
+  ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
