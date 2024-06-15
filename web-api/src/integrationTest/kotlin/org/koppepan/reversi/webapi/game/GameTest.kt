@@ -411,4 +411,34 @@ class GameTest(
         )
         assertEquals(expectedDiskMapSet, actualDiskMapSet)
     }
+
+    @Test
+    @DisplayName("存在しないゲームIDを指定してディスクを配置するとNotFoundが返却されること")
+    fun testPutDiskWithNonExistentGameId() = runTest {
+        webTestClient
+            .put()
+            .uri("/api/games/nonExistentGameId")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(
+                """
+                {
+                    "playerNumber": "PLAYER2",
+                    "horizontalPosition": "D",
+                    "verticalPosition": "6"
+                }
+                """.trimIndent()
+            )
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isNotFound
+            .expectBody()
+            .json(
+                """
+                {
+                    "message": "ディスクを配置する事ができません",
+                    "description": "指定されたゲームが見つかりませんでした。GameId=nonExistentGameId"
+                }
+                """.trimIndent()
+            )
+    }
 }
