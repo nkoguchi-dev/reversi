@@ -6,7 +6,8 @@ module.exports = function(config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
-      require('@angular-devkit/build-angular/plugins/karma')
+      require('@angular-devkit/build-angular/plugins/karma'),
+      require('karma-coverage-istanbul-reporter'),
     ],
     client: {
       clearContext: false
@@ -15,12 +16,13 @@ module.exports = function(config) {
       suppressAll: true
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, './coverage/my-angular-app'),
-      subdir: '.',
+      dir: require('path').join(__dirname, './coverage'),
       reporters: [
         { type: 'html' },
-        { type: 'text-summary' }
-      ]
+        { type: 'text-summary' },
+        { type: 'lcovonly' },
+      ],
+      fixWebpackSourcePaths: true
     },
     reporters: ['progress', 'kjhtml'],
     files: [],
