@@ -1,6 +1,5 @@
 package org.koppepan.reversi.webapi.domain.game
 
-@FunctionalInterface
 interface GetGameRepository {
 
     data class Input(

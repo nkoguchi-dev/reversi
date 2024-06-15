@@ -2,7 +2,6 @@ package org.koppepan.reversi.webapi.application.usecase.game.get_state
 
 import org.koppepan.reversi.webapi.application.usecase.game.create.CreateGameUseCase
 
-@FunctionalInterface
 interface GetGameStateUseCase {
     data class Input(
         val gameId: String,

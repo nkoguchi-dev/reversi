@@ -1,6 +1,5 @@
 package org.koppepan.reversi.webapi.application.usecase.game.put_disk
 
-@FunctionalInterface
 interface PutDiskGameUseCase {
     data class Input(
         val gameId: String,
