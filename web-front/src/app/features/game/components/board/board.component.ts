@@ -30,7 +30,6 @@ export class BoardComponent {
 
   // squareコンポーネントを並べるためにdiskMapを配列にして返す
   diskMapToArray(): Position[] | null {
-    console.log('diskMapToArray called. diskMap:', this._diskMap);
     if (this._diskMap === undefined) {
       return null;
     }

@@ -1,4 +1,4 @@
-import {Component, inject, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {Component, inject, OnDestroy} from '@angular/core';
 import {GameStartResponse, GameStartService} from "../../services/game-start.service";
 import {Subscription} from "rxjs";
 import {GameState} from "../../models/game-state.module";
@@ -15,16 +15,10 @@ import {Disk} from "../../models/disk.module";
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
-export class GameComponent implements OnChanges, OnDestroy {
+export class GameComponent implements OnDestroy {
   private _gameStartService = inject(GameStartService);
   private _subscription: Subscription = new Subscription();
   gameState: GameState = this._initializeGameState();
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['gameState']) {
-      console.log('gameState changed:', this.gameState);
-    }
-  }
 
   ngOnDestroy(): void {
     this._subscription.unsubscribe();
