@@ -7,6 +7,7 @@ import {HorizontalPosition, Position, VerticalPosition} from "../../models/posit
 import {Disk} from "../../models/disk.module";
 import {SquareComponent} from "../../components/square/square.component";
 import {PutDiskResponse, PutDiskService} from "../../services/put-disk.service";
+import {GameProgress} from "../../models/game-progress.module";
 
 @Component({
   selector: 'app-game',
@@ -38,7 +39,7 @@ export class GameComponent implements OnDestroy {
     return new GameState(
       'gameId',
       'nextPlayer',
-      'progress',
+      'INITIAL',
       diskMap,
     );
   }
@@ -77,5 +78,18 @@ export class GameComponent implements OnDestroy {
         );
       })
     );
+  }
+
+  getGameProgress(): string {
+    switch (this.gameState.progress) {
+      case GameProgress.INITIAL:
+        return 'ゲーム開始待ち';
+      case GameProgress.CREATED:
+        return 'ゲーム開始';
+      case GameProgress.IN_PROGRESS:
+        return '進行中';
+      case GameProgress.FINISHED:
+        return '終了';
+    }
   }
 }
