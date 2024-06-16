@@ -1,6 +1,24 @@
 .board {
   display: grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
+  grid-template-columns: auto repeat(8, 50px);
+  grid-template-rows: auto repeat(8, 50px);
   gap: 0;
+  justify-content: start;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  padding: 5px 0;
+}
+
+.row-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-weight: bold;
+  height: 50px;
+  padding: 0 5px;
 }

@@ -1,7 +1,7 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {SquareComponent} from "../square/square.component";
 import {NgForOf} from "@angular/common";
-import {Position} from "../../models/position.module";
+import {HorizontalPosition, Position, VerticalPosition} from "../../models/position.module";
 import {Disk} from "../../models/disk.module";
 
 @Component({
@@ -15,28 +15,20 @@ import {Disk} from "../../models/disk.module";
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  private _diskMap: Map<string, Disk | null> | undefined;
-  positions: Position[] | null = null;
-
-  @Input()
-  set diskMap(diskMap: Map<string, Disk | null> | undefined) {
-    this._diskMap = diskMap;
-    this.positions = this.diskMapToArray();
-  }
+  @Output() squareClicked = new EventEmitter<Position>();
+  @Input() diskMap: Map<string, Disk | null> | undefined;
+  columns: HorizontalPosition[] = Object.values(HorizontalPosition);
+  rows: VerticalPosition[] = Object.values(VerticalPosition);
 
   onSquareClick(position: Position) {
-    console.log('Square clicked', position);
+    this.squareClicked.emit(position);
   }
 
-  // squareコンポーネントを並べるためにdiskMapを配列にして返す
-  diskMapToArray(): Position[] | null {
-    if (this._diskMap === undefined) {
-      return null;
-    }
-    return Array.from(this._diskMap.keys()).map(Position.of);
+  getPosition(horizontalPosition: HorizontalPosition, verticalPosition: VerticalPosition): Position {
+    return new Position(horizontalPosition, verticalPosition);
   }
 
-  getDisk(position: Position): Disk | null {
-    return this._diskMap?.get(position.toString()) || null;
+  getDisk(horizontalPosition: HorizontalPosition, verticalPosition: VerticalPosition): Disk | null {
+    return this.diskMap?.get(new Position(horizontalPosition, verticalPosition).toString()) || null;
   }
 }

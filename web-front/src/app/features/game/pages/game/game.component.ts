@@ -5,18 +5,25 @@ import {GameState} from "../../models/game-state.module";
 import {BoardComponent} from "../../components/board/board.component";
 import {HorizontalPosition, Position, VerticalPosition} from "../../models/position.module";
 import {Disk} from "../../models/disk.module";
+import {SquareComponent} from "../../components/square/square.component";
+import {PutDiskResponse, PutDiskService} from "../../services/put-disk.service";
+import {GameProgress} from "../../models/game-progress.module";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
-    BoardComponent
+    BoardComponent,
+    SquareComponent,
+    NgIf
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
 export class GameComponent implements OnDestroy {
   private _gameStartService = inject(GameStartService);
+  private _putDiskService = inject(PutDiskService);
   private _subscription: Subscription = new Subscription();
   gameState: GameState = this._initializeGameState();
 
@@ -34,7 +41,7 @@ export class GameComponent implements OnDestroy {
     return new GameState(
       'gameId',
       'nextPlayer',
-      'progress',
+      'INITIAL',
       diskMap,
     );
   }
@@ -55,5 +62,41 @@ export class GameComponent implements OnDestroy {
           );
         })
     );
+  }
+
+  onSquareClick(position: Position) {
+    console.log(`onSquareClicked position: ${position.toString()}`);
+    this._subscription.add(
+      this._putDiskService.putDisk(this.gameState.gameId, {
+        playerNumber: this.gameState.nextPlayer,
+        horizontalPosition: position.horizontalPosition,
+        verticalPosition: position.verticalPosition,
+      }).subscribe((response: PutDiskResponse) => {
+        this.gameState = GameState.of(
+          response.gameId,
+          response.nextPlayer,
+          response.progress,
+          new Map(Object.entries(response.diskMap)),
+        );
+      })
+    );
+  }
+
+  displayNextPlayer(): boolean {
+    return this.gameState.progress === GameProgress.CREATED
+      || this.gameState.progress === GameProgress.IN_PROGRESS;
+  }
+
+  getGameProgress(): string {
+    switch (this.gameState.progress) {
+      case GameProgress.INITIAL:
+        return 'ゲーム開始待ち';
+      case GameProgress.CREATED:
+        return 'ゲーム開始';
+      case GameProgress.IN_PROGRESS:
+        return '進行中';
+      case GameProgress.FINISHED:
+        return '終了';
+    }
   }
 }

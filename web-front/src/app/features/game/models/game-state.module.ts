@@ -1,5 +1,6 @@
 import {createDiskType, Disk} from "./disk.module";
 import {HorizontalPosition, Position, VerticalPosition} from "./position.module";
+import {createGameProgress, GameProgress} from "./game-progress.module";
 
 /**
  * ゲームの状態を表す型
@@ -7,13 +8,13 @@ import {HorizontalPosition, Position, VerticalPosition} from "./position.module"
 export class GameState {
   gameId: string;
   nextPlayer: string;
-  progress: string;
+  progress: GameProgress;
   diskMap: Map<string, Disk | null>;
 
   constructor(gameId: string, nextPlayer: string, progress: string, diskMap: Map<string, Disk | null>) {
     this.gameId = gameId;
     this.nextPlayer = nextPlayer;
-    this.progress = progress;
+    this.progress = createGameProgress(progress);
     this.diskMap = initializeDiskMap();
     // diskMapの内容を反映
     for (const [position, disk] of diskMap) {

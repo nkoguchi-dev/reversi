@@ -1,7 +1,12 @@
-<p>game works!</p>
 <div class="board">
-  <button (click)="onButtonClick()">Call API</button>
+  <button (click)="onButtonClick()">ゲーム開始</button>
+  <div class="game-state">
+    <div>ゲーム状態: {{ getGameProgress() }}</div>
+    <div *ngIf="displayNextPlayer()">次のプレイヤー: {{ gameState.nextPlayer }}</div>
+  </div>
+
   <app-board
     [diskMap]="gameState.diskMap"
+    (squareClicked)="onSquareClick($event)"
   ></app-board>
 </div>
