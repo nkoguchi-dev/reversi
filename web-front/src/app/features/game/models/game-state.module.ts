@@ -1,4 +1,4 @@
-import {createDiskType, DiskType} from "./disk.module";
+import {createDiskType, Disk} from "./disk.module";
 import {Position} from "./position.module";
 
 /**
@@ -8,9 +8,9 @@ export class GameState {
   gameId: string;
   nextPlayer: string;
   progress: string;
-  diskMap: Map<Position, DiskType | null>;
+  diskMap: Map<Position, Disk | null>;
 
-  constructor(gameId: string, nextPlayer: string, progress: string, diskMap: Map<Position, DiskType | null>) {
+  constructor(gameId: string, nextPlayer: string, progress: string, diskMap: Map<Position, Disk | null>) {
     this.gameId = gameId;
     this.nextPlayer = nextPlayer;
     this.progress = progress;
@@ -30,7 +30,7 @@ export class GameState {
       new Map(
         Array.from(diskMap.entries())
           .map(([positionString, diskTypeString]) => {
-            return [Position.of(positionString), createDiskType(diskTypeString)]
+            return [Position.of(positionString), new Disk(createDiskType(diskTypeString))]
           })
       )
     )

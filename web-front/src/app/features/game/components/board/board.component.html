@@ -1,7 +1,8 @@
 <div class="board">
   <app-square
-    *ngFor="let square of squares; index as i"
-    [value]="square"
-    (squareClicked)="onSquareClick(i)"
+    *ngFor="let position of positions"
+    [position]="position"
+    [disk]="getDisk(position)"
+    (squareClicked)="onSquareClick($event)"
   ></app-square>
 </div>

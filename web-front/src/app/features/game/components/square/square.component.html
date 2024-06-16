@@ -1,3 +1,3 @@
 <button class="square" (click)="onClick()">
-  {{ value }}
+  {{ disk?.diskType === DiskType.LIGHT ? '○' : disk?.diskType === DiskType.DARK ? '●' : '' }}
 </button>

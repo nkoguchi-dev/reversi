@@ -1,3 +1,12 @@
+
+export class Disk {
+  diskType: DiskType;
+
+  constructor(diskType: DiskType) {
+    this.diskType = diskType;
+  }
+}
+
 export enum DiskType {
   LIGHT = 'LIGHT',
   DARK = 'DARK',

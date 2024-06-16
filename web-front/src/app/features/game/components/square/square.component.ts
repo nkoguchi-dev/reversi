@@ -1,4 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Position} from "../../models/position.module";
+import {Disk, DiskType} from "../../models/disk.module";
 
 @Component({
   selector: 'app-square',
@@ -8,10 +10,13 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
   styleUrl: './square.component.scss'
 })
 export class SquareComponent {
-  @Input() value: string | null = null;
-  @Output() squareClicked = new EventEmitter<void>();
+  @Input() position!: Position;
+  @Input() disk: Disk | null = null;
+  @Output() squareClicked = new EventEmitter<Position>();
 
   onClick() {
-    this.squareClicked.emit();
+    this.squareClicked.emit(this.position);
   }
+
+  protected readonly DiskType = DiskType;
 }

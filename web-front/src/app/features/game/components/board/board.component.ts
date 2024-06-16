@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {SquareComponent} from "../square/square.component";
 import {NgForOf} from "@angular/common";
+import {Position} from "../../models/position.module";
+import {Disk} from "../../models/disk.module";
 
 @Component({
   selector: 'app-board',
@@ -13,11 +15,40 @@ import {NgForOf} from "@angular/common";
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  squares: (string | null)[] = Array(64).fill(null);
+  private _diskMap: Map<Position, Disk | null> | undefined;
+  positions: Position[] | null = null;
 
-  onSquareClick(index: number) {
-    if (!this.squares[index]) {
-      this.squares[index] = 'X'; // プレイヤーの動きを記録するための仮のコード
+  @Input()
+  set diskMap(diskMap: Map<Position, Disk | null> | undefined) {
+    this._diskMap = diskMap;
+    this.positions = this.diskMapToArray();
+  }
+
+  onSquareClick(position: Position) {
+    console.log('Square clicked', position);
+  }
+
+  // squareコンポーネントを並べるためにdiskMapを配列にして返す
+  diskMapToArray(): Position[] | null {
+    console.log('diskMapToArray called. diskMap:', this._diskMap);
+    if (this._diskMap === undefined) {
+      return null;
     }
+    const entriesArray = Array.from(this._diskMap.entries());
+    const sortedEntries = entriesArray.sort(([posA], [posB]) => {
+      // 水平方向の位置で比較
+      const horizontalComparison = posA.horizontalPosition.localeCompare(posB.horizontalPosition);
+      if (horizontalComparison !== 0) {
+        return horizontalComparison;
+      }
+
+      // 水平方向が同じ場合は垂直方向で比較
+      return posA.verticalPosition.localeCompare(posB.verticalPosition);
+    });
+    return sortedEntries.map(([position]) => position);
+  }
+
+  getDisk(position: Position): Disk | null {
+    return this._diskMap?.get(position) || null;
   }
 }
