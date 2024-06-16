@@ -34,7 +34,18 @@ export class BoardComponent {
     if (this._diskMap === undefined) {
       return null;
     }
-    return Array.from(this._diskMap.keys()).map(Position.of);
+    return Array.from(this._diskMap.keys())
+      .sort((posA, posB) => {
+        // Gridの左上から右下に向かって並べるため、vertical, horizontalの順で比較してsortする
+        const [horizontalA, verticalA] = posA.split(':');
+        const [horizontalB, verticalB] = posB.split(':');
+        const verticalComparison = verticalA.localeCompare(verticalB);
+        if (verticalComparison !== 0) {
+          return verticalComparison;
+        }
+        return horizontalA.localeCompare(horizontalB);
+      })
+      .map(Position.of);
   }
 
   getDisk(position: Position): Disk | null {
