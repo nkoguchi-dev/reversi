@@ -3,5 +3,6 @@
   <button (click)="onButtonClick()">Call API</button>
   <app-board
     [diskMap]="gameState.diskMap"
+    (squareClicked)="onSquareClick($event)"
   ></app-board>
 </div>

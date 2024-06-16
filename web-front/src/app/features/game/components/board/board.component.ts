@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {SquareComponent} from "../square/square.component";
 import {NgForOf} from "@angular/common";
 import {Position} from "../../models/position.module";
@@ -17,6 +17,7 @@ import {Disk} from "../../models/disk.module";
 export class BoardComponent {
   private _diskMap: Map<string, Disk | null> | undefined;
   positions: Position[] | null = null;
+  @Output() squareClicked = new EventEmitter<Position>();
 
   @Input()
   set diskMap(diskMap: Map<string, Disk | null> | undefined) {
@@ -25,7 +26,7 @@ export class BoardComponent {
   }
 
   onSquareClick(position: Position) {
-    console.log('Square clicked', position);
+    this.squareClicked.emit(position);
   }
 
   // squareコンポーネントを並べるためにdiskMapを配列にして返す

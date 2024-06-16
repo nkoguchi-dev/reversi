@@ -5,12 +5,14 @@ import {GameState} from "../../models/game-state.module";
 import {BoardComponent} from "../../components/board/board.component";
 import {HorizontalPosition, Position, VerticalPosition} from "../../models/position.module";
 import {Disk} from "../../models/disk.module";
+import {SquareComponent} from "../../components/square/square.component";
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
-    BoardComponent
+    BoardComponent,
+    SquareComponent
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
@@ -55,5 +57,9 @@ export class GameComponent implements OnDestroy {
           );
         })
     );
+  }
+
+  onSquareClick(position: Position) {
+    console.log(`onSquareClicked position: ${position.toString()}`);
   }
 }
