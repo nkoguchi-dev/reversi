@@ -1,0 +1,8 @@
+<div class="board">
+  <app-square
+    *ngFor="let position of positions"
+    [position]="position"
+    [disk]="getDisk(position)"
+    (squareClicked)="onSquareClick($event)"
+  ></app-square>
+</div>

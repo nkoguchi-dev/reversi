@@ -5,9 +5,28 @@ export class Position {
   horizontalPosition: HorizontalPosition;
   verticalPosition: VerticalPosition;
 
-  constructor(horizontalPositionString: string, verticalPositionString: string) {
-    this.horizontalPosition = HorizontalPosition[horizontalPositionString as keyof typeof HorizontalPosition];
-    this.verticalPosition = VerticalPosition[verticalPositionString as keyof typeof VerticalPosition];
+  constructor(horizontalPosition: HorizontalPosition, verticalPosition: VerticalPosition) {
+    this.horizontalPosition = horizontalPosition;
+    this.verticalPosition = verticalPosition;
+  }
+
+  /**
+   * F:4のような形式の文字列から Position インスタンスを生成する
+   * @param positionString
+   */
+  static of(positionString: string): Position {
+    const positions = positionString.split(':');
+    if (positions.length !== 2) {
+      throw new Error(`Invalid position string: ${positionString}`);
+    }
+    return new Position(
+      createHorizontalPosition(positions[0]),
+      createVerticalPosition(positions[1]),
+    );
+  }
+
+  toString(): string {
+    return `${this.horizontalPosition}:${this.verticalPosition}`;
   }
 }
 
@@ -24,6 +43,16 @@ export enum HorizontalPosition {
   G = 'G',
   H = 'H',
 }
+function isHorizontalPosition(value: string): value is HorizontalPosition {
+  return Object.values(HorizontalPosition).includes(value as HorizontalPosition);
+}
+
+function createHorizontalPosition(value: string): HorizontalPosition {
+  if (!isHorizontalPosition(value)) {
+    throw new Error(`Invalid horizontal position: ${value}`);
+  }
+  return value;
+}
 
 /**
  * 垂直方向の位置を表す型
@@ -37,4 +66,15 @@ export enum VerticalPosition {
   SIX = '6',
   SEVEN = '7',
   EIGHT = '8',
+}
+
+function isVerticalPosition(value: string): value is VerticalPosition {
+  return Object.values(VerticalPosition).includes(value as VerticalPosition);
+}
+
+function createVerticalPosition(value: string): VerticalPosition {
+  if (!isVerticalPosition(value)) {
+    throw new Error(`Invalid vertical position: ${value}`);
+  }
+  return value;
 }

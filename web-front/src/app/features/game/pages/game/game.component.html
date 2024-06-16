@@ -1,4 +1,7 @@
 <p>game works!</p>
 <div class="board">
   <button (click)="onButtonClick()">Call API</button>
+  <app-board
+    [diskMap]="gameState.diskMap"
+  ></app-board>
 </div>
