@@ -15,11 +15,11 @@ import {Disk} from "../../models/disk.module";
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  private _diskMap: Map<Position, Disk | null> | undefined;
+  private _diskMap: Map<string, Disk | null> | undefined;
   positions: Position[] | null = null;
 
   @Input()
-  set diskMap(diskMap: Map<Position, Disk | null> | undefined) {
+  set diskMap(diskMap: Map<string, Disk | null> | undefined) {
     this._diskMap = diskMap;
     this.positions = this.diskMapToArray();
   }
@@ -33,21 +33,10 @@ export class BoardComponent {
     if (this._diskMap === undefined) {
       return null;
     }
-    const entriesArray = Array.from(this._diskMap.entries());
-    const sortedEntries = entriesArray.sort(([posA], [posB]) => {
-      // 水平方向の位置で比較
-      const horizontalComparison = posA.horizontalPosition.localeCompare(posB.horizontalPosition);
-      if (horizontalComparison !== 0) {
-        return horizontalComparison;
-      }
-
-      // 水平方向が同じ場合は垂直方向で比較
-      return posA.verticalPosition.localeCompare(posB.verticalPosition);
-    });
-    return sortedEntries.map(([position]) => position);
+    return Array.from(this._diskMap.keys()).map(Position.of);
   }
 
   getDisk(position: Position): Disk | null {
-    return this._diskMap?.get(position) || null;
+    return this._diskMap?.get(position.toString()) || null;
   }
 }

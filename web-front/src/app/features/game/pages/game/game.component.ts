@@ -25,10 +25,10 @@ export class GameComponent implements OnDestroy {
   }
 
   _initializeGameState(): GameState {
-    const diskMap = new Map<Position, Disk | null>();
+    const diskMap = new Map<string, Disk | null>();
     for (const h of Object.values(HorizontalPosition)) {
       for (const v of Object.values(VerticalPosition)) {
-        diskMap.set(new Position(h, v), null);
+        diskMap.set(new Position(h, v).toString(), null);
       }
     }
     return new GameState(
@@ -47,20 +47,12 @@ export class GameComponent implements OnDestroy {
           player2: 'player2',
         })
         .subscribe((response: GameStartResponse) => {
-          const newGameState = GameState.of(
+          this.gameState = GameState.of(
             response.gameId,
             response.nextPlayer,
             response.progress,
             new Map(Object.entries(response.diskMap)),
           );
-          this.gameState = newGameState;
-          console.log(`gameId: ${this.gameState.gameId}`);
-          console.log(`nextPlayer: ${this.gameState.nextPlayer}`);
-          console.log(`progress: ${this.gameState.progress}`);
-          this.gameState.diskMap.forEach((diskType, position) => {
-            console.log(`position: ${position.horizontalPosition}:${position.verticalPosition}`);
-            console.log(`diskType: ${diskType}`);
-          });
         })
     );
   }

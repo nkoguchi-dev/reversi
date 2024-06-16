@@ -24,6 +24,10 @@ export class Position {
       createVerticalPosition(positions[1]),
     );
   }
+
+  toString(): string {
+    return `${this.horizontalPosition}:${this.verticalPosition}`;
+  }
 }
 
 /**
