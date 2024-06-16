@@ -2,7 +2,7 @@
   <button (click)="onButtonClick()">ゲーム開始</button>
   <div class="game-state">
     <div>ゲーム状態: {{ getGameProgress() }}</div>
-    <div>次のプレイヤー: {{ gameState.nextPlayer }}</div>
+    <div *ngIf="displayNextPlayer()">次のプレイヤー: {{ gameState.nextPlayer }}</div>
   </div>
 
   <app-board

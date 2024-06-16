@@ -8,13 +8,15 @@ import {Disk} from "../../models/disk.module";
 import {SquareComponent} from "../../components/square/square.component";
 import {PutDiskResponse, PutDiskService} from "../../services/put-disk.service";
 import {GameProgress} from "../../models/game-progress.module";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
     BoardComponent,
-    SquareComponent
+    SquareComponent,
+    NgIf
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
@@ -78,6 +80,11 @@ export class GameComponent implements OnDestroy {
         );
       })
     );
+  }
+
+  displayNextPlayer(): boolean {
+    return this.gameState.progress === GameProgress.CREATED
+      || this.gameState.progress === GameProgress.IN_PROGRESS;
   }
 
   getGameProgress(): string {

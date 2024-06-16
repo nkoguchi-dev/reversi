@@ -1,8 +1,22 @@
 <div class="board">
-  <app-square
-    *ngFor="let position of positions"
-    [position]="position"
-    [disk]="getDisk(position)"
-    (squareClicked)="onSquareClick($event)"
-  ></app-square>
+  <!-- 列番号を表示する行 -->
+  <div class="grid-header"></div>
+  <div *ngFor="let column of columns" class="column-header">
+    {{ column }}
+  </div>
+
+  <ng-container *ngFor="let row of rows">
+    <div class="row-header">
+      {{ row }}
+    </div>
+    <ng-container *ngFor="let column of columns">
+      <div>
+        <app-square
+          [position]="getPosition(column, row)"
+          [disk]="getDisk(column, row)"
+          (squareClicked)="onSquareClick($event)"
+        ></app-square>
+      </div>
+    </ng-container>
+  </ng-container>
 </div>
