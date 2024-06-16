@@ -6,6 +6,7 @@ import {BoardComponent} from "../../components/board/board.component";
 import {HorizontalPosition, Position, VerticalPosition} from "../../models/position.module";
 import {Disk} from "../../models/disk.module";
 import {SquareComponent} from "../../components/square/square.component";
+import {PutDiskResponse, PutDiskService} from "../../services/put-disk.service";
 
 @Component({
   selector: 'app-game',
@@ -19,6 +20,7 @@ import {SquareComponent} from "../../components/square/square.component";
 })
 export class GameComponent implements OnDestroy {
   private _gameStartService = inject(GameStartService);
+  private _putDiskService = inject(PutDiskService);
   private _subscription: Subscription = new Subscription();
   gameState: GameState = this._initializeGameState();
 
@@ -61,5 +63,19 @@ export class GameComponent implements OnDestroy {
 
   onSquareClick(position: Position) {
     console.log(`onSquareClicked position: ${position.toString()}`);
+    this._subscription.add(
+      this._putDiskService.putDisk(this.gameState.gameId, {
+        playerNumber: this.gameState.nextPlayer,
+        horizontalPosition: position.horizontalPosition,
+        verticalPosition: position.verticalPosition,
+      }).subscribe((response: PutDiskResponse) => {
+        this.gameState = GameState.of(
+          response.gameId,
+          response.nextPlayer,
+          response.progress,
+          new Map(Object.entries(response.diskMap)),
+        );
+      })
+    );
   }
 }
