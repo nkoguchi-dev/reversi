@@ -1,6 +1,7 @@
 name: Test for web-api on prd branch
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - release/prd
