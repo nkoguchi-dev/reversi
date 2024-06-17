@@ -1,4 +1,3 @@
-# prdブランチにプルリクエストがあった場合にテストを実行する
 name: Test for web-api on prd branch
 
 on:
@@ -39,7 +38,7 @@ jobs:
 
       - name: Run Test
         working-directory: 'web-front'
-        run: npx ng test --karma-config=karma.conf.js --browsers=ChromeHeadlessCI --no-watch --no-progress --code-coverage --reporters=coverage,junit
+        run: npx ng test --karma-config=karma.conf.js --browsers=ChromeHeadlessCI --no-watch --no-progress --code-coverage
 
       - name: Run tests
         run: npm test
