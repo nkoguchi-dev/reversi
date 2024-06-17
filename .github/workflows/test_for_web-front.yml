@@ -39,6 +39,3 @@ jobs:
       - name: Run Test
         working-directory: 'web-front'
         run: npx ng test --karma-config=karma.conf.ci.js --browsers=ChromeHeadlessCI --no-watch --no-progress
-
-      - name: Run tests
-        run: npm test
