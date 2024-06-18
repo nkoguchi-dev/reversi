@@ -1,5 +1,4 @@
-# prdブランチにプルリクエストがあった場合にテストを実行する
-name: Test for web-api on prd branch
+name: Test for web-front on prd branch
 
 on:
   workflow_dispatch:
@@ -39,7 +38,4 @@ jobs:
 
       - name: Run Test
         working-directory: 'web-front'
-        run: npx ng test --karma-config=karma.conf.js --browsers=ChromeHeadlessCI --no-watch --no-progress --code-coverage --reporters=coverage,junit
-
-      - name: Run tests
-        run: npm test
+        run: npx ng test --karma-config=karma.conf.ci.js --browsers=ChromeHeadlessCI --no-watch --no-progress
