@@ -6,12 +6,6 @@
 ### VS Code ###
 .DS_Store
 
-### terraform ###
-.terraform
-.terraform.lock.hcl
-terraform.tfstate.backup
-.history
-=======
 # Compiled Java class files
 *.class
 
@@ -49,9 +43,6 @@ Thumbs.db
 
 # session data
 session/data
-
-# Angular
-web-front/coverage/*
 
 # vscode
 *.code-workspace
