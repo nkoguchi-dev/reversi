@@ -5,6 +5,10 @@
   - provider.tf作成
 - ECRでリポジトリを作成
   - reversi/web-apiを作成
+- IAMでECSタスクのRoleを作成
+  - ECSが動作するためのロールEcsTaskExecutionRoleを作成
+- ECSでタスク定義を作成
+  - ReversiWebApiタスクを作成
 - Code Pipelineを作成
   - GitHubリポジトリ上にreversi/web-api/buildspec.ymlを作成
 
