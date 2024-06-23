@@ -1,7 +1,7 @@
 resource "aws_ecs_cluster" "ReversiWebApi" {
-  name               = "ReversiWebApi"
-  tags               = {}
-  tags_all           = {}
+  name     = "ReversiWebApi"
+  tags     = {}
+  tags_all = {}
 
   configuration {
     execute_command_configuration {
@@ -21,7 +21,8 @@ resource "aws_ecs_cluster" "ReversiWebApi" {
 
 resource "aws_ecs_service" "reversi-web-api" {
   name                               = "reversi-web-api"
-  cluster                            = "arn:aws:ecs:ap-northeast-1:${local.aws_account_id}:cluster/ReversiWebApi"
+  cluster                            = aws_ecs_cluster.ReversiWebApi.id
+  task_definition                    = aws_ecs_task_definition.ReversiWebApi.arn
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
   desired_count                      = 1
@@ -34,7 +35,6 @@ resource "aws_ecs_service" "reversi-web-api" {
   scheduling_strategy                = "REPLICA"
   tags                               = {}
   tags_all                           = {}
-  task_definition                    = "ReversiWebApi:1"
   triggers                           = {}
 
   alarms {
@@ -60,13 +60,10 @@ resource "aws_ecs_service" "reversi-web-api" {
 
   network_configuration {
     assign_public_ip = true
-    security_groups  = [
-      "sg-2d2c1250",
-    ]
-    subnets = [
-      "subnet-1fd13b34",
-      "subnet-af7c21f4",
-      "subnet-b4cc2ffc",
+    security_groups  = [aws_security_group.ecs_sg.id]
+    subnets          = [
+      aws_subnet.public_1.id,
+      aws_subnet.public_2.id
     ]
   }
 }
