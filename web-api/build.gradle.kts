@@ -189,4 +189,8 @@ tasks {
     named<CreateStartScripts>("bootStartScripts") {
         dependsOn("jar")
     }
+
+    named<CreateStartScripts>("startScripts") {
+        dependsOn("bootJar")
+    }
 }
