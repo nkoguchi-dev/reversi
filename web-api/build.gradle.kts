@@ -171,8 +171,22 @@ application {
     mainClass.set("org.koppepan.reversi.webapi.WebApiApplication")
 }
 
-tasks.jar {
-    manifest {
-        attributes["Main-Class"] = "org.koppepan.reversi.webapi.WebApiApplication"
+tasks {
+    named<Jar>("jar") {
+        manifest {
+            attributes["Main-Class"] = "org.koppepan.reversi.webapi.WebApiApplication"
+        }
+    }
+
+    named<Zip>("bootDistZip") {
+        dependsOn("jar")
+    }
+
+    named<Tar>("bootDistTar") {
+        dependsOn("jar")
+    }
+
+    named<CreateStartScripts>("bootStartScripts") {
+        dependsOn("jar")
     }
 }
