@@ -1,7 +1,3 @@
-locals {
-  aws_account_id = data.aws_caller_identity.self.account_id
-}
-
 resource "aws_ecs_cluster" "ReversiWebApi" {
   name               = "ReversiWebApi"
   tags               = {}

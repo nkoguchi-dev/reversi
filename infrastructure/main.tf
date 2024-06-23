@@ -10,3 +10,7 @@ terraform {
 }
 
 data "aws_caller_identity" "self" {}
+
+locals {
+  aws_account_id = data.aws_caller_identity.self.account_id
+}
