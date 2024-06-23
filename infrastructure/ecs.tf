@@ -3,16 +3,6 @@ resource "aws_ecs_cluster" "ReversiWebApi" {
   tags     = {}
   tags_all = {}
 
-  configuration {
-    execute_command_configuration {
-      logging = "DEFAULT"
-    }
-  }
-
-  service_connect_defaults {
-    namespace = "arn:aws:servicediscovery:ap-northeast-1:${local.aws_account_id}:namespace/ns-k27qc4qbvs43mcu7"
-  }
-
   setting {
     name  = "containerInsights"
     value = "disabled"
@@ -53,8 +43,10 @@ resource "aws_ecs_service" "reversi-web-api" {
 
   network_configuration {
     assign_public_ip = true
-    security_groups  = [aws_security_group.ecs_sg.id]
-    subnets          = [
+    security_groups  = [
+      aws_security_group.ecs_sg.id
+    ]
+    subnets = [
       aws_subnet.public_1.id,
       aws_subnet.public_2.id
     ]
@@ -77,7 +69,7 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
         environment      = []
         environmentFiles = []
         essential        = true
-        image            = "${local.aws_account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/reversi/web-api"
+        image            = "${local.aws_account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/${var.image_name}"
         logConfiguration = {
           logDriver = "awslogs"
           options   = {
