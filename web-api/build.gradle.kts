@@ -168,13 +168,13 @@ tasks.withType<Jar> {
 }
 
 application {
-    mainClass.set("org.koppepan.reversi.webapi.WebApiApplication")
+    mainClass.set("org.koppepan.reversi.webapi.WebApiApplicationKT")
 }
 
 tasks {
     named<Jar>("jar") {
         manifest {
-            attributes["Main-Class"] = "org.koppepan.reversi.webapi.WebApiApplication"
+            attributes["Main-Class"] = "org.koppepan.reversi.webapi.WebApiApplicationKT"
         }
     }
 
