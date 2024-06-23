@@ -167,17 +167,7 @@ tasks.withType<Jar> {
     archiveFileName.set("reversi_web-api.jar")
 }
 
-application {
-    mainClass.set("org.koppepan.reversi.webapi.WebApiApplicationKT")
-}
-
 tasks {
-    named<Jar>("jar") {
-        manifest {
-            attributes["Main-Class"] = "org.koppepan.reversi.webapi.WebApiApplicationKT"
-        }
-    }
-
     named<Zip>("bootDistZip") {
         dependsOn("jar")
     }
