@@ -32,11 +32,6 @@ resource "aws_ecs_service" "reversi-web-api" {
     weight            = 1
   }
 
-  deployment_circuit_breaker {
-    enable   = true
-    rollback = true
-  }
-
   deployment_controller {
     type = "ECS"
   }
@@ -97,9 +92,4 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
       },
     ]
   )
-
-  runtime_platform {
-    cpu_architecture        = "X86_64"
-    operating_system_family = "LINUX"
-  }
 }
