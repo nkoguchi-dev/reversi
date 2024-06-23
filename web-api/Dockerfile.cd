@@ -1,0 +1,20 @@
+# ベースイメージとしてGradleを使用
+FROM gradle:8.7.0-jdk21 as builder
+
+# プロジェクトのソースコードをコンテナ内にコピー
+COPY --chown=gradle:gradle . /home/gradle/project
+
+# 作業ディレクトリを設定
+WORKDIR /home/gradle/project
+
+# Gradleを使ってアプリケーションをビルド
+RUN gradle build --no-daemon
+
+# ランタイムイメージとしてOpenJDKを使用
+FROM openjdk:21-jdk-slim
+
+# ビルドアーティファクトをコピー
+COPY --from=builder /home/gradle/project/build/libs/reversi_web-api.jar /app/reversi_web-api.jar
+
+# アプリケーションを実行するコマンド
+ENTRYPOINT ["java", "-jar", "/app/reversi_web-api.jar"]

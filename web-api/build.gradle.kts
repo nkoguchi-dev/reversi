@@ -161,3 +161,7 @@ tasks.bootRun {
         "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     )
 }
+
+tasks.withType<Jar> {
+    archiveFileName.set("reversi_web-api.jar")
+}
