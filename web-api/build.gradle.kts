@@ -8,6 +8,7 @@ plugins {
     id("jacoco")
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.spring") version "1.9.23"
+    application
 }
 
 group = "org.koppepan.reversi"
@@ -164,4 +165,14 @@ tasks.bootRun {
 
 tasks.withType<Jar> {
     archiveFileName.set("reversi_web-api.jar")
+}
+
+application {
+    mainClass.set("org.koppepan.reversi.webapi.WebApiApplication")
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "org.koppepan.reversi.webapi.WebApiApplication"
+    }
 }
