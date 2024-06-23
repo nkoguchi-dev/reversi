@@ -2,7 +2,7 @@
 FROM gradle:8.7.0-jdk21 as builder
 
 # プロジェクトのソースコードをコンテナ内にコピー
-COPY --chown=gradle:gradle . /home/gradle/project
+COPY --chown=gradle:gradle ./web-api /home/gradle/project
 
 # 作業ディレクトリを設定
 WORKDIR /home/gradle/project
