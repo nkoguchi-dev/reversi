@@ -9,10 +9,15 @@
   - ECSが動作するためのロールEcsTaskExecutionRoleを作成
 - ECSでタスク定義を作成
   - ReversiWebApiタスクを作成
+- ECSサービスに紐づけるサブネットとセキュリティグループを仮で作成
+  - ReversiWebApiサブネットを作成
+  - ReversiWebApiセキュリティグループを作成
 - ECSでクラスターを作成
   - ReversiWebApiクラスターを作成
 - ESCで作成したクラスターに紐づくサービスを作成
   - ReversiWebApiサービスを作成
+- Code Buildに割り当てられたIAM RoleにECRにアクセスするための権限を持ったポリシーを追加
+  - CodeBuildServiceRoleにAmazonEC2ContainerRegistryPowerUserを追加
 - Code Pipelineを作成
   - GitHubリポジトリ上にreversi/web-api/buildspec.ymlを作成
 
