@@ -13,7 +13,7 @@ resource "aws_subnet" "public_2" {
   vpc_id                  = aws_vpc.reversi.id
   cidr_block              = "10.0.2.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "ap-northeast-1b"
+  availability_zone       = "ap-northeast-1c"
 }
 
 resource "aws_internet_gateway" "gw" {

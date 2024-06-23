@@ -29,19 +29,12 @@ resource "aws_ecs_service" "reversi-web-api" {
   enable_ecs_managed_tags            = true
   enable_execute_command             = false
   health_check_grace_period_seconds  = 0
-  iam_role                           = "/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
   platform_version                   = "LATEST"
   propagate_tags                     = "NONE"
   scheduling_strategy                = "REPLICA"
   tags                               = {}
   tags_all                           = {}
   triggers                           = {}
-
-  alarms {
-    alarm_names = []
-    enable      = false
-    rollback    = false
-  }
 
   capacity_provider_strategy {
     base              = 0
