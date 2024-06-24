@@ -8,13 +8,17 @@ COPY --chown=gradle:gradle ./web-api /home/gradle/project
 WORKDIR /home/gradle/project
 
 # Gradleを使ってアプリケーションをビルド
-RUN gradle build --no-daemon
+RUN gradle bootJar --no-daemon
+
+# マニフェストファイルの確認（デバッグ用）
+# RUN unzip -p build/libs/reversi_web-api.jar META-INF/MANIFEST.MF > /home/gradle/project/web-api/build/libs/MANIFEST.MF
 
 # ランタイムイメージとしてOpenJDKを使用
 FROM openjdk:21-jdk-slim
 
 # ビルドアーティファクトをコピー
 COPY --from=builder /home/gradle/project/build/libs/reversi_web-api.jar /app/reversi_web-api.jar
+# COPY --from=builder /home/gradle/project/build/libs/MANIFEST.MF /app/MANIFEST.MF
 
 # アプリケーションを実行するコマンド
 ENTRYPOINT ["java", "-jar", "/app/reversi_web-api.jar"]
