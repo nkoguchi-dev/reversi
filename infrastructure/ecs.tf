@@ -1,3 +1,20 @@
+# SSM Parameter Storeからシークレットを取得
+data "aws_ssm_parameter" "r2dbc_password" {
+  name = "/reversi/web-api/r2dbc_password"
+}
+
+data "aws_ssm_parameter" "r2dbc_username" {
+  name = "/reversi/web-api/r2dbc_username"
+}
+
+data "aws_ssm_parameter" "flyway_username" {
+  name = "/reversi/web-api/flyway_username"
+}
+
+data "aws_ssm_parameter" "flyway_password" {
+  name = "/reversi/web-api/flyway_password"
+}
+
 resource "aws_ecs_cluster" "ReversiWebApi" {
   name     = "ReversiWebApi"
   tags     = {}
@@ -12,7 +29,7 @@ resource "aws_ecs_cluster" "ReversiWebApi" {
 resource "aws_ecs_service" "reversi-web-api" {
   name                               = "reversi-web-api"
   cluster                            = aws_ecs_cluster.ReversiWebApi.id
-  task_definition                    = aws_ecs_task_definition.ReversiWebApi.arn
+  task_definition                    = "${aws_ecs_task_definition.ReversiWebApi.family}:${aws_ecs_task_definition.ReversiWebApi.revision}"
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
   desired_count                      = 1
@@ -60,8 +77,35 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
   container_definitions = jsonencode(
     [
       {
-        cpu              = 0
-        environment      = []
+        cpu         = 0
+        environment = [
+          {
+            name  = "FLYWAY_URL"
+            value = "jdbc:h2:mem:reversi_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+          },
+          {
+            name  = "R2DBC_URL"
+            value = "r2dbc:h2:mem:///reversi_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+          },
+        ]
+        secrets = [
+          {
+            name  = "FLYWAY_USERNAME"
+            valueFrom = data.aws_ssm_parameter.flyway_username.arn
+          },
+          {
+            name  = "FLYWAY_PASSWORD"
+            valueFrom = data.aws_ssm_parameter.flyway_password.arn
+          },
+          {
+            name  = "R2DBC_USERNAME"
+            valueFrom = data.aws_ssm_parameter.r2dbc_username.arn
+          },
+          {
+            name  = "R2DBC_PASSWORD"
+            valueFrom = data.aws_ssm_parameter.r2dbc_password.arn
+          },
+        ]
         environmentFiles = []
         essential        = true
         image            = "${local.aws_account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/${var.image_name}"

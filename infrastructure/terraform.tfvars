@@ -1,1 +1,1 @@
-image_name = "reversi-web-api:latest"
+image_name = "reversi/web-api:latest"

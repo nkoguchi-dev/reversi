@@ -17,9 +17,17 @@
 - ESCで作成したクラスターに紐づくサービスを作成
   - ReversiWebApiサービスを作成
 - Code Buildに割り当てられたIAM RoleにECRにアクセスするための権限を持ったポリシーを追加
-  - CodeBuildServiceRoleにAmazonEC2ContainerRegistryPowerUserを追加
+  - reversi-codebuild-policyを作成
+    - ECRの権限とS3の権限を持つポリシー
+  - codebuild-Reversi-service-roleを作成
+    - reversi-codebuild-policyをアタッチ
 - Code Pipelineを作成
   - GitHubリポジトリ上にreversi/web-api/buildspec.ymlを作成
+    - dockerコマンドでイメージをビルド
+    - 作成したイメージをECRにプッシュ
+    - MANIFEST情報をS3にアップロード
+- system managerのparameter storeに環境変数で利用するパスワード等を登録
+- ECSのタスク定義に環境変数を設定
 
 
 
