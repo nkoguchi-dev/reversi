@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo Installing dependencies...
+      - cd web-front
+      - npm install -g @angular/cli@18.0.3
+      - npm install
+
+  build:
+    commands:
+      - echo Building the Angular application...
+      - cd web-front
+      - ng build
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - cd web-front
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: web-front/dist/web-front
+
+cache:
+  paths:
+    - '/root/.npm/**/*'
+    - 'web-front/node_modules/**/*'
