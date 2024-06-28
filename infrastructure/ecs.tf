@@ -108,13 +108,13 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
         ]
         environmentFiles = []
         essential        = true
-        image            = "${local.aws_account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/${var.image_name}"
+        image            = "${local.aws_account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.image_name}"
         logConfiguration = {
           logDriver = "awslogs"
           options   = {
             awslogs-create-group  = "true"
             awslogs-group         = "/ecs/"
-            awslogs-region        = "ap-northeast-1"
+            awslogs-region        = var.region
             awslogs-stream-prefix = "ecs"
           }
           secretOptions = []
