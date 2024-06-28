@@ -15,7 +15,7 @@ resource "aws_codebuild_project" "reversi_web-api" {
   name               = "reversi_web-api"
   badge_enabled      = false
   build_timeout      = 60
-  encryption_key     = "arn:aws:kms:ap-northeast-1:${local.aws_account_id}:alias/aws/s3"
+  encryption_key     = "arn:aws:kms:${var.region}:${local.aws_account_id}:alias/aws/s3"
   project_visibility = "PRIVATE"
   queued_timeout     = 480
   service_role       = local.web-api_codebuild_role_arn
@@ -45,12 +45,12 @@ resource "aws_codebuild_project" "reversi_web-api" {
     environment_variable {
       name  = "AWS_ACCOUNT_ID"
       type  = "PLAINTEXT"
-      value = "713746206827"
+      value = local.aws_account_id
     }
     environment_variable {
       name  = "AWS_REGION"
       type  = "PLAINTEXT"
-      value = "ap-northeast-1"
+      value = var.region
     }
   }
 
@@ -77,7 +77,7 @@ resource "aws_codebuild_project" "reversi_web-front" {
   name               = "reversi_web-front"
   badge_enabled      = false
   build_timeout      = 60
-  encryption_key     = "arn:aws:kms:ap-northeast-1:713746206827:alias/aws/s3"
+  encryption_key     = "arn:aws:kms:${var.region}:${local.aws_account_id}:alias/aws/s3"
   project_visibility = "PRIVATE"
   queued_timeout     = 480
   service_role       = local.web-front_codebuild_role_arn
