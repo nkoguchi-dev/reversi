@@ -1,4 +1,3 @@
-# SSM Parameter Storeから値を取得
 data "aws_ssm_parameter" "codepipeline_role_arn" {
   name = "/reversi/web-api/codepipeline_role_arn"
 }
@@ -7,7 +6,6 @@ data "aws_ssm_parameter" "codestar_connection_arn" {
   name = "/reversi/web-api/codestar_connection_arn"
 }
 
-# Terraform変数にSSMから取得した値を設定
 locals {
   codepipeline_role_arn = data.aws_ssm_parameter.codepipeline_role_arn.value
   codestar_connection_arn = data.aws_ssm_parameter.codestar_connection_arn.value
@@ -53,7 +51,7 @@ resource "aws_codepipeline" "reversi_web-api" {
     action {
       category         = "Build"
       configuration    = {
-        "ProjectName" = "Reversi"
+        "ProjectName" = "reversi_web-api"
       }
       input_artifacts  = ["SourceArtifact"]
       name             = "Build"
@@ -83,6 +81,89 @@ resource "aws_codepipeline" "reversi_web-api" {
       owner            = "AWS"
       provider         = "ECS"
       region           = var.region
+      run_order        = 1
+      version          = "1"
+    }
+  }
+}
+
+resource "aws_codepipeline" "reversi_web-front" {
+  name     = "reversi_web-front"
+  role_arn = local.codepipeline_role_arn
+  tags     = {}
+  tags_all = {}
+
+  artifact_store {
+    location = var.artifact_bucket
+    type     = "S3"
+  }
+
+  stage {
+    name = "Source"
+
+    action {
+      category         = "Source"
+      configuration    = {
+        "BranchName"           = "feature/deploy_web-front"
+        "ConnectionArn"        = local.codestar_connection_arn
+        "DetectChanges"        = "false"
+        "FullRepositoryId"     = "nkoguchi-dev/reversi"
+        "OutputArtifactFormat" = "CODE_ZIP"
+      }
+      input_artifacts  = []
+      name             = "Source"
+      namespace        = "SourceVariables"
+      output_artifacts = [
+        "SourceArtifact",
+      ]
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
+      region           = "ap-northeast-1"
+      run_order        = 1
+      version          = "1"
+    }
+  }
+  stage {
+    name = "Build"
+
+    action {
+      category         = "Build"
+      configuration    = {
+        "ProjectName" = "reversi_web-front"
+      }
+      input_artifacts  = [
+        "SourceArtifact",
+      ]
+      name             = "Build"
+      namespace        = "BuildVariables"
+      output_artifacts = [
+        "BuildArtifact",
+      ]
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      region           = "ap-northeast-1"
+      run_order        = 1
+      version          = "1"
+    }
+  }
+  stage {
+    name = "Deploy"
+
+    action {
+      category         = "Deploy"
+      configuration    = {
+        "BucketName" = "reversi-web-front"
+        "Extract"    = "true"
+      }
+      input_artifacts  = [
+        "BuildArtifact",
+      ]
+      name             = "Deploy"
+      namespace        = "DeployVariables"
+      output_artifacts = []
+      owner            = "AWS"
+      provider         = "S3"
+      region           = "ap-northeast-1"
       run_order        = 1
       version          = "1"
     }
