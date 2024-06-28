@@ -13,13 +13,11 @@ phases:
   build:
     commands:
       - echo Building the Angular application...
-      - cd web-front
       - ng build
 
   post_build:
     commands:
       - echo Build completed on `date`
-      - cd web-front
 
 artifacts:
   files:
