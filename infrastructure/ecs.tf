@@ -15,6 +15,11 @@ data "aws_ssm_parameter" "flyway_password" {
   name = "/reversi/web-api/flyway_password"
 }
 
+data "aws_ecs_task_definition" "reversi_task_definition" {
+  task_definition = aws_ecs_task_definition.ReversiWebApi.family
+}
+
+
 resource "aws_ecs_cluster" "ReversiWebApi" {
   name     = "ReversiWebApi"
   tags     = {}
@@ -29,10 +34,10 @@ resource "aws_ecs_cluster" "ReversiWebApi" {
 resource "aws_ecs_service" "reversi-web-api" {
   name                               = "reversi-web-api"
   cluster                            = aws_ecs_cluster.ReversiWebApi.id
-  task_definition                    = "${aws_ecs_task_definition.ReversiWebApi.family}:${aws_ecs_task_definition.ReversiWebApi.revision}"
+  task_definition                    = "${aws_ecs_task_definition.ReversiWebApi.family}:${max(aws_ecs_task_definition.ReversiWebApi.revision, data.aws_ecs_task_definition.reversi_task_definition.revision)}"
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
-  desired_count                      = 1
+  desired_count                      = 0
   enable_ecs_managed_tags            = true
   enable_execute_command             = false
   health_check_grace_period_seconds  = 0
