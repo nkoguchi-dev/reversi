@@ -56,15 +56,13 @@ resource "aws_ecs_service" "reversi" {
   load_balancer {
     container_name   = "reversi-web-api"
     container_port   = 8080
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-northeast-1:713746206827:targetgroup/reversi-web-api-tg/ec86e38f4bce230e"
+    target_group_arn = aws_alb_target_group.reversi-web-api-tg.arn
   }
 
   network_configuration {
     assign_public_ip = true
-    security_groups  = [
-      "sg-0e307c451241a1725",
-    ]
-    subnets = [
+    security_groups  = [aws_security_group.ecs_service-sg.id]
+    subnets          = [
       aws_subnet.public_1.id,
       aws_subnet.public_2.id,
       aws_subnet.private_1.id,
