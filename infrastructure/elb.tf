@@ -15,7 +15,7 @@ resource "aws_alb_target_group" "reversi-web-api-tg" {
 
   health_check {
     enabled             = true
-    healthy_threshold   = 5
+    healthy_threshold   = 2
     interval            = 30
     matcher             = "200"
     path                = "/health"
