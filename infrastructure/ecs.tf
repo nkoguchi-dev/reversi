@@ -1,4 +1,3 @@
-# SSM Parameter Storeからシークレットを取得
 data "aws_ssm_parameter" "r2dbc_password" {
   name = "/reversi/web-api/r2dbc_password"
 }
@@ -31,8 +30,8 @@ resource "aws_ecs_cluster" "ReversiWebApi" {
   }
 }
 
-resource "aws_ecs_service" "reversi-web-api" {
-  name                               = "reversi-web-api"
+resource "aws_ecs_service" "reversi" {
+  name                               = "reversi"
   cluster                            = aws_ecs_cluster.ReversiWebApi.id
   task_definition                    = "${aws_ecs_task_definition.ReversiWebApi.family}:${max(aws_ecs_task_definition.ReversiWebApi.revision, data.aws_ecs_task_definition.reversi_task_definition.revision)}"
   deployment_maximum_percent         = 200
@@ -41,6 +40,7 @@ resource "aws_ecs_service" "reversi-web-api" {
   enable_ecs_managed_tags            = true
   enable_execute_command             = false
   health_check_grace_period_seconds  = 0
+  launch_type                        = "FARGATE"
   platform_version                   = "LATEST"
   propagate_tags                     = "NONE"
   scheduling_strategy                = "REPLICA"
@@ -48,24 +48,24 @@ resource "aws_ecs_service" "reversi-web-api" {
   tags_all                           = {}
   triggers                           = {}
 
-  capacity_provider_strategy {
-    base              = 0
-    capacity_provider = "FARGATE"
-    weight            = 1
-  }
-
   deployment_controller {
     type = "ECS"
   }
 
+  load_balancer {
+    container_name   = "reversi-web-api"
+    container_port   = 8080
+    target_group_arn = aws_alb_target_group.reversi-web-api-tg.arn
+  }
+
   network_configuration {
     assign_public_ip = true
-    security_groups  = [
-      aws_security_group.ecs_sg.id
-    ]
-    subnets = [
+    security_groups  = [aws_security_group.ecs_service-sg.id]
+    subnets          = [
       aws_subnet.public_1.id,
-      aws_subnet.public_2.id
+      aws_subnet.public_2.id,
+      aws_subnet.private_1.id,
+      aws_subnet.private_2.id,
     ]
   }
 }
@@ -76,8 +76,8 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
   memory                   = "2048"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  task_role_arn            = "arn:aws:iam::${local.aws_account_id}:role/EcsTaskExecutionRole"
-  execution_role_arn       = "arn:aws:iam::${local.aws_account_id}:role/EcsTaskExecutionRole"
+  task_role_arn            = "arn:aws:iam::713746206827:role/EcsTaskExecutionRole"
+  execution_role_arn       = "arn:aws:iam::713746206827:role/EcsTaskExecutionRole"
 
   container_definitions = jsonencode(
     [
@@ -95,19 +95,19 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
         ]
         secrets = [
           {
-            name  = "FLYWAY_USERNAME"
+            name      = "FLYWAY_USERNAME"
             valueFrom = data.aws_ssm_parameter.flyway_username.arn
           },
           {
-            name  = "FLYWAY_PASSWORD"
+            name      = "FLYWAY_PASSWORD"
             valueFrom = data.aws_ssm_parameter.flyway_password.arn
           },
           {
-            name  = "R2DBC_USERNAME"
+            name      = "R2DBC_USERNAME"
             valueFrom = data.aws_ssm_parameter.r2dbc_username.arn
           },
           {
-            name  = "R2DBC_PASSWORD"
+            name      = "R2DBC_PASSWORD"
             valueFrom = data.aws_ssm_parameter.r2dbc_password.arn
           },
         ]
@@ -118,7 +118,7 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
           logDriver = "awslogs"
           options   = {
             awslogs-create-group  = "true"
-            awslogs-group         = "/ecs/"
+            awslogs-group         = "/ecs/reversi_web-api/"
             awslogs-region        = var.region
             awslogs-stream-prefix = "ecs"
           }
@@ -129,9 +129,9 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
         portMappings = [
           {
             appProtocol   = "http"
-            containerPort = 80
-            hostPort      = 80
-            name          = "reversi-web-api-80-tcp"
+            containerPort = 8080
+            hostPort      = 8080
+            name          = "reversi-web-api-8080-tcp"
             protocol      = "tcp"
           },
         ]
