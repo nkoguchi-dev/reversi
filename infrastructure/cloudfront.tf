@@ -2,7 +2,6 @@ resource "aws_cloudfront_distribution" "reversi" {
   aliases = [
     "reversi.koppepan.org",
   ]
-  default_root_object = "index.html"
   enabled             = true
   http_version        = "http2"
   is_ipv6_enabled     = true
@@ -11,7 +10,34 @@ resource "aws_cloudfront_distribution" "reversi" {
   tags                = {}
   tags_all            = {}
   wait_for_deployment = true
-  web_acl_id          = "arn:aws:wafv2:us-east-1:713746206827:global/webacl/CreatedByCloudFront-5b7514f5-7ae6-4338-992d-fe2768829f9d/943c1042-792d-4e63-b5bf-431ad616735a"
+
+  ordered_cache_behavior {
+    allowed_methods = [
+      "DELETE",
+      "GET",
+      "HEAD",
+      "OPTIONS",
+      "PATCH",
+      "POST",
+      "PUT",
+    ]
+    cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+    cached_methods  = [
+      "GET",
+      "HEAD",
+    ]
+    compress                 = true
+    default_ttl              = 0
+    max_ttl                  = 0
+    min_ttl                  = 0
+    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+    path_pattern             = "/api/*"
+    smooth_streaming         = false
+    target_origin_id         = "reversi-web-api-lb2-1541394995.ap-northeast-1.elb.amazonaws.com"
+    trusted_key_groups       = []
+    trusted_signers          = []
+    viewer_protocol_policy   = "redirect-to-https"
+  }
 
   default_cache_behavior {
     allowed_methods = [
@@ -35,17 +61,33 @@ resource "aws_cloudfront_distribution" "reversi" {
   }
 
   origin {
-    connection_attempts      = 3
-    connection_timeout       = 10
-    #origin_access_control_id = "E2UOHDJZRBGJ94"
-    domain_name = "reversi-web-front.s3.ap-northeast-1.amazonaws.com"
-    origin_id   = "reversi-web-front.s3.ap-northeast-1.amazonaws.com"
+    connection_attempts = 3
+    connection_timeout  = 10
+    domain_name         = "reversi-web-front.s3.ap-northeast-1.amazonaws.com"
+    origin_id           = "reversi-web-front.s3.ap-northeast-1.amazonaws.com"
 
     s3_origin_config {
       origin_access_identity = "origin-access-identity/cloudfront/E2LWB9V6PB7VZW"
     }
   }
 
+  origin {
+    connection_attempts = 3
+    connection_timeout  = 10
+    domain_name         = "reversi-web-api-lb2-1541394995.ap-northeast-1.elb.amazonaws.com"
+    origin_id           = "reversi-web-api-lb2-1541394995.ap-northeast-1.elb.amazonaws.com"
+
+    custom_origin_config {
+      http_port                = 80
+      https_port               = 443
+      origin_keepalive_timeout = 5
+      origin_protocol_policy   = "https-only"
+      origin_read_timeout      = 30
+      origin_ssl_protocols     = [
+        "TLSv1.2",
+      ]
+    }
+  }
 
   restrictions {
     geo_restriction {
