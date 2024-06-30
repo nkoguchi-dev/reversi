@@ -33,7 +33,6 @@ resource "aws_ecs_cluster" "ReversiWebApi" {
 resource "aws_ecs_service" "reversi" {
   name                               = "reversi"
   cluster                            = aws_ecs_cluster.ReversiWebApi.id
-  #task_definition                    = "ReversiWebApi:27"
   task_definition                    = "${aws_ecs_task_definition.ReversiWebApi.family}:${max(aws_ecs_task_definition.ReversiWebApi.revision, data.aws_ecs_task_definition.reversi_task_definition.revision)}"
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100

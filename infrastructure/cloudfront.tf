@@ -81,7 +81,7 @@ resource "aws_cloudfront_distribution" "reversi" {
       http_port                = 80
       https_port               = 443
       origin_keepalive_timeout = 5
-      origin_protocol_policy   = "https-only"
+      origin_protocol_policy   = "match-viewer"
       origin_read_timeout      = 30
       origin_ssl_protocols     = [
         "TLSv1.2",
