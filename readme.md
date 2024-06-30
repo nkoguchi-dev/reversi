@@ -46,27 +46,12 @@ Controllerを用いてプライマリーアダプターを実装しています�
 
 ### フロントエンドアプリケーション
 
-未実装です
+Angularを利用して作成しています。
+かなりシンプルな作りですので特記する部分は特にありません。
 
 ### インフラストラクチャー
 
-IaCを利用してAWSにリソースを構築する予定です。
+*構築中*
 
-# 静的解析
-
-SonarQubeを利用して静的解析を行うよう設定してあります。
-別途SonarQubeのDockerコンテナを起動しプロジェクトの解析結果を閲覧可能です。
-
-環境変数にSonarQubeへの接続情報を設定してください。
-```shell
-# web-api
-export REVERSI_WEB_API_SONAR_PROJECT_KEY={SonarQubeでのプロジェクトキー}
-export REVERSI_WEB_API_SONAR_PROJECT_NAME={SonarQubeでのプロジェクト名}
-export REVERSI_WEB_API_SONAR_HOST_URL={SonarQubeのホストURL}
-export REVERSI_WEB_API_SONAR_TOKEN={SonarQubeでのアクセストークン}
-# web-front
-export REVERSI_WEB_FRONT_SONAR_PROJECT_KEY={SonarQubeでのプロジェクトキー}
-export REVERSI_WEB_FRONT_SONAR_PROJECT_NAME={SonarQubeでのプロジェクト名}
-export REVERSI_WEB_FRONT_SONAR_HOST_URL={SonarQubeのホストURL}
-export REVERSI_WEB_FRONT_SONAR_TOKEN={SonarQubeでのアクセストークン}
-```
+AWSにリソースを構築してterraformを用いてインフラストラクチャーを管理しています。
+https://reversi.koppepan.org/browser/index.html (仮) にアクセスするとアプリケーションが起動していることを確認できます。
