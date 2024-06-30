@@ -63,3 +63,32 @@ resource "aws_lb" "reversi-web-api-lb" {
     subnet_id = aws_subnet.private_1.id
   }
 }
+
+resource "aws_lb_listener" "reversi-https-listener" {
+  certificate_arn   = "arn:aws:acm:ap-northeast-1:713746206827:certificate/f0bda183-abbe-4993-92e2-e866fa6ed091"
+  load_balancer_arn = aws_lb.reversi-web-api-lb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  tags              = {}
+  tags_all          = {}
+
+  default_action {
+    order            = 1
+    target_group_arn = aws_alb_target_group.reversi-web-api-tg.arn
+    type             = "forward"
+  }
+}
+
+resource "aws_lb_listener" "reversi-http-listener" {
+  load_balancer_arn = aws_lb.reversi-web-api-lb.arn
+  port              = 80
+  protocol          = "HTTP"
+  tags              = {}
+  tags_all          = {}
+
+  default_action {
+    target_group_arn = aws_alb_target_group.reversi-web-api-tg.arn
+    type             = "forward"
+  }
+}
