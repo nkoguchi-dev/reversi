@@ -65,7 +65,7 @@ resource "aws_lb" "reversi-web-api-lb" {
 }
 
 resource "aws_lb_listener" "reversi-https-listener" {
-  certificate_arn   = "arn:aws:acm:ap-northeast-1:713746206827:certificate/f0bda183-abbe-4993-92e2-e866fa6ed091"
+  certificate_arn   = "arn:aws:acm:ap-northeast-1:713746206827:certificate/73a076bd-441b-47d3-a33e-8e6fa5411325"
   load_balancer_arn = aws_lb.reversi-web-api-lb.arn
   port              = 443
   protocol          = "HTTPS"
