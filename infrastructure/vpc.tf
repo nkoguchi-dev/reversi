@@ -1,6 +1,6 @@
 resource "aws_vpc" "reversi-vpc" {
   cidr_block = "10.0.0.0/16"
-  tags     = {
+  tags       = {
     "Name" = "reversi-vpc"
   }
   tags_all = {
@@ -21,10 +21,10 @@ resource "aws_subnet" "public_1" {
   tags                                           = {
     "Name" = "reversi-subnet-public1-ap-northeast-1a"
   }
-  tags_all                                       = {
+  tags_all = {
     "Name" = "reversi-subnet-public1-ap-northeast-1a"
   }
-  vpc_id                                         = "vpc-069a2ddbd70e939a8"
+  vpc_id = "vpc-069a2ddbd70e939a8"
 }
 
 resource "aws_subnet" "public_2" {
@@ -40,10 +40,10 @@ resource "aws_subnet" "public_2" {
   tags                                           = {
     "Name" = "reversi-subnet-public2-ap-northeast-1c"
   }
-  tags_all                                       = {
+  tags_all = {
     "Name" = "reversi-subnet-public2-ap-northeast-1c"
   }
-  vpc_id                                         = "vpc-069a2ddbd70e939a8"
+  vpc_id = "vpc-069a2ddbd70e939a8"
 }
 
 resource "aws_subnet" "private_1" {
@@ -59,10 +59,10 @@ resource "aws_subnet" "private_1" {
   tags                                           = {
     "Name" = "reversi-subnet-private1-ap-northeast-1a"
   }
-  tags_all                                       = {
+  tags_all = {
     "Name" = "reversi-subnet-private1-ap-northeast-1a"
   }
-  vpc_id                                         = "vpc-069a2ddbd70e939a8"
+  vpc_id = "vpc-069a2ddbd70e939a8"
 }
 
 resource "aws_subnet" "private_2" {
@@ -78,17 +78,22 @@ resource "aws_subnet" "private_2" {
   tags                                           = {
     "Name" = "reversi-subnet-private2-ap-northeast-1c"
   }
-  tags_all                                       = {
+  tags_all = {
     "Name" = "reversi-subnet-private2-ap-northeast-1c"
   }
-  vpc_id                                         = "vpc-069a2ddbd70e939a8"
+  vpc_id = "vpc-069a2ddbd70e939a8"
 }
 
-#
-#resource "aws_internet_gateway" "gw" {
-#  vpc_id = aws_vpc.reversi.id
-#}
-#
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.reversi-vpc.id
+  tags   = {
+    "Name" = "reversi-igw"
+  }
+  tags_all = {
+    "Name" = "reversi-igw"
+  }
+}
+
 #resource "aws_route_table" "public" {
 #  vpc_id = aws_vpc.reversi.id
 #
