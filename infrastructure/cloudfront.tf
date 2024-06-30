@@ -33,7 +33,7 @@ resource "aws_cloudfront_distribution" "reversi" {
     origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
     path_pattern             = "/api/*"
     smooth_streaming         = false
-    target_origin_id         = "reversi-web-api-lb2-1541394995.ap-northeast-1.elb.amazonaws.com"
+    target_origin_id         = aws_lb.reversi-web-api-lb.dns_name
     trusted_key_groups       = []
     trusted_signers          = []
     viewer_protocol_policy   = "redirect-to-https"
@@ -54,7 +54,7 @@ resource "aws_cloudfront_distribution" "reversi" {
     max_ttl                = 0
     min_ttl                = 0
     smooth_streaming       = false
-    target_origin_id       = "reversi-web-front.s3.ap-northeast-1.amazonaws.com"
+    target_origin_id       = aws_s3_bucket.reversi-web-front.bucket_regional_domain_name
     trusted_key_groups     = []
     trusted_signers        = []
     viewer_protocol_policy = "allow-all"
@@ -74,8 +74,8 @@ resource "aws_cloudfront_distribution" "reversi" {
   origin {
     connection_attempts = 3
     connection_timeout  = 10
-    domain_name         = "reversi-web-api-lb2-1541394995.ap-northeast-1.elb.amazonaws.com"
-    origin_id           = "reversi-web-api-lb2-1541394995.ap-northeast-1.elb.amazonaws.com"
+    domain_name         = aws_lb.reversi-web-api-lb.dns_name
+    origin_id           = aws_lb.reversi-web-api-lb.dns_name
 
     custom_origin_config {
       http_port                = 80
