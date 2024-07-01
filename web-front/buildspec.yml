@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       - echo Building the Angular application...
-      - ng build --configuration=production --base-href /browser/
+      - ng build --configuration=production
 
   post_build:
     commands:
