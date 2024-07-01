@@ -15,11 +15,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/web-front",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -67,10 +67,10 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "web-front:build:production"
+              "browserTarget": "web-front:build:production"
             },
             "development": {
-              "buildTarget": "web-front:build:development"
+              "browserTarget": "web-front:build:development"
             }
           },
           "defaultConfiguration": "development"
