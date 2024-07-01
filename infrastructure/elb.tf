@@ -33,7 +33,7 @@ resource "aws_alb_target_group" "reversi-web-api-tg" {
 }
 
 resource "aws_lb" "reversi-web-api-lb" {
-  name                                        = "reversi-web-api-lb2"
+  name                                        = "reversi-web-api-lb"
   desync_mitigation_mode                      = "defensive"
   drop_invalid_header_fields                  = false
   enable_cross_zone_load_balancing            = true
@@ -55,13 +55,6 @@ resource "aws_lb" "reversi-web-api-lb" {
   tags                       = {}
   tags_all                   = {}
   xff_header_processing_mode = "append"
-
-  subnet_mapping {
-    subnet_id = aws_subnet.public_2.id
-  }
-  subnet_mapping {
-    subnet_id = aws_subnet.private_1.id
-  }
 }
 
 resource "aws_lb_listener" "reversi-https-listener" {
@@ -75,19 +68,6 @@ resource "aws_lb_listener" "reversi-https-listener" {
 
   default_action {
     order            = 1
-    target_group_arn = aws_alb_target_group.reversi-web-api-tg.arn
-    type             = "forward"
-  }
-}
-
-resource "aws_lb_listener" "reversi-http-listener" {
-  load_balancer_arn = aws_lb.reversi-web-api-lb.arn
-  port              = 80
-  protocol          = "HTTP"
-  tags              = {}
-  tags_all          = {}
-
-  default_action {
     target_group_arn = aws_alb_target_group.reversi-web-api-tg.arn
     type             = "forward"
   }
