@@ -36,7 +36,7 @@ resource "aws_ecs_service" "reversi" {
   task_definition                    = "${aws_ecs_task_definition.ReversiWebApi.family}:${max(aws_ecs_task_definition.ReversiWebApi.revision, data.aws_ecs_task_definition.reversi_task_definition.revision)}"
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
-  desired_count                      = 0
+  desired_count                      = 1
   enable_ecs_managed_tags            = true
   enable_execute_command             = false
   health_check_grace_period_seconds  = 0
