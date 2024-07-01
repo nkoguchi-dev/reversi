@@ -71,9 +71,9 @@ resource "aws_ecs_service" "reversi" {
 }
 
 resource "aws_ecs_task_definition" "ReversiWebApi" {
-  cpu                      = "256"
+  cpu                      = "1024"
   family                   = "ReversiWebApi"
-  memory                   = "2048"
+  memory                   = "4096"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   task_role_arn            = "arn:aws:iam::713746206827:role/EcsTaskExecutionRole"
