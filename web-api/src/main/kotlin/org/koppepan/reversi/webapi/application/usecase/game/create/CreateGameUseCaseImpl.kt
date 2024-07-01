@@ -34,7 +34,7 @@ class CreateGameUseCaseImpl(
             saveGameRepository.save(game)
         }
 
-        log.debug("Gameを開始しました。 {}", game)
+        log.info("Gameを開始しました。 game: $game")
         return CreateGameUseCase.Output(
             gameId = game.gameId.value,
             player1Name = game.player1.name.value,
