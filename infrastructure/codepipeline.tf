@@ -30,7 +30,7 @@ resource "aws_codepipeline" "reversi_web-api" {
       configuration = {
         "BranchName"           = "release/prd"
         "ConnectionArn"        = local.codestar_connection_arn
-        "DetectChanges"        = "true"
+        "DetectChanges"        = "false"
         "FullRepositoryId"     = "nkoguchi-dev/reversi"
         "OutputArtifactFormat" = "CODE_ZIP"
       }
@@ -104,7 +104,7 @@ resource "aws_codepipeline" "reversi_web-front" {
     action {
       category         = "Source"
       configuration    = {
-        "BranchName"           = "feature/deploy_web-front"
+        "BranchName"           = "release/prd"
         "ConnectionArn"        = local.codestar_connection_arn
         "DetectChanges"        = "false"
         "FullRepositoryId"     = "nkoguchi-dev/reversi"
