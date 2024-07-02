@@ -44,7 +44,7 @@ resource "aws_lb" "reversi-web-api-lb" {
   security_groups                             = [aws_security_group.reversi_lb-sg.id]
   subnets                                     = [
     aws_subnet.public_1.id,
-    aws_subnet.private_1.id,
+    aws_subnet.public_2.id,
   ]
   tags                       = {}
   tags_all                   = {}
