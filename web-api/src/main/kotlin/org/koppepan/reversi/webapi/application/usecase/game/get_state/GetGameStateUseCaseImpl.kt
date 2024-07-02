@@ -30,7 +30,7 @@ class GetGameStateUseCaseImpl(
             )
         }
 
-        log.debug("Gameの状態を取得しました。 game: {}", game)
+        log.info("Gameの状態を取得しました。 game: $game")
         return GetGameStateUseCase.Output(
             gameId = game.gameId.value,
             player1Name = game.player1.name.value,

@@ -10,6 +10,8 @@ import org.koppepan.reversi.webapi.domain.game.GetGameRepository
 import org.koppepan.reversi.webapi.domain.game.SaveGameRepository
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
 import org.koppepan.reversi.webapi.domain.player.PlayerNumber
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -37,6 +39,7 @@ class PutDiskGameUseCaseImpl(
                 )
         }
 
+        log.info("ディスクを配置しました。 game: $nextGame")
         return PutDiskGameUseCase.Output(
             gameId = nextGame.gameId.value,
             player1Name = nextGame.player1.name.value,
@@ -62,6 +65,8 @@ class PutDiskGameUseCaseImpl(
     }
 
     companion object {
+        val log: Logger = LoggerFactory.getLogger(this::class.java)
+
         private fun Game.putDisk(idGenerator: IdGenerator, playerNumber: PlayerNumber, position: Position): Game {
             val move = when (playerNumber) {
                 PlayerNumber.PLAYER1 -> player1
