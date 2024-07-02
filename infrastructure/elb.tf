@@ -15,14 +15,8 @@ resource "aws_alb_target_group" "reversi-web-api-tg" {
 
   health_check {
     enabled             = true
-    healthy_threshold   = 2
-    interval            = 30
-    matcher             = "200"
+    matcher             = "200-299"
     path                = "/health"
-    port                = "traffic-port"
-    protocol            = "HTTP"
-    timeout             = 5
-    unhealthy_threshold = 2
   }
 
   stickiness {
@@ -49,7 +43,7 @@ resource "aws_lb" "reversi-web-api-lb" {
   preserve_host_header                        = false
   security_groups                             = [aws_security_group.reversi_lb-sg.id]
   subnets                                     = [
-    aws_subnet.public_2.id,
+    aws_subnet.public_1.id,
     aws_subnet.private_1.id,
   ]
   tags                       = {}
