@@ -10,6 +10,7 @@ resource "aws_cloudfront_distribution" "reversi" {
   tags                = {}
   tags_all            = {}
   wait_for_deployment = true
+  default_root_object = "index.html"
 
   ordered_cache_behavior {
     allowed_methods = [
