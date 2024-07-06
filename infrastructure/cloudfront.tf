@@ -3,14 +3,31 @@ resource "aws_cloudfront_distribution" "reversi" {
     "reversi.koppepan.org",
   ]
   enabled             = true
-  http_version        = "http2"
+  default_root_object = "index.html"
   is_ipv6_enabled     = true
   price_class         = "PriceClass_All"
   retain_on_delete    = false
-  tags                = {}
-  tags_all            = {}
-  wait_for_deployment = true
-  default_root_object = "index.html"
+
+  default_cache_behavior {
+    allowed_methods = [
+      "GET",
+      "HEAD",
+    ]
+    cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cached_methods  = [
+      "GET",
+      "HEAD",
+    ]
+    compress               = true
+    default_ttl            = 0
+    max_ttl                = 0
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = aws_s3_bucket.reversi-web-front.bucket_regional_domain_name
+    trusted_key_groups     = []
+    trusted_signers        = []
+    viewer_protocol_policy = "allow-all"
+  }
 
   ordered_cache_behavior {
     allowed_methods = [
@@ -38,27 +55,6 @@ resource "aws_cloudfront_distribution" "reversi" {
     trusted_key_groups       = []
     trusted_signers          = []
     viewer_protocol_policy   = "redirect-to-https"
-  }
-
-  default_cache_behavior {
-    allowed_methods = [
-      "GET",
-      "HEAD",
-    ]
-    cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
-    cached_methods  = [
-      "GET",
-      "HEAD",
-    ]
-    compress               = true
-    default_ttl            = 0
-    max_ttl                = 0
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = aws_s3_bucket.reversi-web-front.bucket_regional_domain_name
-    trusted_key_groups     = []
-    trusted_signers        = []
-    viewer_protocol_policy = "allow-all"
   }
 
   origin {
