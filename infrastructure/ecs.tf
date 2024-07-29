@@ -18,6 +18,9 @@ data "aws_ecs_task_definition" "reversi_task_definition" {
   task_definition = aws_ecs_task_definition.ReversiWebApi.family
 }
 
+data "aws_iam_role" "ecs_task_execution_role" {
+    name = "EcsTaskExecutionRole"
+}
 
 resource "aws_ecs_cluster" "ReversiWebApi" {
   name     = "ReversiWebApi"
@@ -41,9 +44,7 @@ resource "aws_ecs_service" "reversi" {
   enable_execute_command             = false
   health_check_grace_period_seconds  = 0
   launch_type                        = "FARGATE"
-  platform_version                   = "LATEST"
   propagate_tags                     = "NONE"
-  scheduling_strategy                = "REPLICA"
   tags                               = {}
   tags_all                           = {}
   triggers                           = {}
@@ -76,8 +77,8 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
   memory                   = "2048"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  task_role_arn            = "arn:aws:iam::713746206827:role/EcsTaskExecutionRole"
-  execution_role_arn       = "arn:aws:iam::713746206827:role/EcsTaskExecutionRole"
+  task_role_arn            = data.aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = data.aws_iam_role.ecs_task_execution_role.arn
 
   container_definitions = jsonencode(
     [
