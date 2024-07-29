@@ -32,7 +32,6 @@ resource "aws_cloudfront_distribution" "reversi" {
     compress               = true
     default_ttl            = 0
     max_ttl                = 0
-    min_ttl                = 0
     smooth_streaming       = false
     viewer_protocol_policy = "allow-all"
     cache_policy_id        = data.aws_cloudfront_cache_policy.caching-optimized.id
@@ -45,7 +44,6 @@ resource "aws_cloudfront_distribution" "reversi" {
     compress                 = true
     default_ttl              = 0
     max_ttl                  = 0
-    min_ttl                  = 0
     smooth_streaming         = false
     path_pattern             = "/api/*"
     trusted_key_groups       = []
@@ -57,8 +55,6 @@ resource "aws_cloudfront_distribution" "reversi" {
   }
 
   origin {
-    connection_attempts = 3
-    connection_timeout  = 10
     domain_name         = aws_s3_bucket.reversi-web-front.bucket_regional_domain_name
     origin_id           = aws_s3_bucket.reversi-web-front.bucket_regional_domain_name
 
@@ -68,17 +64,13 @@ resource "aws_cloudfront_distribution" "reversi" {
   }
 
   origin {
-    connection_attempts = 3
-    connection_timeout  = 10
     domain_name         = aws_lb.reversi-web-api-lb.dns_name
     origin_id           = aws_lb.reversi-web-api-lb.dns_name
 
     custom_origin_config {
       http_port                = 80
       https_port               = 443
-      origin_keepalive_timeout = 5
       origin_protocol_policy   = "match-viewer"
-      origin_read_timeout      = 30
       origin_ssl_protocols     = ["TLSv1.2"]
     }
   }
