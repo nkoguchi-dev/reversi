@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   reversi_web-api:
     build:
@@ -24,3 +22,11 @@ services:
       - reversi_web-api
     ports:
       - "14200:4200"
+
+  reversi_e2e-test:
+    build:
+      context: ./e2e-test
+    container_name: reversi_e2e-test
+    depends_on:
+      - reversi_web-api
+      - reversi_web-front
