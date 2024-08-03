@@ -16,7 +16,9 @@ jobs:
 
       - name: Build the Docker image
         run: docker build -t e2e-test .
+        working-directory: ./e2e-test
 
       - name: Run E2E Tests
         run: |
           docker run --rm e2e-test
+        working-directory: ./e2e-test
