@@ -1,13 +1,14 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.2.5"
-    id("io.spring.dependency-management") version "1.1.4"
-    id("com.google.devtools.ksp") version "1.9.23-1.0.19"
+    id("org.springframework.boot") version "3.3.2"
+    id("io.spring.dependency-management") version "1.1.6"
+    id("com.google.devtools.ksp") version "2.0.0-1.0.24"
     id("org.sonarqube") version "5.0.0.4638"
     id("jacoco")
-    kotlin("jvm") version "1.9.23"
-    kotlin("plugin.spring") version "1.9.23"
+    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.spring") version "2.0.0"
     application
 }
 
@@ -39,6 +40,9 @@ dependencies {
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+    // security
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
     // Komapper
     val komapperVersion = "1.17.0"
@@ -124,13 +128,6 @@ tasks.named<JacocoReport>("jacocoTestReport") {
         csv.required.set(false)
         html.required.set(false)
         xml.outputLocation.set(file("${layout.buildDirectory}/jacoco-xml-report/test.xml"))
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "21"
     }
 }
 

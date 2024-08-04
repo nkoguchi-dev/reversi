@@ -21,3 +21,7 @@ spring:
     locations: classpath:db/migration
     schemas: reversi
     defaultSchema: reversi
+
+app:
+  auth:
+    allowed-origins: ${ALLOWED_ORIGINS}
