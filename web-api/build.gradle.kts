@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
-    id("com.google.devtools.ksp") version "2.0.0-1.0.24"
+    id("com.google.devtools.ksp") version "2.0.10-1.0.24"
     id("org.sonarqube") version "5.0.0.4638"
     id("jacoco")
     kotlin("jvm") version "2.0.10"
@@ -45,7 +45,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
 
     // Komapper
-    val komapperVersion = "1.17.0"
+    val komapperVersion = "2.1.0"
     platform("org.komapper:komapper-platform:$komapperVersion").let {
         implementation(it)
         ksp(it)
@@ -60,7 +60,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testImplementation("org.flywaydb:flyway-core")
     testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     testImplementation("io.projectreactor:reactor-test")
 }
 
