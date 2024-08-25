@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -7,8 +7,8 @@ plugins {
     id("com.google.devtools.ksp") version "2.0.0-1.0.24"
     id("org.sonarqube") version "5.0.0.4638"
     id("jacoco")
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.spring") version "2.0.0"
+    kotlin("jvm") version "2.0.10"
+    kotlin("plugin.spring") version "2.0.10"
     application
 }
 
@@ -128,6 +128,13 @@ tasks.named<JacocoReport>("jacocoTestReport") {
         csv.required.set(false)
         html.required.set(false)
         xml.outputLocation.set(file("${layout.buildDirectory}/jacoco-xml-report/test.xml"))
+    }
+}
+
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
