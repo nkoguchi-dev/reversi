@@ -14,7 +14,7 @@ services:
 
   reversi_web-front:
     build:
-      context: ./web-front
+      context: web-front-old
     container_name: reversi_web-front
     volumes:
       - ./web-front:/projects
