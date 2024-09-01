@@ -2,8 +2,8 @@ import {Component, inject} from '@angular/core';
 import {Router} from "@angular/router";
 import {GameStateService} from "../game/services/game-state.service";
 import {GameStartService} from "./services/game-start.service";
-import {GameStartResponse} from "./services/game-start.service";
 import {Subscription} from "rxjs";
+import {GameState} from "../models/game-state.model";
 
 @Component({
   selector: 'app-home',
@@ -25,8 +25,8 @@ export class HomeComponent {
           player1: 'player1',
           player2: 'player2',
         })
-        .subscribe((response: GameStartResponse) => {
-          this._gameStateService.setGameState(response);
+        .subscribe((gameState: GameState) => {
+          this._gameStateService.setGameState(gameState);
           this._router.navigate(['/game']);
         })
     );
