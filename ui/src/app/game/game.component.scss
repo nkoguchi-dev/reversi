@@ -1,0 +1,17 @@
+.game-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 100px 100px 100px 100px;
+  width: 50%;
+}
+
+.game-item {
+  background: #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  border: 3px solid #ccc;
+}
+
+.game-board {
+  grid-row: 1 / 4;
+}
