@@ -7,21 +7,21 @@ services:
       - ./web-api:/project/web-api
       - /project/web-api/.gradle
     ports:
-      - "18080:8080"
-      - "15005:5005"
+      - "8080:8080"
+      - "5005:5005"
     env_file:
       - ./web-api/app-settings.env
 
-  reversi_web-front:
+  reversi_ui:
     build:
-      context: web-front-old
-    container_name: reversi_web-front
+      context: ui
+    container_name: reversi_ui
     volumes:
-      - ./web-front:/projects
+      - ./ui:/projects
     depends_on:
       - reversi_web-api
     ports:
-      - "14200:4200"
+      - "4200:4200"
 
   reversi_e2e-test:
     build:
@@ -29,4 +29,4 @@ services:
     container_name: reversi_e2e-test
     depends_on:
       - reversi_web-api
-      - reversi_web-front
+      - reversi_ui

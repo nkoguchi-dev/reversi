@@ -15,7 +15,7 @@ Dockerを利用してアプリケーションを起動します。
 
 最初にプロジェクトのルートディレクトリに移動し、npm installを実行します。
 ```shell
-docker compose run --no-deps --rm reversi_web-front npm install
+docker compose run --no-deps --rm reversi_ui npm install
 ```
 
 次にDockerコンテナを起動します。
@@ -23,7 +23,7 @@ docker compose run --no-deps --rm reversi_web-front npm install
 docker compose up -d --build
 ```
 
-ブラウザで`http://localhost:14200`にアクセスするとアプリケーションが起動していることを確認できます。
+ブラウザで`http://localhost:4200`にアクセスするとアプリケーションが起動していることを確認できます。
 
 ## プロジェクトの構成
 
@@ -53,7 +53,7 @@ Controllerを用いてプライマリーアダプターを実装しています�
 
 ### フロントエンドアプリケーション
 
-web-frontディレクトリに配置されています。
+uiディレクトリに配置されています。
 Angularを利用して作成しており、かなりシンプルな作りになっているため見どころが無いかもしれません。
 
 ### インフラストラクチャー
