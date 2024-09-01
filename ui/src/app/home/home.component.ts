@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {Router} from "@angular/router";
-import {GameStateService} from "../game/services/game-state.service";
+import {GameStateService} from "../models/game-state.service";
 import {GameStartService} from "./services/game-start.service";
 import {Subscription} from "rxjs";
 import {GameState} from "../models/game-state.model";

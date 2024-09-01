@@ -1,1 +1,15 @@
-<p>game works!</p>
+<div *ngIf="_gameState$ | async as gameState; else loading">
+  <h1>Game State</h1>
+  <p>Game ID: {{ gameState.gameId }}</p>
+  <p>Player 1: {{ gameState.player1Name }}</p>
+  <p>Player 2: {{ gameState.player2Name }}</p>
+  <p>Next Player: {{ gameState.nextPlayer }}</p>
+  <p>Progress: {{ gameState.progress }}</p>
+  <h2>Disk Map</h2>
+  <div *ngFor="let cell of diskMapArray(gameState.diskMap)">
+    <p>{{ cell.key }}: {{ cell.value }}</p>
+  </div>
+</div>
+<ng-template #loading>
+  <p>Loading game state...</p>
+</ng-template>
