@@ -1,27 +1,56 @@
-import {Component, inject} from '@angular/core';
-import {GameStateService} from "../models/game-state.service";
-import {Observable} from "rxjs";
-import {GameState} from "../models/game-state.model";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
+import {Component, inject, OnDestroy, OnInit, Signal, signal} from '@angular/core';
+import {AsyncPipe} from "@angular/common";
+import {Observable, Subscription} from "rxjs";
 import {DebugComponent} from "./components/debug/debug.component";
+import {BoardComponent} from "./components/board/board.component";
+import {GameStartService} from "../home/services/game-start.service";
+import {GameState} from "../models/game-state.module";
+import {Disk} from "../models/disk.module";
+import {HorizontalPosition, Position, VerticalPosition} from "../models/position.module";
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
     AsyncPipe,
-    NgForOf,
-    NgIf,
-    DebugComponent
+    DebugComponent,
+    BoardComponent
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
-export class GameComponent {
-  private _gameStateService = inject(GameStateService);
-  _gameState$: Observable<GameState  | null>;
+export class GameComponent implements OnInit, OnDestroy {
+  private readonly _gameStartService = inject(GameStartService);
+  private readonly _subscription: Subscription = new Subscription();
+  readonly gameState$: Observable<GameState>;
+  readonly diskMapSignal = signal<Map<string, Disk | null>>(new Map());
 
   constructor() {
-    this._gameState$ = this._gameStateService.getGameState();
+    this.gameState$ = this._gameStartService
+      .startGame({
+        player1: 'player1',
+        player2: 'player2',
+      });
+    // 版目の初期化処理。どこかのクラスに移したい。
+    const diskMap = new Map<string, Disk | null>();
+    for (const h of Object.values(HorizontalPosition)) {
+      for (const v of Object.values(VerticalPosition)) {
+        diskMap.set(new Position(h, v).toString(), null);
+      }
+    }
+    this.diskMapSignal.set(diskMap);
+  }
+
+  ngOnInit(): void {
+    this._subscription.add(
+      this.gameState$
+        .subscribe((gameState: GameState) => {
+          this.diskMapSignal.set(gameState.diskMap);
+        })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this._subscription.unsubscribe();
   }
 }

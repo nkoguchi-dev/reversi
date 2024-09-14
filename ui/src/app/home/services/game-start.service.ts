@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
-import {GameState} from "../../models/game-state.model";
+import {GameState} from "../../models/game-state.module";
 
 export interface GameStartRequest {
   "player1": string,
@@ -14,7 +14,7 @@ export interface GameStartResponse {
   player2Name: string;
   nextPlayer: string;
   progress: string;
-  diskMap: Record<string, 'LIGHT' | 'DARK' | null>;
+  diskMap: Map<string, 'LIGHT' | 'DARK' | null>;
 }
 
 @Injectable({
@@ -27,18 +27,16 @@ export class GameStartService {
     return this._http
       .post<GameStartResponse>('/api/games/start', request)
       .pipe(
-        map(response => this.transformResponse(response))
+        map(response => {
+          const diskMap = new Map<string, 'LIGHT' | 'DARK' | null>(Object.entries(response.diskMap));
+          return GameState.of(
+              response.gameId,
+              response.nextPlayer,
+              response.progress,
+              diskMap,
+            )
+          }
+        )
       );
-  }
-
-  private transformResponse(response: GameStartResponse): GameState {
-    return {
-      gameId: response.gameId,
-      player1Name: response.player1Name,
-      player2Name: response.player2Name,
-      nextPlayer: response.nextPlayer,
-      progress: response.progress,
-      diskMap: response.diskMap,
-    }
   }
 }

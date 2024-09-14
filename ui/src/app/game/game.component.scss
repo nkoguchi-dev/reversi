@@ -1,7 +1,7 @@
 .game-container {
   display: grid;
   grid-template-columns: 3fr 1fr;
-  grid-template-rows: 100px 100px 100px 100px;
+  grid-template-rows: 160px 160px 160px auto;
   width: 50%;
 }
 
