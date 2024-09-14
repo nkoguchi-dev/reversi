@@ -4,9 +4,9 @@ import {Observable, Subscription} from "rxjs";
 import {DebugComponent} from "./components/debug/debug.component";
 import {BoardComponent} from "./components/board/board.component";
 import {GameStartService} from "../home/services/game-start.service";
-import {Disk} from "../models/disk.model";
-import {HorizontalPosition, Position, VerticalPosition} from "../models/position.model";
-import {GameState} from "../models/game-state.module";
+import {Disk} from "../../models/disk.model";
+import {HorizontalPosition, Position, VerticalPosition} from "../../models/position.model";
+import {GameState} from "../../models/game-state.module";
 
 @Component({
   selector: 'app-game',

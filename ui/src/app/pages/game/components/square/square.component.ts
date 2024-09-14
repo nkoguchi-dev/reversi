@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Position} from "../../../models/position.model";
-import {Disk, DiskType} from "../../../models/disk.model";
+import {Position} from "../../../../models/position.model";
+import {Disk, DiskType} from "../../../../models/disk.model";
 
 @Component({
   selector: 'app-square',

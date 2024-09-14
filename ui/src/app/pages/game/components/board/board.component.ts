@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, Signal} from '@angular/core';
 import {SquareComponent} from "../square/square.component";
-import {HorizontalPosition, Position, VerticalPosition} from "../../../models/position.model";
-import {Disk} from "../../../models/disk.model";
+import {HorizontalPosition, Position, VerticalPosition} from "../../../../models/position.model";
+import {Disk} from "../../../../models/disk.model";
 
 @Component({
   selector: 'app-board',
@@ -32,9 +32,6 @@ export class BoardComponent {
     if (!this.diskMapSignal) {
       return null;
     }
-    const map = this.diskMapSignal();
-    const value = map.get(new Position(horizontalPosition, verticalPosition).toString()) || null;
-    return value;
-    //return this.diskMapSignal()?.get(new Position(horizontalPosition, verticalPosition).toString()) || null;
+    return this.diskMapSignal()?.get(new Position(horizontalPosition, verticalPosition).toString()) || null;
   }
 }
