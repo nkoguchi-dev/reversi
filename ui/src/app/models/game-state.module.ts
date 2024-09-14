@@ -1,6 +1,6 @@
-import {createDiskType, Disk} from "./disk.module";
-import {HorizontalPosition, Position, VerticalPosition} from "./position.module";
-import {createGameProgress, GameProgress} from "./game-progress.module";
+import {createDiskType, Disk} from "./disk.model";
+import {HorizontalPosition, Position, VerticalPosition} from "./position.model";
+import {createGameProgress, GameProgress} from "./game-progress.model";
 
 /**
  * ゲームの状態を表す型

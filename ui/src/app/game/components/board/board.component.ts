@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, Signal} from '@angular/core';
 import {SquareComponent} from "../square/square.component";
-import {HorizontalPosition, Position, VerticalPosition} from "../../../models/position.module";
-import {Disk} from "../../../models/disk.module";
+import {HorizontalPosition, Position, VerticalPosition} from "../../../models/position.model";
+import {Disk} from "../../../models/disk.model";
 
 @Component({
   selector: 'app-board',
