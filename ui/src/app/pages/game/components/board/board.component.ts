@@ -15,7 +15,8 @@ import {Disk} from "../../../../models/disk.model";
 export class BoardComponent {
   @Output()
   squareClicked = new EventEmitter<Position>();
-  @Input() diskMapSignal!: Signal<Map<string, Disk | null>>;
+  @Input()
+  diskMapSignal!: Signal<Map<string, Disk | null>>;
 
   columns: HorizontalPosition[] = Object.values(HorizontalPosition);
   rows: VerticalPosition[] = Object.values(VerticalPosition);
