@@ -3,22 +3,43 @@ import {HorizontalPosition, Position, VerticalPosition} from "./position.model";
 import {asGameProgress, GameProgress} from "./game-progress.model";
 import {asBrand, Brand} from "./brand.module";
 
-export type GameId = Brand<string, "GameId">
+export type GameId = Brand<string, "GameId">;
 export type Player = "player1" | "player2";
+export type Score = Brand<number, "Score">;
+
+export class PlayerStatus {
+  nextPlayer: Player;
+  player1Score: Score;
+  player2Score: Score;
+
+  constructor(nextPlayer: Player, player1Score: Score, player2Score: Score) {
+    this.nextPlayer = nextPlayer;
+    this.player1Score = player1Score;
+    this.player2Score = player2Score;
+  }
+
+  static of(nextPlayer: Player): PlayerStatus {
+    return new PlayerStatus(
+      nextPlayer,
+      asBrand(0, "number", "Score"),
+      asBrand(0, "number", "Score"),
+    )
+  }
+}
 
 /**
  * ゲームの状態を表す型
  */
-export class GameState {
+export class GameStatus {
   gameId: GameId;
-  nextPlayer: Player;
   progress: GameProgress;
+  playerStatus: PlayerStatus;
   diskMap: Map<string, Disk | null>;
 
   constructor(gameId: GameId, nextPlayer: Player, progress: GameProgress, diskMap: Map<string, Disk | null>) {
     this.gameId = gameId;
-    this.nextPlayer = nextPlayer;
     this.progress = progress;
+    this.playerStatus = PlayerStatus.of(nextPlayer);
     this.diskMap = initializeDiskMap();
     // diskMapの内容を反映
     for (const [position, disk] of diskMap) {
@@ -31,8 +52,8 @@ export class GameState {
     nextPlayer: Player,
     progress: string,
     diskMap: Map<string, 'LIGHT' | 'DARK' | null>,
-  ): GameState {
-    return new GameState(
+  ): GameStatus {
+    return new GameStatus(
       asBrand(gameId, "string", "GameId"),
       nextPlayer,
       asGameProgress(progress),

@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
-import {GameState} from "../../../models/game-state.module";
+import {GameStatus} from "../../../models/game-state.module";
 
 export interface GameStartRequest {
   "player1": string,
@@ -23,13 +23,13 @@ export interface GameStartResponse {
 export class GameStartService {
   private readonly _http = inject(HttpClient);
 
-  startGame(request: GameStartRequest): Observable<GameState> {
+  startGame(request: GameStartRequest): Observable<GameStatus> {
     return this._http
       .post<GameStartResponse>('/api/games/start', request)
       .pipe(
         map(response => {
           const diskMap = new Map<string, 'LIGHT' | 'DARK' | null>(Object.entries(response.diskMap));
-          return GameState.of(
+          return GameStatus.of(
               response.gameId,
               response.nextPlayer,
               response.progress,

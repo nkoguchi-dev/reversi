@@ -6,7 +6,7 @@ import {BoardComponent} from "./components/board/board.component";
 import {GameStartService} from "../home/services/game-start.service";
 import {Disk} from "../../models/disk.model";
 import {HorizontalPosition, Position, VerticalPosition} from "../../models/position.model";
-import {GameState} from "../../models/game-state.module";
+import {GameStatus} from "../../models/game-state.module";
 import {PutDiskResponse, PutDiskService} from "./services/put-disk.service";
 import {GameStateService} from "../../services/game-state.service";
 
@@ -26,7 +26,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private readonly _putDiskService = inject(PutDiskService);
   private readonly _gameStateService = inject(GameStateService);
   private readonly _subscription: Subscription = new Subscription();
-  private _gameState: GameState;
+  private _gameState: GameStatus;
   readonly diskMapSignal = signal<Map<string, Disk | null>>(new Map());
 
   constructor() {
@@ -41,7 +41,7 @@ export class GameComponent implements OnInit, OnDestroy {
           player1: 'player1',
           player2: 'player2',
         })
-        .subscribe((gameState: GameState) => {
+        .subscribe((gameState: GameStatus) => {
           this.diskMapSignal.set(gameState.diskMap);
           this._gameStateService.set(gameState);
           this._gameState = gameState;
@@ -49,14 +49,14 @@ export class GameComponent implements OnInit, OnDestroy {
     );
   }
 
-  _initializeGameState(): GameState {
+  _initializeGameState(): GameStatus {
     const diskMap = new Map<string, "LIGHT" | "DARK" | null>();
     for (const h of Object.values(HorizontalPosition)) {
       for (const v of Object.values(VerticalPosition)) {
         diskMap.set(new Position(h, v).toString(), null);
       }
     }
-    const newGameState = GameState.of(
+    const newGameState = GameStatus.of(
       'gameId',
       'player1',
       'INITIAL',
@@ -73,11 +73,11 @@ export class GameComponent implements OnInit, OnDestroy {
   onSquareClick(position: Position) {
     this._subscription.add(
       this._putDiskService.putDisk(this._gameState.gameId, {
-        playerNumber: this._gameState.nextPlayer,
+        playerNumber: this._gameState.playerStatus.nextPlayer,
         horizontalPosition: position.horizontalPosition,
         verticalPosition: position.verticalPosition,
       }).subscribe((response: PutDiskResponse) => {
-        const newGameState = GameState.of(
+        const newGameState = GameStatus.of(
           response.gameId,
           response.nextPlayer,
           response.progress,

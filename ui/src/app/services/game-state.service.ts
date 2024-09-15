@@ -1,21 +1,21 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
-import {GameState} from "../models/game-state.module";
+import {GameStatus} from "../models/game-state.module";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameStateService {
-  private gameStateSubject = new BehaviorSubject<GameState | null>(null);
+  private gameStateSubject = new BehaviorSubject<GameStatus | null>(null);
 
   constructor() {
   }
 
-  set(state: GameState) {
+  set(state: GameStatus) {
     this.gameStateSubject.next(state)
   }
 
-  get(): Observable<GameState | null> {
+  get(): Observable<GameStatus | null> {
     return this.gameStateSubject.asObservable();
   }
 }
