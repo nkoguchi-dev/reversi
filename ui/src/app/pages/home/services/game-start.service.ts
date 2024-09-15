@@ -12,7 +12,7 @@ export interface GameStartResponse {
   gameId: string;
   player1Name: string;
   player2Name: string;
-  nextPlayer: string;
+  nextPlayer: 'player1' | 'player2';
   progress: string;
   diskMap: Map<string, 'LIGHT' | 'DARK' | null>;
 }

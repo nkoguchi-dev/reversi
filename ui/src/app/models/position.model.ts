@@ -20,8 +20,8 @@ export class Position {
       throw new Error(`Invalid position string: ${positionString}`);
     }
     return new Position(
-      createHorizontalPosition(positions[0]),
-      createVerticalPosition(positions[1]),
+      asHorizontalPosition(positions[0]),
+      asVerticalPosition(positions[1]),
     );
   }
 
@@ -47,7 +47,7 @@ function isHorizontalPosition(value: string): value is HorizontalPosition {
   return Object.values(HorizontalPosition).includes(value as HorizontalPosition);
 }
 
-function createHorizontalPosition(value: string): HorizontalPosition {
+function asHorizontalPosition(value: string): HorizontalPosition {
   if (!isHorizontalPosition(value)) {
     throw new Error(`Invalid horizontal position: ${value}`);
   }
@@ -72,7 +72,7 @@ function isVerticalPosition(value: string): value is VerticalPosition {
   return Object.values(VerticalPosition).includes(value as VerticalPosition);
 }
 
-function createVerticalPosition(value: string): VerticalPosition {
+function asVerticalPosition(value: string): VerticalPosition {
   if (!isVerticalPosition(value)) {
     throw new Error(`Invalid vertical position: ${value}`);
   }

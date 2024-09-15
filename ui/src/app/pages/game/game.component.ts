@@ -50,15 +50,15 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   _initializeGameState(): GameState {
-    const diskMap = new Map<string, Disk | null>();
+    const diskMap = new Map<string, "LIGHT" | "DARK" | null>();
     for (const h of Object.values(HorizontalPosition)) {
       for (const v of Object.values(VerticalPosition)) {
         diskMap.set(new Position(h, v).toString(), null);
       }
     }
-    const newGameState = new GameState(
+    const newGameState = GameState.of(
       'gameId',
-      'nextPlayer',
+      'player1',
       'INITIAL',
       diskMap,
     )

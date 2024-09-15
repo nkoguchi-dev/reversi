@@ -1,20 +1,24 @@
 import {createDiskType, Disk} from "./disk.model";
 import {HorizontalPosition, Position, VerticalPosition} from "./position.model";
-import {createGameProgress, GameProgress} from "./game-progress.model";
+import {asGameProgress, GameProgress} from "./game-progress.model";
+import {asBrand, Brand} from "./brand.module";
+
+export type GameId = Brand<string, "GameId">
+export type Player = "player1" | "player2";
 
 /**
  * ゲームの状態を表す型
  */
 export class GameState {
-  gameId: string;
-  nextPlayer: string;
+  gameId: GameId;
+  nextPlayer: Player;
   progress: GameProgress;
   diskMap: Map<string, Disk | null>;
 
-  constructor(gameId: string, nextPlayer: string, progress: string, diskMap: Map<string, Disk | null>) {
+  constructor(gameId: GameId, nextPlayer: Player, progress: GameProgress, diskMap: Map<string, Disk | null>) {
     this.gameId = gameId;
     this.nextPlayer = nextPlayer;
-    this.progress = createGameProgress(progress);
+    this.progress = progress;
     this.diskMap = initializeDiskMap();
     // diskMapの内容を反映
     for (const [position, disk] of diskMap) {
@@ -24,18 +28,23 @@ export class GameState {
 
   static of(
     gameId: string,
-    nextPlayer: string,
+    nextPlayer: Player,
     progress: string,
     diskMap: Map<string, 'LIGHT' | 'DARK' | null>,
   ): GameState {
     return new GameState(
-      gameId,
+      asBrand(gameId, "string", "GameId"),
       nextPlayer,
-      progress,
+      asGameProgress(progress),
       new Map(
         Array.from(diskMap.entries())
           .map(([positionString, diskTypeString]) => {
-            return [positionString, new Disk(createDiskType(diskTypeString))]
+            return [
+              positionString,
+              diskTypeString !== null
+                ? new Disk(createDiskType(diskTypeString))
+                : null
+            ]
           })
       )
     )
