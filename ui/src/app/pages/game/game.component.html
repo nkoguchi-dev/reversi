@@ -5,8 +5,18 @@
       (squareClicked)="onSquareClick($event)"
     />
   </div>
-  <div class="game-item">player2-status</div>
+  <div class="game-item">
+    <app-player-status
+      [playerStatusSignal]="playerStatusSignal"
+      [player]="'player2'"
+      />
+  </div>
   <div class="game-item">game-status</div>
-  <div class="game-item">player1-status</div>
+  <div class="game-item">
+    <app-player-status
+      [playerStatusSignal]="playerStatusSignal"
+      [player]="'player1'"
+    />
+  </div>
   <div class="game-item"><app-debug/></div>
 </div>
