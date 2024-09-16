@@ -1,0 +1,31 @@
+.game-state {
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.status {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: inline-block;
+  width: 200px;
+  border: 2px solid #000;
+}
+
+.in_progress {
+  background-color: #555;
+  color: #fff;
+}
+
+.finished {
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #000;
+}
+
+.initial {
+  background-color: #ddd;
+  color: #000;
+  border: 2px solid #999;
+}

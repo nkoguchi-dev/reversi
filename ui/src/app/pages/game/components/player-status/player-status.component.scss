@@ -1,0 +1,47 @@
+.player-card {
+  border: 2px solid #4CAF50;
+  border-radius: 10px;
+  padding: 15px;
+  width: 200px;
+  background-color: #f4f4f4;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+}
+
+.black-player {
+  background-color: #333;
+  border: 2px solid #000;
+  color: #fff;
+}
+
+.white-player {
+  background-color: #f4f4f4;
+  border: 2px solid #ddd;
+  color: #000;
+}
+
+.player-name {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.score {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.score-value {
+  font-weight: bold;
+  //color: #4CAF50;
+}
+
+.turn-message {
+  margin-top: 15px;
+  font-size: 16px;
+  font-style: italic;
+}
