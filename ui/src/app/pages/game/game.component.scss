@@ -1,10 +1,18 @@
 .game-container {
   display: grid;
-  grid-template-columns: 3fr 1fr;
-  grid-template-rows: 200px 80px 200px auto;
+  grid-template-columns: 460px 1fr;
   width: 680px;
 }
 
+.game-state {
+  grid-column: 1 / 3;
+}
+
 .game-board {
-  grid-row: 1 / 4;
+  grid-column: 1 / 2;
+  grid-row: 2 / 5;
+}
+
+.spacer {
+  height: 20px;
 }

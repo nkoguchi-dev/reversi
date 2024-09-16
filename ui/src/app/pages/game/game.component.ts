@@ -10,6 +10,7 @@ import {PutDiskResponse, PutDiskService} from "./services/put-disk.service";
 import {GameStateService} from "../../services/game-state.service";
 import {PlayerStatusComponent} from "./components/player-status/player-status.component";
 import {GameStatusComponent} from "./components/game-status/game-status.component";
+import {GameProgress} from "../../models/game-progress.model";
 
 @Component({
   selector: 'app-game',
@@ -31,11 +32,13 @@ export class GameComponent implements OnInit, OnDestroy {
   private _gameState: GameStatus;
   readonly diskMapSignal: WritableSignal<Map<string, Disk | null>>;
   readonly playerStatusSignal: WritableSignal<PlayerStatus>;
+  readonly gameStatusSignal: WritableSignal<GameProgress>;
 
   constructor() {
     this._gameState = this._initializeGameState();
     this.diskMapSignal = signal<Map<string, Disk | null>>(this._gameState.diskMap);
     this.playerStatusSignal = signal<PlayerStatus>(this._gameState.playerStatus);
+    this.gameStatusSignal = signal<GameProgress>(this._gameState.progress);
   }
 
   ngOnInit(): void {
@@ -47,6 +50,7 @@ export class GameComponent implements OnInit, OnDestroy {
         })
         .subscribe((gameState: GameStatus) => {
           this.diskMapSignal.set(gameState.diskMap);
+          this.gameStatusSignal.set(gameState.progress);
           this._gameStateService.set(gameState);
           this._gameState = gameState;
         })
@@ -89,6 +93,7 @@ export class GameComponent implements OnInit, OnDestroy {
         );
         this.diskMapSignal.set(newGameState.diskMap);
         this.playerStatusSignal.set(newGameState.playerStatus);
+        this.gameStatusSignal.set(newGameState.progress);
         this._gameStateService.set(newGameState);
         this._gameState = newGameState;
       })
