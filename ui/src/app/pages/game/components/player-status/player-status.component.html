@@ -1,9 +1,9 @@
 <div class="player-card" [ngClass]="{'black-player': player === 'PLAYER1', 'white-player': player === 'PLAYER2'}">
-  <h2 class="player-name">{{ player }}</h2>
-  <div class="score">
-    <span>Score:</span> <span class="score-value">0</span>
-  </div>
-  @if (getCurrentPhase()) {
-    <p class="turn-message">駒を置いてください</p>
-  }
+    <h2 class="player-name">{{ player }}</h2>
+    <div class="score">
+        <span>Score:</span> <span class="score-value">{{ getPlayerScore() }}</span>
+    </div>
+    @if (getCurrentPhase()) {
+        <p class="turn-message">駒を置いてください</p>
+    }
 </div>

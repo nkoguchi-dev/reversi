@@ -1,3 +1,7 @@
 logging:
   level:
     root: DEBUG
+
+app:
+  auth:
+    allowed-origins: localhost:4200

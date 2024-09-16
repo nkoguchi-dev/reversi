@@ -128,8 +128,14 @@ class GameTest(
 
         val expected = CreateGameController.CreateGameResponse(
             gameId = response.responseBody?.gameId!!,
-            player1Name = "ペンギン",
-            player2Name = "パンダ",
+            player1Status = CreateGameController.CreateGameResponse.PlayerStatus(
+                name = "ペンギン",
+                score = 2,
+            ),
+            player2Status = CreateGameController.CreateGameResponse.PlayerStatus(
+                name = "パンダ",
+                score = 2,
+            ),
             nextPlayer = "PLAYER1",
             progress = "CREATED",
             diskMap = mapOf(

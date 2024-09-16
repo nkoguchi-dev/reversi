@@ -10,11 +10,16 @@ export interface GameStartRequest {
 
 export interface GameStartResponse {
   gameId: string;
-  player1Name: string;
-  player2Name: string;
+  player1Status: PlayerStatus;
+  player2Status: PlayerStatus;
   nextPlayer: 'PLAYER1' | 'PLAYER2';
   progress: string;
   diskMap: Map<string, 'LIGHT' | 'DARK' | null>;
+}
+
+export interface PlayerStatus {
+  name: string;
+  score: number;
 }
 
 @Injectable({
@@ -30,13 +35,14 @@ export class GameStartService {
         map(response => {
           const diskMap = new Map<string, 'LIGHT' | 'DARK' | null>(Object.entries(response.diskMap));
           return GameStatus.of(
-              response.gameId,
-              response.nextPlayer,
-              response.progress,
-              diskMap,
-            )
-          }
-        )
+            response.gameId,
+            response.nextPlayer,
+            response.player1Status.score,
+            response.player2Status.score,
+            response.progress,
+            diskMap,
+          )
+        })
       );
   }
 }

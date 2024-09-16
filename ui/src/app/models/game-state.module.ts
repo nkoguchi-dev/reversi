@@ -18,11 +18,11 @@ export class PlayerStatus {
     this.player2Score = player2Score;
   }
 
-  static of(nextPlayer: Player): PlayerStatus {
+  static of(nextPlayer: Player, player1Score: number, player2Score: number): PlayerStatus {
     return new PlayerStatus(
       nextPlayer,
-      asBrand(0, "number", "Score"),
-      asBrand(0, "number", "Score"),
+      asBrand(player1Score, "number", "Score"),
+      asBrand(player2Score, "number", "Score"),
     )
   }
 }
@@ -36,10 +36,10 @@ export class GameStatus {
   playerStatus: PlayerStatus;
   diskMap: Map<string, Disk | null>;
 
-  constructor(gameId: GameId, nextPlayer: Player, progress: GameProgress, diskMap: Map<string, Disk | null>) {
+  constructor(gameId: GameId, playerStatus: PlayerStatus, progress: GameProgress, diskMap: Map<string, Disk | null>) {
     this.gameId = gameId;
     this.progress = progress;
-    this.playerStatus = PlayerStatus.of(nextPlayer);
+    this.playerStatus = playerStatus;
     this.diskMap = initializeDiskMap();
     // diskMapの内容を反映
     for (const [position, disk] of diskMap) {
@@ -50,12 +50,14 @@ export class GameStatus {
   static of(
     gameId: string,
     nextPlayer: Player,
+    player1Score: number,
+    player2Score: number,
     progress: string,
     diskMap: Map<string, 'LIGHT' | 'DARK' | null>,
   ): GameStatus {
     return new GameStatus(
       asBrand(gameId, "string", "GameId"),
-      nextPlayer,
+      PlayerStatus.of(nextPlayer, player1Score, player2Score),
       asGameProgress(progress),
       new Map(
         Array.from(diskMap.entries())

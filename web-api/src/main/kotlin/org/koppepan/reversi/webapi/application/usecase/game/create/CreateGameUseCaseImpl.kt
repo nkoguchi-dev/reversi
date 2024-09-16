@@ -1,8 +1,10 @@
 package org.koppepan.reversi.webapi.application.usecase.game.create
 
+import org.koppepan.reversi.webapi.domain.board.DiskMap
 import org.koppepan.reversi.webapi.domain.game.Game
 import org.koppepan.reversi.webapi.domain.game.SaveGameRepository
 import org.koppepan.reversi.webapi.domain.generator.IdGenerator
+import org.koppepan.reversi.webapi.domain.player.PlayerNumber
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -28,8 +30,14 @@ class CreateGameUseCaseImpl(
         log.info("Gameを開始しました。 game: $game")
         return CreateGameUseCase.Output(
             gameId = game.gameId.value,
-            player1Name = game.player1.name.value,
-            player2Name = game.player2.name.value,
+            player1Status = CreateGameUseCase.Output.PlayerStatus(
+                name = game.player1.name.value,
+                score = game.board.diskMap.calculateScore(PlayerNumber.PLAYER1)
+            ),
+            player2Status = CreateGameUseCase.Output.PlayerStatus(
+                name = game.player2.name.value,
+                score = game.board.diskMap.calculateScore(PlayerNumber.PLAYER2)
+            ),
             nextPlayer = game.nextPlayerNumber.name,
             progress = game.progress.value,
             diskMap = game.board.diskMap.getPlacedDiskMap()
@@ -44,4 +52,9 @@ class CreateGameUseCaseImpl(
                 },
         )
     }
+
+    private fun DiskMap.calculateScore(playerNumber: PlayerNumber): Int =
+        this.value
+            .entries
+            .count { (_, player) -> player?.type == playerNumber.diskType }
 }
