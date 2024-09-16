@@ -22,7 +22,7 @@ phases:
 artifacts:
   files:
     - '**/*'
-  base-directory: web-front/dist/web-front
+  base-directory: ui/dist/ui
 
 cache:
   paths:
