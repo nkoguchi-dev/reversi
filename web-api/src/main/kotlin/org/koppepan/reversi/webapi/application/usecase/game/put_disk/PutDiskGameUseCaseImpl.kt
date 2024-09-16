@@ -2,6 +2,7 @@ package org.koppepan.reversi.webapi.application.usecase.game.put_disk
 
 import org.komapper.r2dbc.R2dbcDatabase
 import org.koppepan.reversi.webapi.application.usecase.game.exception.GameNotFoundApplicationException
+import org.koppepan.reversi.webapi.domain.board.DiskMap
 import org.koppepan.reversi.webapi.domain.board.HorizontalPosition
 import org.koppepan.reversi.webapi.domain.board.Position
 import org.koppepan.reversi.webapi.domain.board.VerticalPosition
@@ -42,8 +43,14 @@ class PutDiskGameUseCaseImpl(
         log.info("ディスクを配置しました。 game: $nextGame")
         return PutDiskGameUseCase.Output(
             gameId = nextGame.gameId.value,
-            player1Name = nextGame.player1.name.value,
-            player2Name = nextGame.player2.name.value,
+            player1Status = PutDiskGameUseCase.Output.PlayerStatus(
+                name = nextGame.player1.name.value,
+                score = nextGame.board.diskMap.calculateScore(PlayerNumber.PLAYER1)
+            ),
+            player2Status = PutDiskGameUseCase.Output.PlayerStatus(
+                name = nextGame.player2.name.value,
+                score = nextGame.board.diskMap.calculateScore(PlayerNumber.PLAYER2)
+            ),
             nextPlayer = nextGame.nextPlayerNumber.value,
             progress = nextGame.progress.value,
             diskMap = nextGame.board.diskMap.getPlacedDiskMap()
@@ -74,5 +81,10 @@ class PutDiskGameUseCaseImpl(
             }.createMove(idGenerator, position)
             return this.putDisk(move)
         }
+
+        private fun DiskMap.calculateScore(playerNumber: PlayerNumber): Int =
+            this.value
+                .entries
+                .count { (_, player) -> player?.type == playerNumber.diskType }
     }
 }

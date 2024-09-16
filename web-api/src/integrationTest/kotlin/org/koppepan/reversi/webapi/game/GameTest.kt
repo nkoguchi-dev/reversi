@@ -18,6 +18,7 @@ import org.koppepan.reversi.webapi.infrastructure.entity.diskMapEntity
 import org.koppepan.reversi.webapi.infrastructure.entity.gameEntity
 import org.koppepan.reversi.webapi.presentation.game.create.CreateGameController
 import org.koppepan.reversi.webapi.presentation.game.get_state.GetGameStateController
+import org.koppepan.reversi.webapi.presentation.game.put_disk.PutDiskGameController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -364,13 +365,19 @@ class GameTest(
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk
-            .expectBody<GetGameStateController.GetGameStateResponse>()
+            .expectBody<PutDiskGameController.Response>()
             .returnResult()
 
-        val expected = GetGameStateController.GetGameStateResponse(
+        val expected = PutDiskGameController.Response(
             gameId = "gameId",
-            player1Name = "player1",
-            player2Name = "player2",
+            player1Status = PutDiskGameController.Response.PlayerStatus(
+                name = "player1",
+                score = 3,
+            ),
+            player2Status = PutDiskGameController.Response.PlayerStatus(
+                name = "player2",
+                score = 3,
+            ),
             nextPlayer = "PLAYER1",
             progress = "IN_PROGRESS",
             diskMap = mapOf(

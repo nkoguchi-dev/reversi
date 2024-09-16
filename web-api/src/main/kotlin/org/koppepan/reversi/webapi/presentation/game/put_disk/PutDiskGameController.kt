@@ -10,26 +10,31 @@ import org.springframework.web.bind.annotation.RestController
 class PutDiskGameController(
     private val putDiskGameUseCase: PutDiskGameUseCase,
 ) {
-    data class PutDiskGameRequest(
+    data class Request(
         val playerNumber: String,
         val horizontalPosition: String,
         val verticalPosition: String,
     )
 
-    data class PutDiskGameResponse(
+    data class Response(
         val gameId: String,
-        val player1Name: String,
-        val player2Name: String,
+        val player1Status: PlayerStatus,
+        val player2Status: PlayerStatus,
         val nextPlayer: String,
         val progress: String,
         val diskMap: Map<String, String>
-    )
+    ) {
+        data class PlayerStatus(
+            val name: String,
+            val score: Int,
+        )
+    }
 
     @PutMapping("/api/games/{gameId}")
     suspend fun get(
         @PathVariable gameId: String,
-        @RequestBody request: PutDiskGameRequest,
-    ): PutDiskGameResponse {
+        @RequestBody request: Request,
+    ): Response {
         val input = PutDiskGameUseCase.Input(
             gameId = gameId,
             playerNumber = request.playerNumber,
@@ -42,11 +47,17 @@ class PutDiskGameController(
     }
 
     companion object {
-        private fun PutDiskGameUseCase.Output.toResponse(): PutDiskGameResponse {
-            return PutDiskGameResponse(
+        private fun PutDiskGameUseCase.Output.toResponse(): Response {
+            return Response(
                 gameId = this.gameId,
-                player1Name = this.player1Name,
-                player2Name = this.player2Name,
+                player1Status = Response.PlayerStatus(
+                    name = this.player1Status.name,
+                    score = this.player1Status.score,
+                ),
+                player2Status = Response.PlayerStatus(
+                    name = this.player2Status.name,
+                    score = this.player2Status.score,
+                ),
                 nextPlayer = this.nextPlayer,
                 progress = this.progress,
                 diskMap = this.diskMap

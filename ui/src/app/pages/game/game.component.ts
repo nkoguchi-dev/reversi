@@ -6,8 +6,7 @@ import {GameStartService} from "./services/game-start.service";
 import {Disk} from "../../models/disk.model";
 import {HorizontalPosition, Position, VerticalPosition} from "../../models/position.model";
 import {GameStatus, PlayerStatus} from "../../models/game-state.module";
-import {PutDiskResponse, PutDiskService} from "./services/put-disk.service";
-import {GameStateService} from "../../services/game-state.service";
+import {PutDiskService} from "./services/put-disk.service";
 import {PlayerStatusComponent} from "./components/player-status/player-status.component";
 import {GameStatusComponent} from "./components/game-status/game-status.component";
 import {GameProgress} from "../../models/game-progress.model";
@@ -27,7 +26,6 @@ import {GameProgress} from "../../models/game-progress.model";
 export class GameComponent implements OnInit, OnDestroy {
   private readonly _gameStartService = inject(GameStartService);
   private readonly _putDiskService = inject(PutDiskService);
-  private readonly _gameStateService = inject(GameStateService);
   private readonly _subscription: Subscription = new Subscription();
   private _gameState: GameStatus;
   readonly diskMapSignal: WritableSignal<Map<string, Disk | null>>;
@@ -87,19 +85,10 @@ export class GameComponent implements OnInit, OnDestroy {
           horizontalPosition: position.horizontalPosition,
           verticalPosition: position.verticalPosition,
         }
-      ).subscribe((response: PutDiskResponse) => {
-        const newGameState = GameStatus.of(
-          response.gameId,
-          response.nextPlayer,
-          0,
-          0,
-          response.progress,
-          new Map(Object.entries(response.diskMap)),
-        );
+      ).subscribe((newGameState: GameStatus) => {
         this.diskMapSignal.set(newGameState.diskMap);
         this.playerStatusSignal.set(newGameState.playerStatus);
         this.gameStatusSignal.set(newGameState.progress);
-        this._gameStateService.set(newGameState);
         this._gameState = newGameState;
       })
     );

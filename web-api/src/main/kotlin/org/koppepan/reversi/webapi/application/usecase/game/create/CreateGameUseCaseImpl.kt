@@ -14,10 +14,6 @@ class CreateGameUseCaseImpl(
     private val idGenerator: IdGenerator,
     private val saveGameRepository: SaveGameRepository,
 ) : CreateGameUseCase {
-    companion object {
-        val log: Logger = LoggerFactory.getLogger(this::class.java)
-    }
-
     override suspend fun create(input: CreateGameUseCase.Input): CreateGameUseCase.Output {
         val game = Game.start(
             idGenerator = idGenerator,
@@ -53,8 +49,13 @@ class CreateGameUseCaseImpl(
         )
     }
 
-    private fun DiskMap.calculateScore(playerNumber: PlayerNumber): Int =
-        this.value
-            .entries
-            .count { (_, player) -> player?.type == playerNumber.diskType }
+    companion object {
+        val log: Logger = LoggerFactory.getLogger(this::class.java)
+
+        private fun DiskMap.calculateScore(playerNumber: PlayerNumber): Int =
+            this.value
+                .entries
+                .count { (_, player) -> player?.type == playerNumber.diskType }
+
+    }
 }
