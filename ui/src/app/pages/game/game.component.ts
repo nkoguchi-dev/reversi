@@ -62,7 +62,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
     const newGameState = GameStatus.of(
       'gameId',
-      'player1',
+      'PLAYER1',
       'INITIAL',
       diskMap,
     )
@@ -88,6 +88,7 @@ export class GameComponent implements OnInit, OnDestroy {
           new Map(Object.entries(response.diskMap)),
         );
         this.diskMapSignal.set(newGameState.diskMap);
+        this.playerStatusSignal.set(newGameState.playerStatus);
         this._gameStateService.set(newGameState);
         this._gameState = newGameState;
       })

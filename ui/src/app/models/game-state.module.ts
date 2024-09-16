@@ -4,7 +4,7 @@ import {asGameProgress, GameProgress} from "./game-progress.model";
 import {asBrand, Brand} from "./brand.module";
 
 export type GameId = Brand<string, "GameId">;
-export type Player = "player1" | "player2";
+export type Player = "PLAYER1" | "PLAYER2";
 export type Score = Brand<number, "Score">;
 
 export class PlayerStatus {

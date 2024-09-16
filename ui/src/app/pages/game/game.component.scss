@@ -1,8 +1,8 @@
 .game-container {
   display: grid;
   grid-template-columns: 3fr 1fr;
-  grid-template-rows: 160px 160px 160px auto;
-  width: 50%;
+  grid-template-rows: 200px 80px 200px auto;
+  width: 680px;
 }
 
 .game-item {

@@ -19,10 +19,14 @@ export class PlayerStatusComponent {
     if (!this.playerStatusSignal) {
       return asBrand(0, "number", "Score");
     }
-    if (this.player === 'player1') {
+    if (this.player === 'PLAYER1') {
       return this.playerStatusSignal().player1Score;
     } else {
       return this.playerStatusSignal().player2Score;
     }
+  }
+
+  getCurrentPhase(): boolean {
+    return this.playerStatusSignal().nextPlayer === this.player
   }
 }

@@ -1,2 +1,9 @@
-<p>Name: {{ player }}</p>
-<p>Score: {{ getPlayerScore() }}</p>
+<div class="player-card">
+  <h2 class="player-name">{{ player }}</h2>
+  <div class="score">
+    <span>Score:</span> <span class="score-value">0</span>
+  </div>
+  @if (getCurrentPhase()) {
+    <p class="turn-message">駒を置いてください</p>
+  }
+</div>

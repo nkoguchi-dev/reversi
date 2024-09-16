@@ -12,7 +12,7 @@ export interface PutDiskResponse {
   gameId: string;
   player1Name: string;
   player2Name: string;
-  nextPlayer: 'player1' | 'player2';
+  nextPlayer: 'PLAYER1' | 'PLAYER2';
   progress: string;
   diskMap: Record<string, 'LIGHT' | 'DARK' | null>;
 }

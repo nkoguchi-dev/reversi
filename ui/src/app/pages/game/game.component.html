@@ -1,21 +1,21 @@
 <div class="game-container">
-  <div class="game-item game-board">
+  <div class="game-board">
     <app-board
       [diskMapSignal]="diskMapSignal"
       (squareClicked)="onSquareClick($event)"
     />
   </div>
-  <div class="game-item">
+  <div>
     <app-player-status
       [playerStatusSignal]="playerStatusSignal"
-      [player]="'player2'"
+      [player]="'PLAYER2'"
       />
   </div>
   <div class="game-item">game-status</div>
-  <div class="game-item">
+  <div>
     <app-player-status
       [playerStatusSignal]="playerStatusSignal"
-      [player]="'player1'"
+      [player]="'PLAYER1'"
     />
   </div>
   <div class="game-item"><app-debug/></div>
