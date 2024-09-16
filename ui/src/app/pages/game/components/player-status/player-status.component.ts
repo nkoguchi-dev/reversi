@@ -1,11 +1,14 @@
 import {Component, Input, Signal} from '@angular/core';
 import {Player, PlayerStatus, Score} from "../../../../models/game-state.module";
 import {asBrand} from "../../../../models/brand.module";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-player-status',
   standalone: true,
-  imports: [],
+  imports: [
+    NgClass
+  ],
   templateUrl: './player-status.component.html',
   styleUrl: './player-status.component.scss'
 })

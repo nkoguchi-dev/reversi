@@ -12,28 +12,36 @@
   flex-direction: column;
 }
 
+.black-player {
+  background-color: #333;
+  border: 2px solid #000;
+  color: #fff;
+}
+
+.white-player {
+  background-color: #f4f4f4;
+  border: 2px solid #ddd;
+  color: #000;
+}
+
 .player-name {
   margin: 0;
   font-size: 24px;
   font-weight: bold;
-  color: #333;
 }
 
 .score {
   margin-top: 10px;
   font-size: 18px;
-  color: #555;
 }
 
 .score-value {
   font-weight: bold;
-  color: #4CAF50;
+  //color: #4CAF50;
 }
 
 .turn-message {
   margin-top: 15px;
   font-size: 16px;
-  color: #ff5722;
   font-style: italic;
-  min-height: 20px;
 }

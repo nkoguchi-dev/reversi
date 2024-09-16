@@ -9,22 +9,23 @@
   padding: 10px 20px;
   border-radius: 8px;
   display: inline-block;
+  width: 200px;
+  border: 2px solid #000;
 }
 
 .in_progress {
-  background-color: #4CAF50;
-  color: white;
-  border: 2px solid #388E3C;
+  background-color: #555;
+  color: #fff;
 }
 
 .finished {
-  background-color: #f44336;
-  color: white;
-  border: 2px solid #d32f2f;
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #000;
 }
 
 .initial {
-  background-color: #FFEB3B;
-  color: #333;
-  border: 2px solid #FBC02D;
+  background-color: #ddd;
+  color: #000;
+  border: 2px solid #999;
 }
