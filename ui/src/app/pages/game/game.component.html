@@ -11,12 +11,13 @@
       [player]="'PLAYER2'"
       />
   </div>
-  <div class="game-item">game-status</div>
+  <div>
+    <app-game-status/>
+  </div>
   <div>
     <app-player-status
       [playerStatusSignal]="playerStatusSignal"
       [player]="'PLAYER1'"
     />
   </div>
-  <div class="game-item"><app-debug/></div>
 </div>

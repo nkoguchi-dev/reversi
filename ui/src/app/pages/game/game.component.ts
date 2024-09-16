@@ -1,7 +1,6 @@
 import {Component, inject, OnDestroy, OnInit, Signal, signal, WritableSignal} from '@angular/core';
 import {AsyncPipe} from "@angular/common";
 import {Subscription} from "rxjs";
-import {DebugComponent} from "./components/debug/debug.component";
 import {BoardComponent} from "./components/board/board.component";
 import {GameStartService} from "../home/services/game-start.service";
 import {Disk} from "../../models/disk.model";
@@ -10,15 +9,16 @@ import {GameStatus, PlayerStatus} from "../../models/game-state.module";
 import {PutDiskResponse, PutDiskService} from "./services/put-disk.service";
 import {GameStateService} from "../../services/game-state.service";
 import {PlayerStatusComponent} from "./components/player-status/player-status.component";
+import {GameStatusComponent} from "./components/game-status/game-status.component";
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
     AsyncPipe,
-    DebugComponent,
     BoardComponent,
-    PlayerStatusComponent
+    PlayerStatusComponent,
+    GameStatusComponent
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
