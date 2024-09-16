@@ -72,7 +72,7 @@ resource "aws_codepipeline" "reversi_web-api" {
       configuration = {
         "ClusterName" = "ReversiWebApi"
         "FileName"    = "imagedefinitions.json"
-        "ServiceName" = "reversi-web-api"
+        "ServiceName" = "reversi"
       }
       input_artifacts  = ["BuildArtifact"]
       name             = "Deploy"
@@ -87,8 +87,8 @@ resource "aws_codepipeline" "reversi_web-api" {
   }
 }
 
-resource "aws_codepipeline" "reversi_web-front" {
-  name     = "reversi_web-front"
+resource "aws_codepipeline" "reversi_ui" {
+  name     = "reversi_ui"
   role_arn = local.codepipeline_role_arn
   tags     = {}
   tags_all = {}
@@ -129,7 +129,7 @@ resource "aws_codepipeline" "reversi_web-front" {
     action {
       category         = "Build"
       configuration    = {
-        "ProjectName" = "reversi_web-front"
+        "ProjectName" = "reversi_ui"
       }
       input_artifacts  = [
         "SourceArtifact",
@@ -152,7 +152,7 @@ resource "aws_codepipeline" "reversi_web-front" {
     action {
       category         = "Deploy"
       configuration    = {
-        "BucketName" = "reversi-web-front"
+        "BucketName" = "reversi-ui"
         "Extract"    = "true"
       }
       input_artifacts  = [

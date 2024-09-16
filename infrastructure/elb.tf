@@ -2,7 +2,6 @@ data "aws_ssm_parameter" "https-listener-acm-certificate-arn" {
   name = "/reversi/https-listener/acm_certificate_arn"
 }
 
-
 resource "aws_alb_target_group" "reversi-web-api-tg" {
   deregistration_delay              = "300"
   ip_address_type                   = "ipv4"
@@ -22,6 +21,7 @@ resource "aws_alb_target_group" "reversi-web-api-tg" {
     enabled             = true
     matcher             = "200-299"
     path                = "/health"
+    unhealthy_threshold = 10
   }
 
   stickiness {

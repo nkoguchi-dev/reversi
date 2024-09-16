@@ -93,6 +93,10 @@ resource "aws_ecs_task_definition" "ReversiWebApi" {
             name  = "R2DBC_URL"
             value = "r2dbc:h2:mem:///reversi_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
           },
+          {
+            name  = "ALLOWED_ORIGINS"
+            value = "https://reversi.koppepan.org"
+          },
         ]
         secrets = [
           {

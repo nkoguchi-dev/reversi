@@ -2,13 +2,13 @@ data "aws_ssm_parameter" "web-api_codebuild_role_arn" {
   name = "/reversi/web-api/codebuild_role_arn"
 }
 
-data "aws_ssm_parameter" "web-front_codebuild_role_arn" {
-  name = "/reversi/web-front/codebuild_role_arn"
+data "aws_ssm_parameter" "ui_codebuild_role_arn" {
+  name = "/reversi/ui/codebuild_role_arn"
 }
 
 locals {
   web-api_codebuild_role_arn = data.aws_ssm_parameter.web-api_codebuild_role_arn.value
-  web-front_codebuild_role_arn = data.aws_ssm_parameter.web-front_codebuild_role_arn.value
+  ui_codebuild_role_arn = data.aws_ssm_parameter.ui_codebuild_role_arn.value
 }
 
 resource "aws_codebuild_project" "reversi_web-api" {
@@ -73,20 +73,20 @@ resource "aws_codebuild_project" "reversi_web-api" {
   }
 }
 
-resource "aws_codebuild_project" "reversi_web-front" {
-  name               = "reversi_web-front"
+resource "aws_codebuild_project" "reversi_ui" {
+  name               = "reversi_ui"
   badge_enabled      = false
   build_timeout      = 60
   encryption_key     = "arn:aws:kms:${var.region}:${local.aws_account_id}:alias/aws/s3"
   project_visibility = "PRIVATE"
   queued_timeout     = 480
-  service_role       = local.web-front_codebuild_role_arn
+  service_role       = local.ui_codebuild_role_arn
   tags               = {}
   tags_all           = {}
 
   artifacts {
     encryption_disabled    = false
-    name                   = "reversi_web-front"
+    name                   = "reversi_ui"
     override_artifact_name = false
     packaging              = "NONE"
     type                   = "CODEPIPELINE"
@@ -116,7 +116,7 @@ resource "aws_codebuild_project" "reversi_web-front" {
   }
 
   source {
-    buildspec           = "web-front/buildspec.yml"
+    buildspec           = "ui/buildspec.yml"
     git_clone_depth     = 0
     insecure_ssl        = false
     report_build_status = false
