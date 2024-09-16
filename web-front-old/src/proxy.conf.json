@@ -1,7 +1,0 @@
-{
-  "/api": {
-    "target": "http://reversi_web-api:8080",
-    "secure": false,
-    "logLevel": "debug"
-  }
-}
